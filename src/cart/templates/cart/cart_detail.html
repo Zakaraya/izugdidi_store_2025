@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load cart_extras %}
+{% block title %}Корзина{% endblock %}
+{% block content %}
+
+  <h1>Корзина</h1>
+  {% if messages %}
+    <ul>
+      {% for m in messages %}<li>{{ m }}</li>{% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if items %}
+      <table class="table">
+    <thead>
+      <tr>
+        <th>Товар</th><th>Цена</th><th>Кол-во</th><th>Сумма</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for it in items %}
+      <tr>
+        <td>
+          <a href="/p/{{ it.product.base_slug }}/">{{ it.product.translations.title|default:it.product }}</a>
+        </td>
+        <td>{{ it.unit_price_snapshot|money }} {{ it.product.currency }}</td>
+        <td>
+          <form action="/cart/update/{{ it.id }}/" method="post" style="display:flex;gap:6px;align-items:center;">
+            {% csrf_token %}
+            <input type="number" min="0" name="qty" value="{{ it.qty }}" style="width:70px;">
+            <button class="btn secondary" type="submit">OK</button>
+          </form>
+        </td>
+        <td><b>{{ it.unit_price_snapshot|mul:it.qty }} {{ it.product.currency }}</b></td>
+        <td>
+          <form action="/cart/remove/{{ it.id }}/" method="post">
+            {% csrf_token %}
+            <button class="btn secondary" type="submit">Удалить</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+    <p style="text-align:right;font-size:18px;">Итого: <span class="price">{{ subtotal }} GEL</span></p>
+    <p style="text-align:right;">
+      <a class="btn" href="/checkout/">Оформить заказ</a>
+    </p>
+  {% else %}
+    <p>Корзина пуста.</p>
+  {% endif %}
+{% endblock %}

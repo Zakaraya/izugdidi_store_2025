@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}FAQ{% endblock %}
+{% block content %}
+<h1 class="section-title">FAQ</h1>
+<div class="card">
+  <h3>{% trans "Как узнать состояние батареи?" %}</h3>
+  <p>{% trans "Мы указываем процент здоровья батареи в карточке товара." %}</p>
+  <h3>{% trans "Есть ли рассрочка?" %}</h3>
+  <p>{% trans "Уточняйте в магазине — доступны варианты в зависимости от банка." %}</p>
+</div>
+{% endblock %}

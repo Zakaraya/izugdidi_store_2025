@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Статус заказа №{{ order.id }}{% endblock %}
+{% block content %}
+  <h1>Статус заказа №{{ order.id }}</h1>
+  <div class="card">
+    <p>Текущий статус: <b>{{ order.get_status_display }}</b></p>
+    {% if order.tracking_number %}
+      <p>Трек-номер: <b>{{ order.tracking_number }}</b></p>
+    {% else %}
+      <p>Трек-номер появится после отправки.</p>
+    {% endif %}
+    <p>Сумма: {{ order.total }} {{ order.currency }} (скидка: {{ order.discount_total }}, доставка: {{ order.shipping_total }})</p>
+      {% if order.status == 'pending' %}
+    <p><a class="btn" href="/pay/{{ order.id }}/">Оплатить</a></p>
+      {% endif %}
+
+  </div>
+
+  <h3 style="margin-top:16px;">Этапы</h3>
+  <ol>
+    <li{% if step_pending %} class="badge"{% endif %}>Принят</li>
+    <li{% if step_paid %} class="badge"{% endif %}>Оплачен</li>
+    <li{% if step_processing %} class="badge"{% endif %}>В обработке</li>
+    <li{% if step_shipped %} class="badge"{% endif %}>В доставке</li>
+    <li{% if step_delivered %} class="badge"{% endif %}>Доставлен</li>
+  </ol>
+
+  <p><a class="btn secondary" href="/">На главную</a></p>
+{% endblock %}

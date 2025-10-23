@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Регистрация" %}{% endblock %}
+{% block content %}
+  <div class="auth-wrap">
+    <div class="card auth-card">
+      <h1 class="auth-title">{% trans "Создать аккаунт" %}</h1>
+      <form method="post" action="{% url 'users:signup' %}">
+        {% csrf_token %}
+        <label for="{{ form.username.id_for_label }}">{% trans "Логин" %}</label>
+        {{ form.username }}
+        <label for="{{ form.password1.id_for_label }}">{% trans "Пароль" %}</label>
+        {{ form.password1 }}
+        <label for="{{ form.password2.id_for_label }}">{% trans "Подтверждение пароля" %}</label>
+        {{ form.password2 }}
+        <button class="btn auth-btn" type="submit">{% trans "Зарегистрироваться" %}</button>
+      </form>
+      <p class="auth-alt">
+        {% trans "Уже есть аккаунт?" %} <a href="{% url 'login' %}">{% trans "Войти" %}</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

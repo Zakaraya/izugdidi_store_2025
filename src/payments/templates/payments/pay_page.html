@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Оплата заказа №{{ order.id }}{% endblock %}
+{% block content %}
+  <h1>Оплата заказа №{{ order.id }}</h1>
+  <div class="card">
+    <p>К оплате: <b class="price">{{ order.total }} {{ order.currency }}</b></p>
+    <p>Статус: <b>{{ order.get_status_display }}</b></p>
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn" type="submit">Оплатить</button>
+    </form>
+  </div>
+  <p style="margin-top:12px;"><a class="btn secondary" href="/orders/{{ order.id }}/track/">Вернуться к заказу</a></p>
+{% endblock %}

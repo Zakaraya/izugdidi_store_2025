@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Оформление заказа{% endblock %}
+{% block content %}
+  <h1>Оформление заказа</h1>
+
+  {% if messages %}
+    <ul>
+      {% for m in messages %}<li>{{ m }}</li>{% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if items %}
+    <div class="grid" style="grid-template-columns: 2fr 1fr;">
+      <div>
+        <form method="post" action="">
+          {% csrf_token %}
+          <div class="card">
+            <h3>Контакты и адрес</h3>
+            <div>
+              <label>Имя и фамилия</label><br>
+              {{ form.customer_name }}
+            </div>
+            <div>
+              <label>Email</label><br>
+              {{ form.email }}
+            </div>
+            <div>
+              <label>Телефон</label><br>
+              {{ form.phone }}
+            </div>
+            <div>
+              <label>Адрес доставки</label><br>
+              {{ form.shipping_address }}
+            </div>
+            <div>
+              <label>{{ form.billing_same }} {{ form.billing_same.label }}</label>
+            </div>
+            <div id="billing_block"{% if form.billing_same.value %} style="display:none"{% endif %}>
+              <label>Платёжный адрес</label><br>
+              {{ form.billing_address }}
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px;">
+            <h3>Промокод</h3>
+            <div style="display:flex; gap:8px;">
+              {{ form.promo_code }}
+              <button class="btn" type="submit" name="action" value="apply">Применить</button>
+              <button class="btn" type="submit" name="action" value="place">Оформить заказ</button>
+            </div>
+            {% if applied_code %}
+              <p style="font-size:12px;color:#666;margin-top:6px;">Применён: <b>{{ applied_code }}</b></p>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Ваш заказ</h3>
+          <table class="table">
+            <thead><tr><th>Товар</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr></thead>
+            <tbody>
+              {% for it in items %}
+              <tr>
+                <td><a href="/p/{{ it.product.base_slug }}/">{{ it.product.translations.title|default:it.product }}</a></td>
+                <td>{{ it.qty }}</td>
+                <td>{{ it.unit_price_snapshot }} {{ it.product.currency }}</td>
+                <td>{{ it.unit_price_snapshot|floatformat:2 }} × {{ it.qty }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <div style="text-align:right;">
+            <p>Подытог: <b>{{ subtotal }} GEL</b></p>
+            <p>Доставка: <b>{{ shipping_total }} GEL</b></p>
+            <p>Скидка{% if applied_code %} ({{ applied_code }}){% endif %}: <b>-{{ discount_total }} GEL</b></p>
+            <p style="font-size:18px;">Итого к оплате: <span class="price">{{ total }} GEL</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function(){
+        const cb = document.querySelector('input[name="billing_same"]');
+        const blk = document.getElementById('billing_block');
+        if(cb && blk){
+          cb.addEventListener('change', function(){
+            blk.style.display = this.checked ? 'none' : '';
+          });
+        }
+      })();
+    </script>
+  {% else %}
+    <p>Корзина пуста. <a class="btn" href="/catalog/">Перейти в каталог</a></p>
+  {% endif %}
+{% endblock %}

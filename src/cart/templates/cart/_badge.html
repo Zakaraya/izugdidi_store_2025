@@ -1,0 +1,7 @@
+{% load i18n %}
+<span id="cart-badge"
+      class="cart-badge"
+      {% if cart_count|default:0 == 0 %}style="display:none"{% endif %}
+      hx-swap-oob="true">
+  {{ cart_count|default:0 }}
+</span>

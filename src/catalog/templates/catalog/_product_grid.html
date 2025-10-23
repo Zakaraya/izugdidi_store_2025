@@ -1,0 +1,46 @@
+{% load i18n %}
+<div id="product-grid">
+  <div class="product-grid">
+    {% for p in page_obj.object_list %}
+      <div class="product-card hvr">
+        <a href="{% url 'catalog:product_detail' p.base_slug %}" class="product-link">
+          {% with img=p.images.first %}
+          <div class="img-frame">
+            {% if img %}<img src="{{ img.file.url }}" alt="" class="product-img">{% endif %}
+          </div>
+        {% endwith %}
+          <div class="pad">
+            <div class="badge">{% trans "Сост." %} {{ p.condition }}</div>
+            <div class="product-title">{{ p.translations.title|default:p }}</div>
+            <div class="price">{{ p.price }} {{ p.currency }}</div>
+          </div>
+        </a>
+        <!-- ФОРМА должна быть вне <a> (валидная разметка) -->
+        <form hx-post="{% url 'cart:add' %}"
+              hx-target="#toast"
+              hx-swap="none"
+              style="margin:8px 12px 12px;">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{ p.id }}">
+          <button class="btn" type="submit">{% trans "В корзину" %}</button>
+        </form>
+      </div>
+    {% empty %}
+      <p>{% trans "Товары не найдены." %}</p>
+    {% endfor %}
+  </div>
+
+  <nav class="pager">
+    {% if page_obj.has_previous %}
+      <a class="btn secondary"
+         hx-get="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.brand %}&brand={{ request.GET.brand }}{% endif %}{% if request.GET.storage %}&storage={{ request.GET.storage }}{% endif %}{% if request.GET.cond %}&cond={{ request.GET.cond }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}{% if request.GET.o %}&o={{ request.GET.o }}{% endif %}"
+         hx-target="#product-grid" hx-swap="outerHTML">{% trans "Назад" %}</a>
+    {% endif %}
+    <span class="pager-info">{% trans "Стр." %} {{ page_obj.number }} {% trans "из" %} {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a class="btn secondary"
+         hx-get="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.brand %}&brand={{ request.GET.brand }}{% endif %}{% if request.GET.storage %}&storage={{ request.GET.storage }}{% endif %}{% if request.GET.cond %}&cond={{ request.GET.cond }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}{% if request.GET.o %}&o={{ request.GET.o }}{% endif %}"
+         hx-target="#product-grid" hx-swap="outerHTML">{% trans "Вперёд" %}</a>
+    {% endif %}
+  </nav>
+</div>

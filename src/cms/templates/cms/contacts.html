@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Контакты" %}{% endblock %}
+{% block content %}
+  <h1 class="section-title">{% trans "Контакты" %}</h1>
+
+  <div class="grid-2">
+    <div class="card">
+      <p><b>{% trans "Офлайн-магазин" %}:</b> {% trans "Зугдиди, Грузия" %}</p>
+      <p><b>{% trans "Телефон/WhatsApp" %}:</b> +995 5xx xxx xxx</p>
+      <p><b>{% trans "Время работы" %}:</b> {% trans "Пн–Сб 10:00–19:00" %}</p>
+      <p><b>Email:</b> info@example.com</p>
+    </div>
+    <div class="card">
+      <div id="map" style="height:420px;border-radius:12px;overflow:hidden;"></div>
+    </div>
+  </div>
+
+  <!-- Leaflet CSS/JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    (function(){
+      // Центр: Зугдиди
+      var map = L.map('map').setView([42.5088, 41.8709], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+      var marker = L.marker([42.5088, 41.8709]).addTo(map);
+      marker.bindPopup("iZugdidi — {% trans 'Магазин поддержанных iPhone' %}").openPopup();
+    })();
+  </script>
+{% endblock %}

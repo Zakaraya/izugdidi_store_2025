@@ -1,0 +1,442 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-18 16:16+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: cart/models.py:18
+msgid "Cart"
+msgstr ""
+
+#: cart/models.py:19
+msgid "Carts"
+msgstr ""
+
+#: cart/models.py:29
+msgid "Cart item"
+msgstr ""
+
+#: cart/models.py:30
+msgid "Cart items"
+msgstr ""
+
+#: catalog/models.py:19
+msgid "Category"
+msgstr ""
+
+#: catalog/models.py:20
+msgid "Categories"
+msgstr ""
+
+#: catalog/models.py:29
+msgid "Brand"
+msgstr ""
+
+#: catalog/models.py:30
+msgid "Brands"
+msgstr ""
+
+#: catalog/models.py:37
+msgid "Excellent"
+msgstr ""
+
+#: catalog/models.py:38
+msgid "Good"
+msgstr ""
+
+#: catalog/models.py:39
+msgid "Fair"
+msgstr ""
+
+#: catalog/models.py:68
+msgid "Product"
+msgstr ""
+
+#: catalog/models.py:69
+msgid "Products"
+msgstr ""
+
+#: catalog/models.py:83
+msgid "Product image"
+msgstr ""
+
+#: catalog/models.py:84
+msgid "Product images"
+msgstr ""
+
+#: catalog/models.py:102
+msgid "Maximum 10 images per product."
+msgstr ""
+
+#: catalog/templates/catalog/_product_grid.html:11
+#: catalog/templates/catalog/product_list.html:42
+#: catalog/templates/catalog/product_list.html:59
+#: cms/templates/cms/home.html:36
+msgid "Сост."
+msgstr ""
+
+#: catalog/templates/catalog/_product_grid.html:23
+msgid "В корзину"
+msgstr ""
+
+#: catalog/templates/catalog/_product_grid.html:27
+#: catalog/templates/catalog/product_list.html:66
+msgid "Товары не найдены."
+msgstr ""
+
+#: catalog/templates/catalog/_product_grid.html:35
+#: catalog/templates/catalog/product_list.html:72
+msgid "Назад"
+msgstr ""
+
+#: catalog/templates/catalog/_product_grid.html:37
+#: catalog/templates/catalog/product_list.html:74
+msgid "Стр."
+msgstr ""
+
+#: catalog/templates/catalog/_product_grid.html:37
+#: catalog/templates/catalog/product_list.html:74
+msgid "из"
+msgstr ""
+
+#: catalog/templates/catalog/_product_grid.html:41
+#: catalog/templates/catalog/product_list.html:76
+msgid "Вперёд"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:3
+#: catalog/templates/catalog/product_list.html:5 templates/base.html:16
+msgid "Каталог"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:13
+msgid "Поиск…"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:15
+msgid "Бренд"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:19
+msgid "Память"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:23
+msgid "Состояние"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:28
+msgid "Цена от"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:29
+msgid "Цена до"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:31
+msgid "Сортировка"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:32
+msgid "Цена ↑"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:33
+msgid "Цена ↓"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:34
+msgid "Сначала новые"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:36
+msgid "Применить"
+msgstr ""
+
+#: catalog/templates/catalog/product_list.html:47
+msgid "Сбросить"
+msgstr ""
+
+#: cms/templates/cms/contacts.html:3 cms/templates/cms/contacts.html:5
+#: cms/templates/cms/home.html:11 templates/base.html:17
+msgid "Контакты"
+msgstr ""
+
+#: cms/templates/cms/contacts.html:9
+msgid "Офлайн-магазин"
+msgstr ""
+
+#: cms/templates/cms/contacts.html:9
+msgid "Зугдиди, Грузия"
+msgstr ""
+
+#: cms/templates/cms/contacts.html:10
+msgid "Телефон/WhatsApp"
+msgstr ""
+
+#: cms/templates/cms/contacts.html:11
+msgid "Время работы"
+msgstr ""
+
+#: cms/templates/cms/contacts.html:11
+msgid "Пн–Сб 10:00–19:00"
+msgstr ""
+
+#: cms/templates/cms/contacts.html:33
+msgid "Магазин поддержанных iPhone"
+msgstr ""
+
+#: cms/templates/cms/delivery.html:2 cms/templates/cms/delivery.html:4
+msgid "Доставка и оплата"
+msgstr ""
+
+#: cms/templates/cms/delivery.html:6
+msgid "Доставка по Грузии"
+msgstr ""
+
+#: cms/templates/cms/delivery.html:7
+msgid ""
+"Сроки 1–3 дня. Отправка курьером/почтой. Стоимость обсуждается при "
+"оформлении."
+msgstr ""
+
+#: cms/templates/cms/delivery.html:8
+msgid "Самовывоз"
+msgstr ""
+
+#: cms/templates/cms/delivery.html:9
+msgid "Вы можете забрать заказ в магазине в Зугдиди."
+msgstr ""
+
+#: cms/templates/cms/delivery.html:10
+msgid "Оплата"
+msgstr ""
+
+#: cms/templates/cms/delivery.html:11
+msgid "Наличные, банковская карта. Онлайн-оплата — на этапе оформления."
+msgstr ""
+
+#: cms/templates/cms/faq.html:6
+msgid "Как узнать состояние батареи?"
+msgstr ""
+
+#: cms/templates/cms/faq.html:7
+msgid "Мы указываем процент здоровья батареи в карточке товара."
+msgstr ""
+
+#: cms/templates/cms/faq.html:8
+msgid "Есть ли рассрочка?"
+msgstr ""
+
+#: cms/templates/cms/faq.html:9
+msgid "Уточняйте в магазине — доступны варианты в зависимости от банка."
+msgstr ""
+
+#: cms/templates/cms/home.html:3
+msgid "Главная"
+msgstr ""
+
+#: cms/templates/cms/home.html:7
+msgid "Поддержанные iPhone с гарантией в Зугдиди"
+msgstr ""
+
+#: cms/templates/cms/home.html:8
+msgid "Проверенные устройства, удобный заказ и быстрая доставка по Грузии."
+msgstr ""
+
+#: cms/templates/cms/home.html:10
+msgid "Смотреть каталог"
+msgstr ""
+
+#: cms/templates/cms/home.html:14
+msgid "Гарантия на устройство"
+msgstr ""
+
+#: cms/templates/cms/home.html:15
+msgid "Проверка батареи и функционала"
+msgstr ""
+
+#: cms/templates/cms/home.html:16
+msgid "Поддержка на двух языках"
+msgstr ""
+
+#: cms/templates/cms/home.html:27
+msgid "Новинки в наличии"
+msgstr ""
+
+#: cms/templates/cms/home.html:43
+msgid "Пока нет товаров."
+msgstr ""
+
+#: cms/templates/cms/warranty.html:2 cms/templates/cms/warranty.html:4
+msgid "Гарантия и возврат"
+msgstr ""
+
+#: cms/templates/cms/warranty.html:6
+msgid "Гарантия"
+msgstr ""
+
+#: cms/templates/cms/warranty.html:7
+msgid ""
+"На все устройства предоставляется гарантия 1 месяц, если не указано иначе."
+msgstr ""
+
+#: cms/templates/cms/warranty.html:8
+msgid "Возврат/обмен"
+msgstr ""
+
+#: cms/templates/cms/warranty.html:9
+msgid ""
+"Если устройство не соответствует описанию, мы обменяем или вернём деньги "
+"согласно законодательству."
+msgstr ""
+
+#: config/settings/base.py:125
+msgid "ქართული"
+msgstr ""
+
+#: config/settings/base.py:126
+msgid "English"
+msgstr ""
+
+#: orders/models.py:17
+msgid "Percent"
+msgstr ""
+
+#: orders/models.py:18
+msgid "Fixed amount"
+msgstr ""
+
+#: orders/models.py:32
+msgid "Coupon"
+msgstr ""
+
+#: orders/models.py:33
+msgid "Coupons"
+msgstr ""
+
+#: orders/models.py:45
+msgid "Draft"
+msgstr ""
+
+#: orders/models.py:46
+msgid "Pending payment"
+msgstr ""
+
+#: orders/models.py:47
+msgid "Paid"
+msgstr ""
+
+#: orders/models.py:48
+msgid "Processing"
+msgstr ""
+
+#: orders/models.py:49
+msgid "Shipped"
+msgstr ""
+
+#: orders/models.py:50
+msgid "Delivered"
+msgstr ""
+
+#: orders/models.py:51
+msgid "Cancelled"
+msgstr ""
+
+#: orders/models.py:52
+msgid "Returned"
+msgstr ""
+
+#: orders/models.py:76
+msgid "Order"
+msgstr ""
+
+#: orders/models.py:77
+msgid "Orders"
+msgstr ""
+
+#: orders/models.py:91
+msgid "Order item"
+msgstr ""
+
+#: orders/models.py:92
+msgid "Order items"
+msgstr ""
+
+#: templates/base.html:19
+msgid "Корзина"
+msgstr ""
+
+#: templates/base.html:28
+msgid "Мои заказы"
+msgstr ""
+
+#: templates/base.html:36
+msgid "Выйти"
+msgstr ""
+
+#: templates/base.html:45 templates/registration/login.html:3
+#: templates/registration/login.html:18 templates/registration/signup.html:19
+msgid "Войти"
+msgstr ""
+
+#: templates/base.html:52 templates/registration/signup.html:3
+msgid "Регистрация"
+msgstr ""
+
+#: templates/base.html:73
+msgid "поддержанные iPhone в Зугдиди"
+msgstr ""
+
+#: templates/registration/login.html:7
+msgid "Войти в аккаунт"
+msgstr ""
+
+#: templates/registration/login.html:9
+msgid "Неверный логин или пароль."
+msgstr ""
+
+#: templates/registration/login.html:13 templates/registration/signup.html:10
+msgid "Логин"
+msgstr ""
+
+#: templates/registration/login.html:15 templates/registration/signup.html:12
+msgid "Пароль"
+msgstr ""
+
+#: templates/registration/login.html:21
+msgid "Нет аккаунта?"
+msgstr ""
+
+#: templates/registration/login.html:21 templates/registration/signup.html:16
+msgid "Зарегистрироваться"
+msgstr ""
+
+#: templates/registration/login.html:22
+msgid "Забыли пароль?"
+msgstr ""
+
+#: templates/registration/signup.html:7
+msgid "Создать аккаунт"
+msgstr ""
+
+#: templates/registration/signup.html:14
+msgid "Подтверждение пароля"
+msgstr ""
+
+#: templates/registration/signup.html:19
+msgid "Уже есть аккаунт?"
+msgstr ""

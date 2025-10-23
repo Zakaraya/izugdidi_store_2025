@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Заказ оформлен{% endblock %}
+{% block content %}
+  <h1>Спасибо! Заказ №{{ order.id }} оформлен</h1>
+  <p>Мы отправили подтверждение на {{ order.email }}. Статус заказа сейчас: <b>{{ order.get_status_display }}</b>.</p>
+  <p><a class="btn" href="/pay/{{ order.id }}/">Оплатить сейчас</a></p>
+  <p><a class="btn" href="/orders/{{ order.id }}/track/">Отслеживать заказ</a></p>
+  <p><a class="btn secondary" href="/catalog/">Вернуться к покупкам</a></p>
+{% endblock %}

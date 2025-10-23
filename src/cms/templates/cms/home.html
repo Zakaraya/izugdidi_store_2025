@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}iZugdidi — {% trans "Главная" %}{% endblock %}
+{% block content %}
+  <section class="hero hero-gradient">
+    <div class="hero-col">
+      <h1 class="title">{% trans "Поддержанные iPhone с гарантией в Зугдиди" %}</h1>
+      <p class="lead">{% trans "Проверенные устройства, удобный заказ и быстрая доставка по Грузии." %}</p>
+      <div class="hero-actions">
+        <a class="btn" href="{% url 'catalog:product_list' %}">{% trans "Смотреть каталог" %}</a>
+        <a class="btn secondary" href="{% url 'cms:contacts' %}">{% trans "Контакты" %}</a>
+      </div>
+      <ul class="hero-bullets">
+        <li>✓ {% trans "Гарантия на устройство" %}</li>
+        <li>✓ {% trans "Проверка батареи и функционала" %}</li>
+        <li>✓ {% trans "Поддержка на двух языках" %}</li>
+      </ul>
+    </div>
+    <div class="hero-col">
+      <div class="card photo-shadow">
+        <img src="https://images.unsplash.com/photo-1510552776732-01acc9a4c0d9?q=80&w=1200"
+             alt="iPhone" class="hero-img">
+      </div>
+    </div>
+  </section>
+
+  <h2 class="section-title">{% trans "Новинки в наличии" %}</h2>
+  <div class="product-grid">
+    {% for p in latest %}
+      <div class="product-card hvr">
+        <a href="{% url 'catalog:product_detail' p.base_slug %}" class="product-link">
+          {% with img=p.images.first %}
+            {% if img %}<div class="img-frame"><img src="{{ img.file.url }}" alt="" class="product-img"></div>{% endif %}
+          {% endwith %}
+          <div class="pad">
+            <div class="badge">{% trans "Сост." %} {{ p.condition }}</div>
+            <div class="product-title">{{ p.translations.title|default:p }}</div>
+            <div class="price">{{ p.price }} {{ p.currency }}</div>
+          </div>
+        </a>
+      </div>
+    {% empty %}
+      <p>{% trans "Пока нет товаров." %}</p>
+    {% endfor %}
+  </div>
+{% endblock %}

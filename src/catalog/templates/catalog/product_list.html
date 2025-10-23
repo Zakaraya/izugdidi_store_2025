@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Каталог" %}{% endblock %}
+{% block content %}
+  <h1 class="section-title">{% trans "Каталог" %}{% if category %} — {{ category }}{% endif %}</h1>
+
+    <form method="get" class="filters"
+        hx-get=""
+        hx-target="#product-grid"
+        hx-push-url="true"
+        hx-swap="outerHTML">
+    <div class="filters-row">
+      <input class="input" type="text" name="q" placeholder="{% trans 'Поиск…' %}" value="{{ current.q }}">
+      <select class="input" name="brand">
+        <option value="">{% trans "Бренд" %}</option>
+        {% for b in brands %}<option value="{{ b.slug }}"{% if current.brand == b.slug %} selected{% endif %}>{{ b.name }}</option>{% endfor %}
+      </select>
+      <select class="input" name="storage">
+        <option value="">{% trans "Память" %}</option>
+        {% for s in storages %}<option value="{{ s }}"{% if current.storage|stringformat:"s" == s|stringformat:"s" %} selected{% endif %}>{{ s }} GB</option>{% endfor %}
+      </select>
+      <select class="input" name="cond">
+        <option value="">{% trans "Состояние" %}</option>
+        <option value="A"{% if current.cond == "A" %} selected{% endif %}>A</option>
+        <option value="B"{% if current.cond == "B" %} selected{% endif %}>B</option>
+        <option value="C"{% if current.cond == "C" %} selected{% endif %}>C</option>
+      </select>
+      <input class="input" type="number" step="0.01" name="price_min" placeholder="{% trans 'Цена от' %}" value="{{ current.price_min }}">
+      <input class="input" type="number" step="0.01" name="price_max" placeholder="{% trans 'Цена до' %}" value="{{ current.price_max }}">
+      <select class="input" name="o">
+        <option value="">{% trans "Сортировка" %}</option>
+        <option value="price_asc"{% if current.o == "price_asc" %} selected{% endif %}>{% trans "Цена ↑" %}</option>
+        <option value="price_desc"{% if current.o == "price_desc" %} selected{% endif %}>{% trans "Цена ↓" %}</option>
+        <option value="newest"{% if current.o == "newest" %} selected{% endif %}>{% trans "Сначала новые" %}</option>
+      </select>
+      <button class="btn" type="submit">{% trans "Применить" %}</button>
+    </div>
+
+    <div class="chips">
+      {% if current.brand %}<span class="chip">Brand: {{ current.brand }}</span>{% endif %}
+      {% if current.storage %}<span class="chip">{{ current.storage }} GB</span>{% endif %}
+      {% if current.cond %}<span class="chip">{% trans "Сост." %} {{ current.cond }}</span>{% endif %}
+      {% if current.price_min %}<span class="chip">≥ {{ current.price_min }}</span>{% endif %}
+      {% if current.price_max %}<span class="chip">≤ {{ current.price_max }}</span>{% endif %}
+      {% if current.q %}<span class="chip">“{{ current.q }}”</span>{% endif %}
+      {% if current.brand or current.storage or current.cond or current.price_min or current.price_max or current.q %}
+        <a class="chip reset" href="{% url 'catalog:product_list' %}">{% trans "Сбросить" %}</a>
+      {% endif %}
+    </div>
+  </form>
+    {% include "catalog/_product_grid.html" %}
+
+<!--  <div class="product-grid">-->
+<!--    {% for p in page_obj.object_list %}-->
+<!--      <div class="product-card hvr">-->
+<!--        <a href="{% url 'catalog:product_detail' p.base_slug %}" class="product-link">-->
+<!--          {% with img=p.images.first %}{% if img %}<img src="{{ img.file.url }}" alt="" class="product-img">{% endif %}{% endwith %}-->
+<!--          <div class="pad">-->
+<!--            <div class="badge">{% trans "Сост." %} {{ p.condition }}</div>-->
+<!--            <div class="product-title">{{ p.translations.title|default:p }}</div>-->
+<!--            <div class="price">{{ p.price }} {{ p.currency }}</div>-->
+<!--          </div>-->
+<!--        </a>-->
+<!--      </div>-->
+<!--    {% empty %}-->
+<!--      <p>{% trans "Товары не найдены." %}</p>-->
+<!--    {% endfor %}-->
+<!--  </div>-->
+
+<!--  <nav class="pager">-->
+<!--    {% if page_obj.has_previous %}-->
+<!--      <a class="btn secondary" href="?page={{ page_obj.previous_page_number }}">{% trans "Назад" %}</a>-->
+<!--    {% endif %}-->
+<!--    <span class="pager-info">{% trans "Стр." %} {{ page_obj.number }} {% trans "из" %} {{ page_obj.paginator.num_pages }}</span>-->
+<!--    {% if page_obj.has_next %}-->
+<!--      <a class="btn secondary" href="?page={{ page_obj.next_page_number }}">{% trans "Вперёд" %}</a>-->
+<!--    {% endif %}-->
+<!--  </nav>-->
+{% endblock %}

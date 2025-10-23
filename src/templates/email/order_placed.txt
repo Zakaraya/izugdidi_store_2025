@@ -1,0 +1,6 @@
+Здравствуйте, {{ order.customer_name }}!
+
+Ваш заказ №{{ order.id }} принят.
+Сумма: {{ order.total }} {{ order.currency }}
+
+Отслеживание: {{ request_scheme }}://{{ request_host }}/orders/{{ order.id }}/track/

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Мои заказы{% endblock %}
+{% block content %}
+  <h1>Мои заказы</h1>
+  {% if orders %}
+<div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Статус</th><th>Сумма</th><th>Создан</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in orders %}
+          <tr>
+            <td>#{{ o.id }}</td>
+            <td>{{ o.get_status_display }}</td>
+            <td>{{ o.total }} {{ o.currency }}</td>
+            <td>{{ o.created_at }}</td>
+            <td><a class="btn secondary" href="/orders/{{ o.id }}/track/">Открыть</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+  {% else %}
+    <p>У вас пока нет заказов.</p>
+  {% endif %}
+{% endblock %}

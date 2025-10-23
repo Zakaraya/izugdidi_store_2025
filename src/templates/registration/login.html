@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Войти" %}{% endblock %}
+{% block content %}
+  <div class="auth-wrap">
+    <div class="card auth-card">
+      <h1 class="auth-title">{% trans "Войти в аккаунт" %}</h1>
+      {% if form.errors %}
+        <div class="auth-alert">{% trans "Неверный логин или пароль." %}</div>
+      {% endif %}
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <label for="id_username">{% trans "Логин" %}</label>
+        {{ form.username }}
+        <label for="id_password">{% trans "Пароль" %}</label>
+        {{ form.password }}
+        <input type="hidden" name="next" value="{{ next|default:'/' }}">
+        <button class="btn auth-btn" type="submit">{% trans "Войти" %}</button>
+      </form>
+      <p class="auth-alt">
+        {% trans "Нет аккаунта?" %} <a href="{% url 'users:signup' %}">{% trans "Зарегистрироваться" %}</a>
+        · <a href="{% url 'password_reset' %}">{% trans "Забыли пароль?" %}</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}
