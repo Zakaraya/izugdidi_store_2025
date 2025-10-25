@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-18 16:16+0300\n"
+"POT-Creation-Date: 2025-10-25 16:20+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,426 +17,736 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
 #: cart/models.py:18
 msgid "Cart"
-msgstr ""
+msgstr "კალათა"
 
 #: cart/models.py:19
 msgid "Carts"
-msgstr ""
+msgstr "კალათები"
 
 #: cart/models.py:29
 msgid "Cart item"
-msgstr ""
+msgstr "კალათის ერთეული"
 
 #: cart/models.py:30
 msgid "Cart items"
-msgstr ""
+msgstr "კალათის ერთეულები"
+
+#: cart/templates/cart/cart_detail.html:5
+#: cart/templates/cart/cart_detail.html:8 templates/base.html:20
+#: templates/base.html:23
+msgid "Корзина"
+msgstr "კალათა"
+
+#: cart/templates/cart/cart_detail.html:19
+#: orders/templates/orders/checkout.html:105
+msgid "Товар"
+msgstr "პროდუქტი"
+
+#: cart/templates/cart/cart_detail.html:20
+#: orders/templates/orders/checkout.html:107
+msgid "Цена"
+msgstr "ფასი"
+
+#: cart/templates/cart/cart_detail.html:21
+#: orders/templates/orders/checkout.html:106
+msgid "Кол-во"
+msgstr "რაოდენობა"
+
+#: cart/templates/cart/cart_detail.html:22
+#: orders/templates/orders/checkout.html:108
+#: users/templates/users/_tab_orders.html:8
+msgid "Сумма"
+msgstr "ჯამი"
+
+#: cart/templates/cart/cart_detail.html:37
+msgid "OK"
+msgstr "კარგი"
+
+#: cart/templates/cart/cart_detail.html:44
+msgid "Удалить"
+msgstr "წაშლა"
+
+#: cart/templates/cart/cart_detail.html:52
+msgid "Итого"
+msgstr "ჯამი"
+
+#: cart/templates/cart/cart_detail.html:54
+#: orders/templates/orders/checkout.html:130
+msgid "Оформить заказ"
+msgstr "შეკვეთის გაფორმება"
+
+#: cart/templates/cart/cart_detail.html:65
+msgid "Тут пусто"
+msgstr "ცარიელია"
+
+#: cart/templates/cart/cart_detail.html:66
+msgid "Добавьте товары из каталога, чтобы оформить заказ."
+msgstr "შეარჩიეთ პროდუქტები კატალოგიდან შეკვეთისთვის."
+
+#: cart/templates/cart/cart_detail.html:67
+#: orders/templates/orders/checkout.html:158
+msgid "Перейти в каталог"
+msgstr "კატალოგში დაბრუნება"
 
 #: catalog/models.py:19
 msgid "Category"
-msgstr ""
+msgstr "კატეგორია"
 
 #: catalog/models.py:20
 msgid "Categories"
-msgstr ""
+msgstr "კატეგორიები"
 
 #: catalog/models.py:29
 msgid "Brand"
-msgstr ""
+msgstr "ბრენდი"
 
 #: catalog/models.py:30
 msgid "Brands"
-msgstr ""
+msgstr "ბრენდები"
 
 #: catalog/models.py:37
 msgid "Excellent"
-msgstr ""
+msgstr "შესანიშნავი"
 
 #: catalog/models.py:38
 msgid "Good"
-msgstr ""
+msgstr "კარგი"
 
 #: catalog/models.py:39
 msgid "Fair"
-msgstr ""
+msgstr "დამაკმაყოფილებელი"
 
 #: catalog/models.py:68
 msgid "Product"
-msgstr ""
+msgstr "პროდუქტი"
 
 #: catalog/models.py:69
 msgid "Products"
-msgstr ""
+msgstr "პროდუქტები"
 
 #: catalog/models.py:83
 msgid "Product image"
-msgstr ""
+msgstr "პროდუქტის ფოტო"
 
 #: catalog/models.py:84
 msgid "Product images"
-msgstr ""
+msgstr "პროდუქტის ფოტოები"
 
 #: catalog/models.py:102
 msgid "Maximum 10 images per product."
-msgstr ""
+msgstr "პროდუქტზე მაქსიმუმ 10 სურათი."
 
-#: catalog/templates/catalog/_product_grid.html:11
+#: catalog/templates/catalog/_product_grid.html:13
+#: catalog/templates/catalog/product_detail.html:37
 #: catalog/templates/catalog/product_list.html:42
 #: catalog/templates/catalog/product_list.html:59
 #: cms/templates/cms/home.html:36
 msgid "Сост."
-msgstr ""
+msgstr "მდგომარეობა"
 
-#: catalog/templates/catalog/_product_grid.html:23
+#: catalog/templates/catalog/_product_grid.html:25
+#: catalog/templates/catalog/product_detail.html:50
 msgid "В корзину"
-msgstr ""
+msgstr "კალათაში დამატება"
 
-#: catalog/templates/catalog/_product_grid.html:27
+#: catalog/templates/catalog/_product_grid.html:29
 #: catalog/templates/catalog/product_list.html:66
 msgid "Товары не найдены."
-msgstr ""
+msgstr "პროდუქტები არ მოიძებნა."
 
-#: catalog/templates/catalog/_product_grid.html:35
+#: catalog/templates/catalog/_product_grid.html:37
 #: catalog/templates/catalog/product_list.html:72
 msgid "Назад"
-msgstr ""
+msgstr "უკან"
 
-#: catalog/templates/catalog/_product_grid.html:37
+#: catalog/templates/catalog/_product_grid.html:39
 #: catalog/templates/catalog/product_list.html:74
 msgid "Стр."
-msgstr ""
+msgstr "გვ."
 
-#: catalog/templates/catalog/_product_grid.html:37
+#: catalog/templates/catalog/_product_grid.html:39
 #: catalog/templates/catalog/product_list.html:74
 msgid "из"
-msgstr ""
+msgstr "მთლ."
 
-#: catalog/templates/catalog/_product_grid.html:41
+#: catalog/templates/catalog/_product_grid.html:43
 #: catalog/templates/catalog/product_list.html:76
 msgid "Вперёд"
+msgstr "წინ"
+
+#: catalog/templates/catalog/product_detail.html:7
+#: catalog/templates/catalog/product_list.html:3
+#: catalog/templates/catalog/product_list.html:5 templates/base.html:17
+#: templates/base.html:79
+msgid "Каталог"
+msgstr "კატალოგი"
+
+#: catalog/templates/catalog/product_detail.html:17
+msgid "No image"
+msgstr "სურათი არ არის"
+
+#: catalog/templates/catalog/product_detail.html:18
+msgid "No photo"
+msgstr "ფოტო არ არის"
+
+#: catalog/templates/catalog/product_detail.html:39
+#, python-format
+msgid ""
+"\n"
+"        %(gb)s GB · %(color)s\n"
+"      "
 msgstr ""
 
-#: catalog/templates/catalog/product_list.html:3
-#: catalog/templates/catalog/product_list.html:5 templates/base.html:16
-msgid "Каталог"
-msgstr ""
+#: catalog/templates/catalog/product_detail.html:56
+msgid "Похожие"
+msgstr "მსგავსი პროდუქტები"
 
 #: catalog/templates/catalog/product_list.html:13
 msgid "Поиск…"
-msgstr ""
+msgstr "ძიება…"
 
 #: catalog/templates/catalog/product_list.html:15
 msgid "Бренд"
-msgstr ""
+msgstr "ბრენდი"
 
 #: catalog/templates/catalog/product_list.html:19
 msgid "Память"
-msgstr ""
+msgstr "მეხსიერება"
 
 #: catalog/templates/catalog/product_list.html:23
 msgid "Состояние"
-msgstr ""
+msgstr "მდგომარეობა"
 
 #: catalog/templates/catalog/product_list.html:28
 msgid "Цена от"
-msgstr ""
+msgstr "ფასი მინ."
 
 #: catalog/templates/catalog/product_list.html:29
 msgid "Цена до"
-msgstr ""
+msgstr "ფასი მაქს."
 
 #: catalog/templates/catalog/product_list.html:31
 msgid "Сортировка"
-msgstr ""
+msgstr "დახარისხება"
 
 #: catalog/templates/catalog/product_list.html:32
 msgid "Цена ↑"
-msgstr ""
+msgstr "ფასი ↑"
 
 #: catalog/templates/catalog/product_list.html:33
 msgid "Цена ↓"
-msgstr ""
+msgstr "ფასი ↓"
 
 #: catalog/templates/catalog/product_list.html:34
 msgid "Сначала новые"
-msgstr ""
+msgstr "ჯერ ახალი"
 
 #: catalog/templates/catalog/product_list.html:36
+#: orders/templates/orders/checkout.html:89
 msgid "Применить"
-msgstr ""
+msgstr "გადატარება"
 
 #: catalog/templates/catalog/product_list.html:47
 msgid "Сбросить"
-msgstr ""
+msgstr "განულება"
 
 #: cms/templates/cms/contacts.html:3 cms/templates/cms/contacts.html:5
-#: cms/templates/cms/home.html:11 templates/base.html:17
+#: cms/templates/cms/home.html:11 templates/base.html:18 templates/base.html:80
 msgid "Контакты"
-msgstr ""
+msgstr "კონტაქტები"
 
 #: cms/templates/cms/contacts.html:9
 msgid "Офлайн-магазин"
-msgstr ""
+msgstr "მაღაზია"
 
 #: cms/templates/cms/contacts.html:9
-msgid "Зугдиди, Грузия"
-msgstr ""
+msgid "რუსთაველის #92, Zugdidi, Georgia"
+msgstr "რუსთაველის #92, ზუგდიდი, საქართველო"
 
 #: cms/templates/cms/contacts.html:10
 msgid "Телефон/WhatsApp"
-msgstr ""
+msgstr "ტელეფონი/WhatsApp"
 
 #: cms/templates/cms/contacts.html:11
 msgid "Время работы"
-msgstr ""
+msgstr "მუშაობის დრო"
 
 #: cms/templates/cms/contacts.html:11
-msgid "Пн–Сб 10:00–19:00"
-msgstr ""
+msgid "Пн–Сб 10:00–18:00"
+msgstr "ორშ–შაბ 10:00–18:00"
 
 #: cms/templates/cms/contacts.html:33
-msgid "Магазин поддержанных iPhone"
-msgstr ""
+msgid "Магазин Apple техники"
+msgstr "Apple-ის ტექნიკის მაღაზია"
 
 #: cms/templates/cms/delivery.html:2 cms/templates/cms/delivery.html:4
 msgid "Доставка и оплата"
-msgstr ""
+msgstr "მიწოდება და გადახდა"
 
 #: cms/templates/cms/delivery.html:6
 msgid "Доставка по Грузии"
-msgstr ""
+msgstr "მიწოდება საქართველოს მასშტაბით"
 
 #: cms/templates/cms/delivery.html:7
 msgid ""
 "Сроки 1–3 дня. Отправка курьером/почтой. Стоимость обсуждается при "
 "оформлении."
-msgstr ""
+msgstr "მიწოდება 1–3 დღეში. კურიერით ან ფოსტით. ღირებულება განისაზღვრება შეკვეთისას."
 
 #: cms/templates/cms/delivery.html:8
+#: orders/templates/orders/_address_fields.html:32
+#: orders/templates/orders/checkout.html:48
 msgid "Самовывоз"
-msgstr ""
+msgstr "გატანა მაღაზიიდან"
 
 #: cms/templates/cms/delivery.html:9
 msgid "Вы можете забрать заказ в магазине в Зугдиди."
-msgstr ""
+msgstr "შეგიძლიათ შეკვეთის აღება ზუგდიდის მაღაზიიდან."
 
 #: cms/templates/cms/delivery.html:10
 msgid "Оплата"
-msgstr ""
+msgstr "გადახდა"
 
 #: cms/templates/cms/delivery.html:11
 msgid "Наличные, банковская карта. Онлайн-оплата — на этапе оформления."
-msgstr ""
+msgstr "ნაღდი, ბარათი ან ონლაინ გადახდა შეკვეთისას."
 
 #: cms/templates/cms/faq.html:6
 msgid "Как узнать состояние батареи?"
-msgstr ""
+msgstr "როგორ შევამოწმო ბატარეის მდგომარეობა?"
 
 #: cms/templates/cms/faq.html:7
 msgid "Мы указываем процент здоровья батареи в карточке товара."
-msgstr ""
+msgstr "პროდუქტის ბარათში მითითებულია ბატარეის ჯანმრთელობის პროცენტი."
 
 #: cms/templates/cms/faq.html:8
 msgid "Есть ли рассрочка?"
-msgstr ""
+msgstr "არის თუ არა განვადება?"
 
 #: cms/templates/cms/faq.html:9
 msgid "Уточняйте в магазине — доступны варианты в зависимости от банка."
-msgstr ""
+msgstr "მოიკითხეთ მაღაზიაში — პირობები დამოკიდებულია ბანკზე."
 
 #: cms/templates/cms/home.html:3
 msgid "Главная"
-msgstr ""
+msgstr "მთავარი"
 
 #: cms/templates/cms/home.html:7
-msgid "Поддержанные iPhone с гарантией в Зугдиди"
-msgstr ""
+msgid "Apple техника с гарантией в Зугдиди"
+msgstr "Apple-ის ტექნიკა გარანტიით ზუგდიდში"
 
 #: cms/templates/cms/home.html:8
 msgid "Проверенные устройства, удобный заказ и быстрая доставка по Грузии."
-msgstr ""
+msgstr "შემოწმებული მოწყობილობები, მარტივი შეკვეთა და სწრაფი მიწოდება."
 
 #: cms/templates/cms/home.html:10
 msgid "Смотреть каталог"
-msgstr ""
+msgstr "კატალოგის ნახვა"
 
 #: cms/templates/cms/home.html:14
 msgid "Гарантия на устройство"
-msgstr ""
+msgstr "გარანტია მოწყობილობაზე"
 
 #: cms/templates/cms/home.html:15
 msgid "Проверка батареи и функционала"
-msgstr ""
+msgstr "ბატარეისა და ფუნქციონალის შემოწმება"
 
 #: cms/templates/cms/home.html:16
 msgid "Поддержка на двух языках"
-msgstr ""
+msgstr "ორენოვანი მხარდაჭერა"
 
 #: cms/templates/cms/home.html:27
 msgid "Новинки в наличии"
-msgstr ""
+msgstr "ახალი მოდელები"
 
 #: cms/templates/cms/home.html:43
 msgid "Пока нет товаров."
-msgstr ""
+msgstr "ჯერ არ არის პროდუქტები."
 
 #: cms/templates/cms/warranty.html:2 cms/templates/cms/warranty.html:4
 msgid "Гарантия и возврат"
-msgstr ""
+msgstr "გარანტია და დაბრუნება"
 
 #: cms/templates/cms/warranty.html:6
 msgid "Гарантия"
-msgstr ""
+msgstr "გარანტია"
 
 #: cms/templates/cms/warranty.html:7
 msgid ""
 "На все устройства предоставляется гарантия 1 месяц, если не указано иначе."
-msgstr ""
+msgstr "ყველა მოწყობილობაზე ვრცელდება 1-თვიანი გარანტია, თუ სხვაგვარად არ არის მითითებული."
 
 #: cms/templates/cms/warranty.html:8
 msgid "Возврат/обмен"
-msgstr ""
+msgstr "დაბრუნება/გაცვლა"
 
 #: cms/templates/cms/warranty.html:9
 msgid ""
 "Если устройство не соответствует описанию, мы обменяем или вернём деньги "
 "согласно законодательству."
-msgstr ""
+msgstr "თუ მოწყობილობა არ შეესაბამება აღწერას, მოვახდენთ შეცვლას ან თანხის დაბრუნებას კანონმდებლობის შესაბამისად."
 
-#: config/settings/base.py:125
+
+#: config/settings/base.py:127
 msgid "ქართული"
-msgstr ""
+msgstr "ქართული"
 
-#: config/settings/base.py:126
+#: config/settings/base.py:128
 msgid "English"
-msgstr ""
+msgstr "ინგლისური"
 
 #: orders/models.py:17
 msgid "Percent"
-msgstr ""
+msgstr "პროცენტი"
 
 #: orders/models.py:18
 msgid "Fixed amount"
-msgstr ""
+msgstr "ფიქსირებული თანხა"
 
 #: orders/models.py:32
 msgid "Coupon"
-msgstr ""
+msgstr "კუპონი"
 
 #: orders/models.py:33
 msgid "Coupons"
-msgstr ""
+msgstr "კუპონები"
 
 #: orders/models.py:45
 msgid "Draft"
-msgstr ""
+msgstr "მონახაზი"
 
 #: orders/models.py:46
 msgid "Pending payment"
-msgstr ""
+msgstr "გადახდის მოლოდინში"
 
 #: orders/models.py:47
 msgid "Paid"
-msgstr ""
+msgstr "გადახდილია"
 
 #: orders/models.py:48
 msgid "Processing"
-msgstr ""
+msgstr "მუშავდება"
 
 #: orders/models.py:49
 msgid "Shipped"
-msgstr ""
+msgstr "გაგზავნილია"
 
 #: orders/models.py:50
 msgid "Delivered"
-msgstr ""
+msgstr "მიწოდებულია"
 
 #: orders/models.py:51
 msgid "Cancelled"
-msgstr ""
+msgstr "გაუქმებულია"
 
 #: orders/models.py:52
 msgid "Returned"
-msgstr ""
+msgstr "დაბრუნებულია"
 
-#: orders/models.py:76
+#: orders/models.py:86
 msgid "Order"
-msgstr ""
+msgstr "შეკვეთა"
 
-#: orders/models.py:77
+#: orders/models.py:87
 msgid "Orders"
-msgstr ""
+msgstr "შეკვეთები"
 
-#: orders/models.py:91
+#: orders/models.py:101
 msgid "Order item"
-msgstr ""
+msgstr "შეკვეთის ერთეული"
 
-#: orders/models.py:92
+#: orders/models.py:102
 msgid "Order items"
-msgstr ""
+msgstr "შეკვეთის ერთეულები"
 
-#: templates/base.html:19
-msgid "Корзина"
-msgstr ""
+#: orders/templates/orders/_address_fields.html:6
+msgid "Город"
+msgstr "ქალაქი"
 
-#: templates/base.html:28
+#: orders/templates/orders/_address_fields.html:11
+msgid "Улица"
+msgstr "ქუჩა"
+
+#: orders/templates/orders/_address_fields.html:18
+msgid "Дом"
+msgstr "სახლი"
+
+#: orders/templates/orders/_address_fields.html:23
+msgid "Квартира/офис"
+msgstr "ბინა/ოფისი"
+
+#: orders/templates/orders/_address_fields.html:32
+msgid ""
+"Зугдиди, наш офлайн-магазин. Точный адрес и время подтверждаются после "
+"оформления."
+msgstr "ზუგდიდი, ჩვენი ოფლაინ მაღაზია. ზუსტი მისამართი და დრო დასტურდება შეკვეთის გაფორმების შემდეგ."
+
+#: orders/templates/orders/checkout.html:4
+#: orders/templates/orders/checkout.html:7
+msgid "Оформление заказа"
+msgstr "შეკვეთის გაფორმება"
+
+#: orders/templates/orders/checkout.html:22
+msgid "Контакты и адрес"
+msgstr "კონტაქტები და მისამართი"
+
+#: orders/templates/orders/checkout.html:26
+msgid "Имя и фамилия"
+msgstr "სახელი და გვარი"
+
+#: orders/templates/orders/checkout.html:30
+#: users/templates/users/_tab_profile.html:24
+msgid "Телефон"
+msgstr "ტელეფონი"
+
+#: orders/templates/orders/checkout.html:36
+msgid "Email"
+msgstr "ელ. ფოსტა"
+
+#: orders/templates/orders/checkout.html:43
+msgid "Способ получения"
+msgstr "მიღების მეთოდი"
+
+#: orders/templates/orders/checkout.html:49
+msgid "Доставка по адресу"
+msgstr "მისამართზე მიწოდება"
+
+#: orders/templates/orders/checkout.html:55
+msgid "Адрес доставки"
+msgstr "მიწოდების მისამართი"
+
+#: orders/templates/orders/checkout.html:59
+#: orders/templates/orders/checkout.html:76
+msgid "Город, улица, дом, квартира/офис"
+msgstr "ქალაქი, ქუჩა, სახლი, ბინა/ოფისი"
+
+#: orders/templates/orders/checkout.html:67
+msgid "Платёжный адрес совпадает с адресом доставки"
+msgstr "გადახდის მისამართი ემთხვევა მიწოდების მისამართს"
+
+#: orders/templates/orders/checkout.html:72
+msgid "Платёжный адрес"
+msgstr "გადახდის მისამართი"
+
+#: orders/templates/orders/checkout.html:82
+#: orders/templates/orders/checkout.html:87
+msgid "Промокод"
+msgstr "პრომო კოდი"
+
+#: orders/templates/orders/checkout.html:93
+msgid "Применён"
+msgstr "გამოყენებულია"
+
+#: orders/templates/orders/checkout.html:101
+msgid "Ваш заказ"
+msgstr "თქვენი შეკვეთა"
+
+#: orders/templates/orders/checkout.html:123
+msgid "Подытог"
+msgstr "შუალედური ჯამი"
+
+#: orders/templates/orders/checkout.html:124
+msgid "Доставка"
+msgstr "მიწოდება"
+
+#: orders/templates/orders/checkout.html:125
+msgid "Скидка"
+msgstr "ფასდაკლება"
+
+#: orders/templates/orders/checkout.html:126
+msgid "Итого к оплате"
+msgstr "სულ გადასახდელია"
+
+#: orders/templates/orders/checkout.html:158
+msgid "Корзина пуста."
+msgstr "კალათა ცარიელია."
+
+#: orders/templates/orders/order_success.html:3
+msgid "Заказ оформлен"
+msgstr "შეკვეთა გაფორმებულია"
+
+#: orders/templates/orders/order_success.html:12
+msgid "Спасибо! Заказ оформлен"
+msgstr "გმადლობთ! შეკვეთა გაფორმებულია"
+
+#: orders/templates/orders/order_success.html:13
+msgid "Мы отправили подтверждение на вашу почту."
+msgstr "ჩვენ გამოგიგზავნეთ დადასტურება თქვენს ელ. ფოსტაზე."
+
+#: orders/templates/orders/order_success.html:17 templates/base.html:33
+#: templates/base.html:34 templates/base.html:82
+#: users/templates/users/account_tabs.html:16
 msgid "Мои заказы"
-msgstr ""
+msgstr "ჩემი შეკვეთები"
 
-#: templates/base.html:36
+#: orders/templates/orders/order_success.html:18
+msgid "Вернуться в каталог"
+msgstr "კატალოგში დაბრუნება"
+
+#: orders/templates/orders/order_success.html:19
+#: orders/templates/orders/order_track.html:37
+msgid "На главную"
+msgstr "მთავარ გვერდზე"
+
+#: orders/templates/orders/order_track.html:4
+#: orders/templates/orders/order_track.html:7
+#, python-format
+msgid "Статус заказа №%(id)s"
+msgstr "შეკვეთის სტატუსი №%(id)s"
+
+#: orders/templates/orders/order_track.html:10
+msgid "Текущий статус:"
+msgstr "მიმდინარე სტატუსი:"
+
+#: orders/templates/orders/order_track.html:12
+msgid "Трек-номер:"
+msgstr "თრექინგ ნომერი:"
+
+#: orders/templates/orders/order_track.html:14
+msgid "Трек-номер появится после отправки."
+msgstr "თრექინგ ნომერი გამოჩნდება გაგზავნის შემდეგ."
+
+#: orders/templates/orders/order_track.html:18
+#, python-format
+msgid ""
+"\n"
+"        Сумма: %(total)s %(currency)s (скидка: %(discount)s, доставка: "
+"%(shipping)s)\n"
+"      "
+msgstr ""
+"\n"
+"        თანხა: %(total)s %(currency)s (ფასდაკლება: %(discount)s, მიწოდება: "
+"%(shipping)s)\n"
+"      "
+
+#: orders/templates/orders/order_track.html:24
+msgid "Оплатить"
+msgstr "გადახდა"
+
+#: orders/templates/orders/order_track.html:28
+msgid "Этапы"
+msgstr "ეტაპები"
+
+#: orders/templates/orders/order_track.html:30
+msgid "Принят"
+msgstr "მიღებულია"
+
+#: orders/templates/orders/order_track.html:31
+msgid "Оплачен"
+msgstr "გადახდილია"
+
+#: orders/templates/orders/order_track.html:32
+msgid "В обработке"
+msgstr "მუშავდება"
+
+#: orders/templates/orders/order_track.html:33
+msgid "В доставке"
+msgstr "მიწოდების პროცესშია"
+
+#: orders/templates/orders/order_track.html:34
+msgid "Доставлен"
+msgstr "მიწოდებულია"
+
+#: templates/base.html:42 templates/base.html:83
+#: users/templates/users/_tab_profile.html:31
 msgid "Выйти"
-msgstr ""
+msgstr "გასვლა"
 
-#: templates/base.html:45 templates/registration/login.html:3
-#: templates/registration/login.html:18 templates/registration/signup.html:19
+#: templates/base.html:51 templates/base.html:85
+#: templates/registration/login.html:3 templates/registration/login.html:18
+#: templates/registration/signup.html:19
 msgid "Войти"
-msgstr ""
+msgstr "შესვლა"
 
-#: templates/base.html:52 templates/registration/signup.html:3
+#: templates/base.html:58 templates/base.html:86
+#: templates/registration/signup.html:3
 msgid "Регистрация"
-msgstr ""
+msgstr "რეგისტრაცია"
 
-#: templates/base.html:73
+#: templates/base.html:98
 msgid "поддержанные iPhone в Зугдиди"
-msgstr ""
+msgstr "მეორადი iPhone-ები ზუგდიდში"
 
 #: templates/registration/login.html:7
 msgid "Войти в аккаунт"
-msgstr ""
+msgstr "ანგარიშზე შესვლა"
 
 #: templates/registration/login.html:9
 msgid "Неверный логин или пароль."
-msgstr ""
+msgstr "არასწორი ლოგინი ან პაროლი."
 
 #: templates/registration/login.html:13 templates/registration/signup.html:10
 msgid "Логин"
-msgstr ""
+msgstr "ლოგინი"
 
 #: templates/registration/login.html:15 templates/registration/signup.html:12
 msgid "Пароль"
-msgstr ""
+msgstr "პაროლი"
 
 #: templates/registration/login.html:21
 msgid "Нет аккаунта?"
-msgstr ""
+msgstr "არ გაქვთ ანგარიში?"
 
 #: templates/registration/login.html:21 templates/registration/signup.html:16
 msgid "Зарегистрироваться"
-msgstr ""
+msgstr "რეგისტრაცია"
 
 #: templates/registration/login.html:22
 msgid "Забыли пароль?"
-msgstr ""
+msgstr "დაგავიწყდათ პაროლი?"
 
 #: templates/registration/signup.html:7
 msgid "Создать аккаунт"
-msgstr ""
+msgstr "ანგარიშის შექმნა"
 
 #: templates/registration/signup.html:14
 msgid "Подтверждение пароля"
-msgstr ""
+msgstr "პაროლის დადასტურება"
 
 #: templates/registration/signup.html:19
 msgid "Уже есть аккаунт?"
-msgstr ""
+msgstr "უკვე გაქვთ ანგარიში?"
+
+#: users/templates/users/_tab_orders.html:7
+msgid "Статус"
+msgstr "სტატუსი"
+
+#: users/templates/users/_tab_orders.html:9
+msgid "Создан"
+msgstr "შექმნილია"
+
+#: users/templates/users/_tab_orders.html:20
+msgid "Открыть"
+msgstr "გახსნა"
+
+#: users/templates/users/_tab_orders.html:23
+msgid "Пока нет заказов."
+msgstr "შეკვეთები ჯერ არ არის."
+
+#: users/templates/users/_tab_profile.html:10
+msgid "Имя"
+msgstr "სახელი"
+
+#: users/templates/users/_tab_profile.html:14
+msgid "Фамилия"
+msgstr "გვარი"
+
+#: users/templates/users/_tab_profile.html:29
+msgid "Сохранить"
+msgstr "შენახვა"
+
+#: users/templates/users/_tab_profile.html:30
+msgid "Сменить пароль"
+msgstr "პაროლის შეცვლა"
+
+#: users/templates/users/account_tabs.html:4
+#: users/templates/users/account_tabs.html:7
+msgid "Личный кабинет"
+msgstr "პირადი კაბინეტი"
+
+#: users/templates/users/account_tabs.html:26
+msgid "Профиль"
+msgstr "პროფილი"
