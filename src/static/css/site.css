@@ -75,6 +75,8 @@ a:hover {
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 .header-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -355,7 +357,7 @@ a:hover {
 .section-title {
   font-size: clamp(28px, 4vw, 40px);
   font-weight: 800;
-  margin: 64px 0 32px;
+  margin: 0px 0 32px;
   text-align: center;
   letter-spacing: -0.02em;
 }
@@ -885,3 +887,33 @@ input[type="checkbox"] {
   .table th,.table td{padding:8px}
   .table thead, .table tbody, .table tr{ display:table; width:100% }
 }
+
+
+
+.tabs{display:flex;gap:8px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.tab{display:inline-block;padding:10px 12px;border:1px solid transparent;border-bottom:none;border-radius:12px 12px 0 0;text-decoration:none;color:inherit;background:#f8fafc}
+.tab:hover{background:#eef2f7}
+.tab.active{background:#fff;border-color:var(--line)}
+.tab-panel{background:#fff;border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:12px}
+
+/* Checkout: на мобилках одна колонка */
+@media (max-width: 900px){
+  .checkout-grid{
+    grid-template-columns: 1fr !important;
+  }
+  /* немного воздуха между блоками */
+  .checkout-grid > div + div{
+    margin-top: 12px;
+  }
+}
+
+.empty-state{
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  padding:24px; text-align:center;
+}
+.empty-icon{
+  width:56px; height:56px; margin:0 auto 10px;
+  border-radius:50%; border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center;
+}
+.empty-state .btn{ margin-top:6px }

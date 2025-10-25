@@ -1,5 +1,7 @@
 from decimal import Decimal
 from django.contrib import messages
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.template.loader import render_to_string
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -41,48 +43,49 @@ def _get_valid_coupon_or_none(code: str, user, email: str, subtotal: Decimal):
 
 def checkout(request):
     cart = get_or_create_cart(request)
-    items = list(cart.items.select_related("product").all())
+    items = list(cart.items.select_related("product"))
     subtotal = sum((i.unit_price_snapshot * i.qty for i in items), Decimal("0.00"))
     shipping_total = Decimal("0.00")
 
     # применённый купон из сессии (если есть)
     applied_code = request.session.get("applied_coupon_code", "")
+
+    # initial значениями заполняем форму на GET и при невалидном POST
     initial = {}
     if request.user.is_authenticated:
         initial.update({
-            "email": request.user.email,
-            "customer_name": request.user.get_full_name() or request.user.username,
+            "email": request.user.email or "",
+            "customer_name": (request.user.get_full_name() or request.user.username),
+            "phone": getattr(getattr(request.user, "profile", None), "phone", ""),
         })
     if applied_code:
         initial["promo_code"] = applied_code
 
-    # предварительные значения для отображения
+    # значения по умолчанию для отображения
     coupon = None
     discount_total = Decimal("0.00")
 
     if request.method == "POST":
-        action = request.POST.get("action", "").strip()  # "apply" или "place"
+        action = (request.POST.get("action") or "").strip()  # "apply" или "place"
         form = CheckoutForm(request.POST)
 
-        # Обработка применения купона — не оформляем заказ
+        # 1) Применение купона — не требуем валидности всей формы
         if action == "apply":
-            # Разрешаем применять купон даже если контактные поля пустые:
-            promo_code = request.POST.get("promo_code", "").strip()
-            # Для подсчёта лимита per-user используем email (если введён) или пустую строку
-            tmp_email = request.POST.get("email", "").strip()
+            promo_code = (request.POST.get("promo_code") or "").strip()
+            tmp_email = (request.POST.get("email") or "").strip()  # для per-user лимитов
+
             coupon, err = _get_valid_coupon_or_none(promo_code, request.user, tmp_email, subtotal)
             if coupon is None:
                 messages.error(request, err)
-                # очищаем ранее применённый код
                 request.session.pop("applied_coupon_code", None)
             else:
                 request.session["applied_coupon_code"] = coupon.code
-                messages.success(request, "Промокод применён.")
                 discount_total = _calc_discount(subtotal, coupon)
-            # Перерисовываем страницу с формой (с тем, что ввёл пользователь)
+                messages.success(request, "Промокод применён.")
+
             total = (subtotal - discount_total + shipping_total).quantize(Decimal("0.01"))
             return render(request, "orders/checkout.html", {
-                "form": form,
+                "form": form,  # показываем то, что ввёл пользователь
                 "items": items,
                 "subtotal": subtotal,
                 "shipping_total": shipping_total,
@@ -91,24 +94,21 @@ def checkout(request):
                 "applied_code": request.session.get("applied_coupon_code", ""),
             })
 
-        # Оформление заказа
+        # 2) Оформление заказа — валидируем форму и создаём заказ
         if action == "place":
-            if form.is_valid():
-                customer_name = form.cleaned_data["customer_name"]
+            if not form.is_valid():
+                messages.error(request, "Проверьте корректность данных.")
+            else:
                 email = form.cleaned_data["email"]
-                phone = form.cleaned_data["phone"]
-                shipping_address = form.cleaned_data["shipping_address"].strip()
-                billing_same = form.cleaned_data["billing_same"]
-                billing_address = form.cleaned_data["billing_address"].strip() if not billing_same else shipping_address
-                promo_code = form.cleaned_data["promo_code"].strip()
-
+                # финальное определение купона: приоритет — то, что ввёл пользователь; иначе — купон из сессии
+                promo_code = (form.cleaned_data.get("promo_code") or "").strip()
                 coupon = None
                 discount_total = Decimal("0.00")
+
                 if promo_code:
                     coupon, err = _get_valid_coupon_or_none(promo_code, request.user, email, subtotal)
                     if coupon is None:
                         messages.error(request, err)
-                        # не оформляем заказ — заново показываем страницу
                         total = (subtotal - discount_total + shipping_total).quantize(Decimal("0.01"))
                         return render(request, "orders/checkout.html", {
                             "form": form,
@@ -121,12 +121,11 @@ def checkout(request):
                         })
                     discount_total = _calc_discount(subtotal, coupon)
                     request.session["applied_coupon_code"] = coupon.code
-                else:
-                    # если поля промокода пусты, но в сессии уже есть код — применим его
-                    if applied_code:
-                        coupon, _ = _get_valid_coupon_or_none(applied_code, request.user, email, subtotal)
-                        if coupon:
-                            discount_total = _calc_discount(subtotal, coupon)
+                elif applied_code:
+                    # в форме промокод пуст, но в сессии есть — пытаемся применить его
+                    coupon, _ = _get_valid_coupon_or_none(applied_code, request.user, email, subtotal)
+                    if coupon:
+                        discount_total = _calc_discount(subtotal, coupon)
 
                 if not items:
                     messages.error(request, "Корзина пуста.")
@@ -137,57 +136,49 @@ def checkout(request):
                     total = Decimal("0.00")
 
                 with transaction.atomic():
-                    order = Order.objects.create(
-                        user=request.user if request.user.is_authenticated else None,
-                        status=Order.Status.PENDING,
-                        total=total,
-                        discount_total=discount_total,
-                        shipping_total=shipping_total,
-                        currency="GEL",
-                        email=email,
-                        phone=phone,
-                        customer_name=customer_name,
-                        shipping_address_json={"address": shipping_address},
-                        billing_address_json={"address": billing_address},
-                        coupon=coupon,
-                        placed_at=timezone.now(),
-                    )
+                    # ВАЖНО: адреса и способ доставки уже соберутся в save() формы
+                    order = form.save(commit=False)
+                    order.user = request.user if request.user.is_authenticated else None
+                    order.status = Order.Status.PENDING
+                    order.total = total
+                    order.discount_total = discount_total
+                    order.shipping_total = shipping_total
+                    order.currency = "GEL"
+                    order.coupon = coupon
+                    order.placed_at = timezone.now()
+                    order.save()
+
+                    # переноcим позиции корзины
                     for it in items:
                         OrderItem.objects.create(
                             order=order,
                             product=it.product,
-                            title_snapshot=(
-                                it.product.safe_translation_getter("title", any_language=True)
-                                or str(it.product)
-                            ),
+                            title_snapshot=(it.product.safe_translation_getter("title", any_language=True) or str(it.product)),
                             qty=it.qty,
                             unit_price_snapshot=it.unit_price_snapshot,
                         )
                         if it.product.in_stock >= it.qty:
                             it.product.in_stock -= it.qty
                             it.product.save(update_fields=["in_stock", "updated_at"])
+
+                    # очищаем корзину
                     cart.items.all().delete()
 
-                context = {
-                    "order": order,
-                    "request_scheme": request.scheme,
-                    "request_host": request.get_host(),
-                }
+                # письмо — опционально
                 try:
+                    context = {"order": order, "request_scheme": request.scheme, "request_host": request.get_host()}
                     send_order_placed_email.delay(order.id, order.email, context)
-                except Exception as exc:
+                except Exception:
                     pass
+
                 messages.success(request, "Заказ создан. Спасибо!")
                 return redirect("orders:success", pk=order.pk)
 
-            # форма невалидна — показать ошибки
-            messages.error(request, "Проверьте корректность данных.")
-            # падать дальше в общий рендер ниже (с подсказками)
-
+        # если action неожиданный или форма невалидна — падаем к общему рендеру ниже
     else:
         form = CheckoutForm(initial=initial)
 
-    # Отображение (GET или неуспешный POST)
+    # GET или неуспешный POST: пересчёт скидки по купону из сессии (если есть)
     if applied_code:
         coupon, err = _get_valid_coupon_or_none(applied_code, request.user, initial.get("email", ""), subtotal)
         if coupon:
@@ -201,7 +192,7 @@ def checkout(request):
         "shipping_total": shipping_total,
         "discount_total": discount_total,
         "total": total,
-        "applied_code": applied_code,
+        "applied_code": request.session.get("applied_coupon_code", "") or "",
     })
 
 def order_track(request, pk: int):
@@ -225,3 +216,15 @@ def order_track(request, pk: int):
 def order_success(request, pk: int):
     order = get_object_or_404(Order, pk=pk)
     return render(request, "orders/order_success.html", {"order": order})
+
+def checkout_address_fields(request):
+    """
+    Возвращает только кусок HTML с адресными полями в зависимости от выбранного метода.
+    Вызывается HTMX при смене delivery_method.
+    """
+    if request.method != "GET":
+        return HttpResponseBadRequest("GET only")
+    method = request.GET.get("delivery_method", Order.DELIVERY_PICKUP)
+    form = CheckoutForm(initial={"delivery_method": method})
+    html = render_to_string("orders/_address_fields.html", {"form": form, "method": method}, request=request)
+    return HttpResponse(html)

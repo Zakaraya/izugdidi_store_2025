@@ -48,6 +48,17 @@
       <a class="btn" href="/checkout/">Оформить заказ</a>
     </p>
   {% else %}
-    <p>Корзина пуста.</p>
+      <div class="empty-state">
+    <div class="empty-icon" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <path d="M6 6h15l-1.5 9h-12L6 6Z" stroke="currentColor" stroke-width="2" fill="none"/>
+        <circle cx="9" cy="20" r="1.5" fill="currentColor"/>
+        <circle cx="17" cy="20" r="1.5" fill="currentColor"/>
+      </svg>
+    </div>
+    <h2 style="margin:0 0 6px;">Тут пусто</h2>
+    <p class="muted" style="margin:0 0 10px;">Добавьте товары из каталога, чтобы оформить заказ.</p>
+    <a class="btn" href="{% url 'catalog:product_list' %}">Перейти в каталог</a>
+  </div>
   {% endif %}
 {% endblock %}

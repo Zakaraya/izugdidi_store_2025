@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Личный кабинет" %}{% endblock %}
+
+{% block content %}
+  <h1 class="section-title">{% trans "Личный кабинет" %}</h1>
+
+  <div class="tabs">
+    <a href="{% url 'users:account_hub' %}?tab=orders"
+       class="tab{% if active_tab == 'orders' %} active{% endif %}"
+       hx-get="{% url 'users:account_tab_orders' %}"
+       hx-target="#tab-panel"
+       hx-swap="innerHTML"
+       hx-push-url="true">
+      {% trans "Мои заказы" %}
+    </a>
+      <!--       hx-get="{% url 'users:account_tab_profile' %}"-->
+    <a href="{% url 'users:account_hub' %}?tab=profile"
+       class="tab{% if active_tab == 'profile' %} active{% endif %}"
+
+       hx-get="{% url 'users:account_tab_profile' %}"
+       hx-target="#tab-panel"
+       hx-swap="innerHTML"
+       hx-push-url="true">
+      {% trans "Профиль" %}
+    </a>
+  </div>
+
+  <div id="tab-panel" class="tab-panel">
+    {{ tab_html|safe }}
+  </div>
+{% endblock %}

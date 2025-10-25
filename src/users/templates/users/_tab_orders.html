@@ -1,0 +1,27 @@
+{% load i18n %}
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>{% trans "Статус" %}</th>
+        <th>{% trans "Сумма" %}</th>
+        <th>{% trans "Создан" %}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+        <tr>
+          <td>#{{ o.id }}</td>
+          <td>{{ o.get_status_display }}</td>
+          <td>{{ o.total }} {{ o.currency }}</td>
+          <td>{{ o.created_at }}</td>
+          <td><a class="btn secondary" href="/orders/{{ o.id }}/track/">{% trans "Открыть" %}</a></td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" class="muted">{% trans "Пока нет заказов." %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

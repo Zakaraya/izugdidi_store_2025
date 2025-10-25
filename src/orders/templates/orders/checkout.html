@@ -1,7 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Оформление заказа{% endblock %}
+{% load i18n %}
+
+{% block title %}{% trans "Оформление заказа" %}{% endblock %}
+
 {% block content %}
-  <h1>Оформление заказа</h1>
+  <h1>{% trans "Оформление заказа" %}</h1>
 
   {% if messages %}
     <ul>
@@ -10,46 +13,84 @@
   {% endif %}
 
   {% if items %}
-    <div class="grid" style="grid-template-columns: 2fr 1fr;">
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 16px;">
       <div>
-        <form method="post" action="">
+        <form id="checkout-form" method="post" action="">
           {% csrf_token %}
+
           <div class="card">
-            <h3>Контакты и адрес</h3>
-            <div>
-              <label>Имя и фамилия</label><br>
-              {{ form.customer_name }}
+            <h3>{% trans "Контакты и адрес" %}</h3>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div>
+                <label>{% trans "Имя и фамилия" %}</label><br>
+                {{ form.customer_name }}
+              </div>
+              <div>
+                <label>{% trans "Телефон" %}</label><br>
+                {{ form.phone }}
+              </div>
             </div>
-            <div>
-              <label>Email</label><br>
+
+            <div style="margin-top:10px;">
+              <label>{% trans "Email" %}</label><br>
               {{ form.email }}
             </div>
+
+            <hr style="border:none;border-top:1px solid var(--line);margin:12px 0;">
+
             <div>
-              <label>Телефон</label><br>
-              {{ form.phone }}
+              <label>{% trans "Способ получения" %}</label><br>
+              {% if form.delivery_method %}
+                {{ form.delivery_method }}
+              {% else %}
+                <select name="delivery_method" class="input">
+                  <option value="pickup">{% trans "Самовывоз" %}</option>
+                  <option value="address">{% trans "Доставка по адресу" %}</option>
+                </select>
+              {% endif %}
             </div>
-            <div>
-              <label>Адрес доставки</label><br>
-              {{ form.shipping_address }}
+
+            <div id="shipping_block" style="margin-top:10px;">
+              <label>{% trans "Адрес доставки" %}</label><br>
+              {% if form.shipping_address %}
+                {{ form.shipping_address }}
+              {% else %}
+                <textarea name="shipping_address" class="input" rows="3" placeholder="{% trans 'Город, улица, дом, квартира/офис' %}"></textarea>
+              {% endif %}
             </div>
-            <div>
-              <label>{{ form.billing_same }} {{ form.billing_same.label }}</label>
+
+            <div style="margin-top:10px;">
+              {% if form.billing_same %}
+                <label>{{ form.billing_same }} {{ form.billing_same.label }}</label>
+              {% else %}
+                <label><input type="checkbox" name="billing_same" checked> {% trans "Платёжный адрес совпадает с адресом доставки" %}</label>
+              {% endif %}
             </div>
-            <div id="billing_block"{% if form.billing_same.value %} style="display:none"{% endif %}>
-              <label>Платёжный адрес</label><br>
-              {{ form.billing_address }}
+
+            <div id="billing_block" style="{% if form.billing_same and form.billing_same.value %}display:none{% endif %};margin-top:10px;">
+              <label>{% trans "Платёжный адрес" %}</label><br>
+              {% if form.billing_address %}
+                {{ form.billing_address }}
+              {% else %}
+                <textarea name="billing_address" class="input" rows="3" placeholder="{% trans 'Город, улица, дом, квартира/офис' %}"></textarea>
+              {% endif %}
             </div>
           </div>
 
           <div class="card" style="margin-top:12px;">
-            <h3>Промокод</h3>
-            <div style="display:flex; gap:8px;">
-              {{ form.promo_code }}
-              <button class="btn" type="submit" name="action" value="apply">Применить</button>
-              <button class="btn" type="submit" name="action" value="place">Оформить заказ</button>
+            <h3>{% trans "Промокод" %}</h3>
+            <div>
+              {% if form.promo_code %}
+                {{ form.promo_code }}
+              {% else %}
+                <input class="input" type="text" name="promo_code" placeholder="{% trans 'Промокод' %}">
+              {% endif %}
+                <button class="btn secondary" type="submit" name="action" value="apply" style="margin-top:8px;width:100%;">{% trans "Применить" %}</button>
             </div>
+
             {% if applied_code %}
-              <p style="font-size:12px;color:#666;margin-top:6px;">Применён: <b>{{ applied_code }}</b></p>
+              <p style="font-size:12px;color:#666;margin-top:6px;">{% trans "Применён" %}: <b>{{ applied_code }}</b></p>
             {% endif %}
           </div>
         </form>
@@ -57,9 +98,16 @@
 
       <div>
         <div class="card">
-          <h3>Ваш заказ</h3>
+          <h3>{% trans "Ваш заказ" %}</h3>
           <table class="table">
-            <thead><tr><th>Товар</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr></thead>
+            <thead>
+              <tr>
+                <th>{% trans "Товар" %}</th>
+                <th>{% trans "Кол-во" %}</th>
+                <th>{% trans "Цена" %}</th>
+                <th>{% trans "Сумма" %}</th>
+              </tr>
+            </thead>
             <tbody>
               {% for it in items %}
               <tr>
@@ -72,27 +120,41 @@
             </tbody>
           </table>
           <div style="text-align:right;">
-            <p>Подытог: <b>{{ subtotal }} GEL</b></p>
-            <p>Доставка: <b>{{ shipping_total }} GEL</b></p>
-            <p>Скидка{% if applied_code %} ({{ applied_code }}){% endif %}: <b>-{{ discount_total }} GEL</b></p>
-            <p style="font-size:18px;">Итого к оплате: <span class="price">{{ total }} GEL</span></p>
+            <p>{% trans "Подытог" %}: <b>{{ subtotal }} GEL</b></p>
+            <p>{% trans "Доставка" %}: <b>{{ shipping_total }} GEL</b></p>
+            <p>{% trans "Скидка" %}{% if applied_code %} ({{ applied_code }}){% endif %}: <b>-{{ discount_total }} GEL</b></p>
+            <p style="font-size:18px;">{% trans "Итого к оплате" %}: <span class="price">{{ total }} GEL</span></p>
           </div>
         </div>
+        <button class="btn" type="submit" form="checkout-form" name="action" value="place" style="margin-top:8px;width:100%;">
+          {% trans "Оформить заказ" %}
+        </button>
       </div>
     </div>
 
     <script>
       (function(){
-        const cb = document.querySelector('input[name="billing_same"]');
-        const blk = document.getElementById('billing_block');
-        if(cb && blk){
-          cb.addEventListener('change', function(){
-            blk.style.display = this.checked ? 'none' : '';
-          });
+        const delivery = document.querySelector('select[name="delivery_method"]') || document.getElementById('{{ form.delivery_method.id_for_label|default:"" }}');
+        const shippingBlock = document.getElementById('shipping_block');
+        const billingSame = document.querySelector('input[name="billing_same"]');
+        const billingBlock = document.getElementById('billing_block');
+
+        function toggleShipping(){
+          if(!delivery || !shippingBlock) return;
+          const v = (delivery.value || '').toLowerCase();
+          shippingBlock.style.display = (v === 'address') ? '' : 'none';
         }
+
+        function toggleBilling(){
+          if(!billingSame || !billingBlock) return;
+          billingBlock.style.display = billingSame.checked ? 'none' : '';
+        }
+
+        if(delivery){ delivery.addEventListener('change', toggleShipping); toggleShipping(); }
+        if(billingSame){ billingSame.addEventListener('change', toggleBilling); toggleBilling(); }
       })();
     </script>
   {% else %}
-    <p>Корзина пуста. <a class="btn" href="/catalog/">Перейти в каталог</a></p>
+    <p>{% trans "Корзина пуста." %} <a class="btn" href="/catalog/">{% trans "Перейти в каталог" %}</a></p>
   {% endif %}
 {% endblock %}

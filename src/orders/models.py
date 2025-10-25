@@ -51,6 +51,16 @@ class Order(TimeStamped):
         CANCELLED = "cancelled", _("Cancelled")
         RETURNED = "returned", _("Returned")
 
+    DELIVERY_PICKUP = "pickup"
+    DELIVERY_ADDRESS = "address"
+    DELIVERY_CHOICES = [
+        (DELIVERY_PICKUP, "Самовывоз"),
+        (DELIVERY_ADDRESS, "Доставка по адресу"),
+    ]
+
+    delivery_method = models.CharField(
+        max_length=16, choices=DELIVERY_CHOICES, default=DELIVERY_PICKUP
+    )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING, db_index=True)
     total = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"))

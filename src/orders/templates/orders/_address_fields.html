@@ -1,0 +1,35 @@
+{% load i18n %}
+{% if method == 'address' %}
+  <div id="address-fields">
+    <div class="form-grid">
+      <div class="form-item">
+        <label for="{{ form.city.id_for_label }}">{% trans "Город" %}</label>
+        {{ form.city }}
+        {% if form.city.errors %}<div class="form-error">{{ form.city.errors|striptags }}</div>{% endif %}
+      </div>
+      <div class="form-item">
+        <label for="{{ form.street.id_for_label }}">{% trans "Улица" %}</label>
+        {{ form.street }}
+        {% if form.street.errors %}<div class="form-error">{{ form.street.errors|striptags }}</div>{% endif %}
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-item">
+        <label for="{{ form.house.id_for_label }}">{% trans "Дом" %}</label>
+        {{ form.house }}
+        {% if form.house.errors %}<div class="form-error">{{ form.house.errors|striptags }}</div>{% endif %}
+      </div>
+      <div class="form-item">
+        <label for="{{ form.apartment.id_for_label }}">{% trans "Квартира/офис" %}</label>
+        {{ form.apartment }}
+        {% if form.apartment.errors %}<div class="form-error">{{ form.apartment.errors|striptags }}</div>{% endif %}
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div id="address-fields">
+    <div class="pickup-note">
+      <strong>{% trans "Самовывоз" %}</strong> — {% trans "Зугдиди, наш офлайн-магазин. Точный адрес и время подтверждаются после оформления." %}
+    </div>
+  </div>
+{% endif %}

@@ -1,9 +1,23 @@
 {% extends "base.html" %}
-{% block title %}Заказ оформлен{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Заказ оформлен" %}{% endblock %}
 {% block content %}
-  <h1>Спасибо! Заказ №{{ order.id }} оформлен</h1>
-  <p>Мы отправили подтверждение на {{ order.email }}. Статус заказа сейчас: <b>{{ order.get_status_display }}</b>.</p>
-  <p><a class="btn" href="/pay/{{ order.id }}/">Оплатить сейчас</a></p>
-  <p><a class="btn" href="/orders/{{ order.id }}/track/">Отслеживать заказ</a></p>
-  <p><a class="btn secondary" href="/catalog/">Вернуться к покупкам</a></p>
+  <div class="card success-card">
+    <div class="success-icon" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1 style="margin:0 0 6px;">{% trans "Спасибо! Заказ оформлен" %}</h1>
+    <p class="muted" style="margin:0 0 10px;">{% trans "Мы отправили подтверждение на вашу почту." %}</p>
+
+    <div class="btn-row">
+      <a class="btn" href="/pay/{{ order.id }}/">Оплатить сейчас</a>
+      <a class="btn" href="{% url 'users:account_hub' %}?tab=orders">{% trans "Мои заказы" %}</a>
+      <a class="btn secondary" href="{% url 'catalog:product_list' %}">{% trans "Вернуться в каталог" %}</a>
+      <a class="btn secondary" href="/">{% trans "На главную" %}</a>
+    </div>
+  </div>
 {% endblock %}
+

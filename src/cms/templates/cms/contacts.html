@@ -6,10 +6,10 @@
 
   <div class="grid-2">
     <div class="card">
-      <p><b>{% trans "Офлайн-магазин" %}:</b> {% trans "Зугдиди, Грузия" %}</p>
-      <p><b>{% trans "Телефон/WhatsApp" %}:</b> +995 5xx xxx xxx</p>
-      <p><b>{% trans "Время работы" %}:</b> {% trans "Пн–Сб 10:00–19:00" %}</p>
-      <p><b>Email:</b> info@example.com</p>
+      <p><b>{% trans "Офлайн-магазин" %}:</b> {% trans "რუსთაველის #92, Zugdidi, Georgia" %}</p>
+      <p><b>{% trans "Телефон/WhatsApp" %}:</b> +995 592 27 27 28</p>
+      <p><b>{% trans "Время работы" %}:</b> {% trans "Пн–Сб 10:00–18:00" %}</p>
+      <p><b>Email:</b> izugdidi@gmail.com</p>
     </div>
     <div class="card">
       <div id="map" style="height:420px;border-radius:12px;overflow:hidden;"></div>
@@ -30,7 +30,7 @@
         attribution: '&copy; OpenStreetMap'
       }).addTo(map);
       var marker = L.marker([42.5088, 41.8709]).addTo(map);
-      marker.bindPopup("iZugdidi — {% trans 'Магазин поддержанных iPhone' %}").openPopup();
+      marker.bindPopup("iZugdidi — {% trans 'Магазин Apple техники' %}").openPopup();
     })();
   </script>
 {% endblock %}
