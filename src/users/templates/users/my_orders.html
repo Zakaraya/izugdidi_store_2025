@@ -3,26 +3,48 @@
 {% block content %}
   <h1>Мои заказы</h1>
   {% if orders %}
-<div class="table-wrap">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>ID</th><th>Статус</th><th>Сумма</th><th>Создан</th><th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for o in orders %}
-          <tr>
-            <td>#{{ o.id }}</td>
-            <td>{{ o.get_status_display }}</td>
-            <td>{{ o.total }} {{ o.currency }}</td>
-            <td>{{ o.created_at }}</td>
-            <td><a class="btn secondary" href="/orders/{{ o.id }}/track/">Открыть</a></td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+{# ДЕСКТОП: таблица #}
+<div class="orders-table">
+  <table class="table orders">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>{% trans "Статус" %}</th>
+        <th>{% trans "Сумма" %}</th>
+        <th>{% trans "Создан" %}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for o in orders %}
+      <tr>
+        <td>#{{ o.id }}</td>
+        <td>{{ o.get_status_display }}</td>
+        <td>{{ o.total }} {{ o.currency }}</td>
+        <td>{{ o.created_at|date:"Y-m-d H:i" }}</td>
+        <td><a class="btn tiny" href="{% url 'orders:track' o.id %}">{% trans "Открыть" %}</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
 </div>
+
+{# МОБИЛА: карточки #}
+<div class="orders-cards">
+  {% for o in orders %}
+    <div class="order-card">
+      <div class="row"><span class="label">ID</span><span class="value">#{{ o.id }}</span></div>
+      <div class="row"><span class="label">{% trans "Статус" %}</span><span class="value">{{ o.get_status_display }}</span></div>
+      <div class="row"><span class="label">{% trans "Сумма" %}</span><span class="value">{{ o.total }} {{ o.currency }}</span></div>
+      <div class="row"><span class="label">{% trans "Создан" %}</span><span class="value">{{ o.created_at|date:"Y-m-d H:i" }}</span></div>
+      <div class="actions">
+        <a class="btn tiny" href="{% url 'orders:track' o.id %}">{% trans "Открыть" %}</a>
+        <a class="btn secondary tiny" href="{% url 'orders:success' o.id %}">{% trans "Квитанция" %}</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
   {% else %}
     <p>У вас пока нет заказов.</p>
   {% endif %}

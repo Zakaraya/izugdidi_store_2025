@@ -1,27 +1,64 @@
 {% load i18n %}
-<div class="table-wrap">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>{% trans "Статус" %}</th>
-        <th>{% trans "Сумма" %}</th>
-        <th>{% trans "Создан" %}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for o in orders %}
+
+<!-- ВЕРСИЯ ДЛЯ ДЕСКТОПА: ТАБЛИЦА -->
+<div class="orders-table">
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
         <tr>
-          <td>#{{ o.id }}</td>
-          <td>{{ o.get_status_display }}</td>
-          <td>{{ o.total }} {{ o.currency }}</td>
-          <td>{{ o.created_at }}</td>
-          <td><a class="btn secondary" href="/orders/{{ o.id }}/track/">{% trans "Открыть" %}</a></td>
+          <th>ID</th>
+          <th>{% trans "Статус" %}</th>
+          <th>{% trans "Сумма" %}</th>
+          <th>{% trans "Дата" %}</th>
+          <th></th>
         </tr>
-      {% empty %}
-        <tr><td colspan="5" class="muted">{% trans "Пока нет заказов." %}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for o in orders %}
+          <tr>
+            <td>#{{ o.id }}</td>
+            <td><span class="order-badge">{{ o.get_status_display }}</span></td>
+            <td class="price">{{ o.total }} {{ o.currency }}</td>
+            <td>{{ o.created_at|date:"d.m.Y H:i" }}</td>
+            <td style="text-align: right;">
+              <a class="btn secondary" style="padding: 8px 16px;" href="/orders/{{ o.id }}/track/">{% trans "Подробнее" %}</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5" style="text-align: center; padding: 32px;">{% trans "Пока нет заказов." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ВЕРСИЯ ДЛЯ МОБИЛЬНЫХ: КАРТОЧКИ -->
+<div class="orders-cards">
+  {% for o in orders %}
+    <div class="order-card">
+      <div class="row">
+        <span class="label">Заказ #{{ o.id }}</span>
+        <span class="value price">{{ o.total }} {{ o.currency }}</span>
+      </div>
+      <div class="row">
+        <span class="label">{% trans "Дата" %}</span>
+        <span class="value">{{ o.created_at|date:"d.m.Y H:i" }}</span>
+      </div>
+      <div class="row">
+        <span class="label">{% trans "Статус" %}</span>
+        <span class="value"><span class="order-badge">{{ o.get_status_display }}</span></span>
+      </div>
+      <div class="actions">
+        <a class="btn secondary" style="width: 100%;" href="/orders/{{ o.id }}/track/">{% trans "Подробнее о заказе" %}</a>
+      </div>
+    </div>
+  {% empty %}
+    <div class="empty-state">
+      <div class="empty-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+      <h2 style="margin:0 0 6px;">{% trans "У вас еще нет заказов" %}</h2>
+      <p style="color: var(--text-secondary);">{% trans "Все ваши будущие покупки появятся здесь." %}</p>
+    </div>
+  {% endfor %}
 </div>

@@ -72,6 +72,6 @@ def product_detail(request, base_slug):
         base_slug=base_slug, is_published=True
     )
     related = Product.objects.filter(
-        brand=product.brand, category=product.category, is_published=True
+        brand=product.brand, category=product.category, is_published=True, in_stock__gt=0
     ).exclude(id=product.id).order_by("-created_at")[:8]
     return render(request, "catalog/product_detail.html", {"product": product, "related": related})

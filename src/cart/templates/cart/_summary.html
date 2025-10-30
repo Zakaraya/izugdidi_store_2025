@@ -1,0 +1,9 @@
+{% load i18n %}
+<div id="cart-summary">
+  <p style="text-align:right;font-size:18px;">
+    {% trans "Итого" %}: <span class="price">{{ total }} GEL</span>
+  </p>
+  <p style="text-align:right;">
+    <a class="btn" href="/checkout/">{% trans "Оформить заказ" %}</a>
+  </p>
+</div>

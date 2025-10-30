@@ -851,6 +851,34 @@ input[type="checkbox"] {
 .order-line.active{background:#16a34a}
 .order-badge{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:600}
 
+.steps{ display:flex; gap:8px; margin-top:8px; counter-reset:step }
+.steps-mobile{ display:none }
+.step{
+  flex:1; position:relative; padding:10px 12px;
+  border:1px solid var(--line); border-radius:10px;
+  background:#f5f7fb; color:#6b7280; text-align:center; font-weight:600
+}
+.step.done{ background:#ecfdf5; border-color:#10b981; color:#065f46 }
+.step::before{
+  counter-increment:step; content:counter(step);
+  position:absolute; left:8px; top:8px; font-weight:700; opacity:.5
+}
+@media (max-width: 800px){
+  .steps{ display:none }
+  .steps-mobile{ display:grid; gap:8px; margin-top:8px }
+  .steps-mobile .mstep{
+    display:flex; align-items:center; gap:10px;
+    border:1px solid var(--line); border-radius:10px; padding:10px 12px;
+    background:#f5f7fb; color:#6b7280;
+  }
+  .steps-mobile .dot{
+    width:14px; height:14px; border-radius:50%;
+    border:2px solid #9ca3af; background:#e5e7eb; flex:0 0 auto;
+  }
+  .steps-mobile .mstep.done{ background:#ecfdf5; color:#065f46; border-color:#10b981 }
+  .steps-mobile .mstep.done .dot{ border-color:#10b981; background:#10b981 }
+}
+
 /* Бургер */
 .burger{display:none;background:transparent;border:0;width:40px;height:40px;border-radius:10px;align-items:center;justify-content:center;z-index:1001}
 .burger span{display:block;width:22px;height:2px;background:var(--text);margin:4px 0;border-radius:2px}
@@ -917,3 +945,35 @@ input[type="checkbox"] {
   display:flex; align-items:center; justify-content:center;
 }
 .empty-state .btn{ margin-top:6px }
+
+
+.qty-input{
+  width:84px; padding:8px 10px; border:1px solid var(--line);
+  border-radius:10px; text-align:center;
+}
+.qty-input:focus{ outline:2px solid rgba(59,130,246,.35); outline-offset:2px; border-color:transparent }
+
+
+/* Desktop: таблица; Mobile: карточки */
+.orders-table{ display:block }
+.orders-cards{ display:none }
+
+@media (max-width: 800px){
+  .orders-table{ display:none }
+  .orders-cards{ display:grid; gap:10px; }
+}
+
+.order-card{
+  border:1px solid var(--line); border-radius:12px; background:#fff; padding:12px;
+  display:grid; gap:6px;
+}
+.order-card .row{ display:flex; justify-content:space-between; gap:8px; }
+.order-card .label{ color:#6b7280 }
+.order-card .value{ font-weight:600 }
+.order-card .actions{ display:flex; gap:8px; margin-top:6px; }
+
+.cart-badge{
+  position:absolute; top:-4px; right:-4px; min-width:18px; height:18px;
+  padding:0 5px; border-radius:9px; background:#ef4444; color:#fff;
+  font-size:12px; line-height:18px; text-align:center; font-weight:700;
+}

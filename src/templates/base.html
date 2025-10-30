@@ -37,24 +37,24 @@
             <path d="M4 20c2-4 6-6 8-6s6 2 8 6" stroke="currentColor" stroke-width="2" fill="none"/>
           </svg>
         </a>
-        <form action="{% url 'logout' %}" method="post" style="display:inline;">
-          {% csrf_token %}
-          <button type="submit" title="{% trans 'Выйти' %}" class="icon-link" aria-label="{% trans 'Выйти' %}" style="background:none;border:none;padding:0;cursor:pointer;">
-            <svg class="icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none">
-              <path d="M14 12H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M11 9l-3 3 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M18 4h-6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </button>
-        </form>
+    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+      {% csrf_token %}
+      <button type="submit" title="{% trans 'Выйти' %}" class="icon-link" aria-label="{% trans 'Выйти' %}" style="background:none;border:none;padding:0;cursor:pointer;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"></path>
+            <path d="M17 16l4-4-4-4"></path>
+            <path d="M21 12H9"></path>
+        </svg>
+      </button>
+    </form>
       {% else %}
-        <a title="{% trans 'Войти' %}" href="{% url 'login' %}" class="icon-link" aria-label="{% trans 'Войти' %}">
-          <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M10 12h8" stroke="currentColor" stroke-width="2"/>
-            <path d="M13 9l3 3-3 3" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M6 4h6a2 2 0 0 1 2 2v3" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
-        </a>
+    <a title="{% trans 'Войти' %}" href="{% url 'login' %}" class="icon-link" aria-label="{% trans 'Войти' %}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+        <polyline points="10 17 15 12 10 7"></polyline>
+        <line x1="15" y1="12" x2="3" y2="12"></line>
+      </svg>
+    </a>
         <a href="{% url 'users:signup' %}" class="nav-link-text">{% trans "Регистрация" %}</a>
       {% endif %}
 
@@ -115,6 +115,16 @@
     });
   })();
 </script>
+  <script>
+  function getCookie(name){
+    const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return m ? m.pop() : '';
+  }
+  document.addEventListener('htmx:configRequest', function (e) {
+    e.detail.headers['X-CSRFToken'] = getCookie('csrftoken');
+  });
+</script>
+
 
   </body>
 </html>

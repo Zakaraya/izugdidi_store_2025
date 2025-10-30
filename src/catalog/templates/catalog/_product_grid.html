@@ -2,34 +2,47 @@
 <div id="product-grid">
   <div class="product-grid">
     {% for p in page_obj.object_list %}
-      <div class="product-card hvr">
+      <div class="product-card">
         <a href="{% url 'catalog:product_detail' p.base_slug %}" class="product-link">
-          {% with img=p.images.first %}
           <div class="img-frame">
-            {% if img %}<img src="{{ img.file.url }}" alt="" class="product-img">{% endif %}
+            {% with img=p.images.first %}
+              {% if img %}
+                <img src="{{ img.file.url }}" alt="{{ p.translations.title|default:p }}" class="product-img">
+              {% endif %}
+            {% endwith %}
           </div>
-        {% endwith %}
           <div class="pad">
             <div class="badge">{% trans "Сост." %} {{ p.condition }}</div>
             <div class="product-title">{{ p.translations.title|default:p }}</div>
-            <div class="price">{{ p.price }} {{ p.currency }}</div>
+            <div class="price" style="margin-top: auto; padding-top: 8px;">{{ p.price }} {{ p.currency }}</div>
           </div>
         </a>
-        <!-- ФОРМА должна быть вне <a> (валидная разметка) -->
-        <form hx-post="{% url 'cart:add' %}"
-              hx-target="#toast"
-              hx-swap="none"
-              style="margin:8px 12px 12px;">
-          {% csrf_token %}
-          <input type="hidden" name="product_id" value="{{ p.id }}">
-          <button class="btn" type="submit">{% trans "В корзину" %}</button>
-        </form>
+        <div style="padding: 0 20px 20px;">
+          <form hx-post="{% url 'cart:add' %}"
+                hx-target="#toast"
+                hx-swap="none">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ p.id }}">
+            <button class="btn secondary" type="submit" style="width: 100%;">{% trans "В корзину" %}</button>
+          </form>
+        </div>
       </div>
     {% empty %}
-      <p>{% trans "Товары не найдены." %}</p>
-    {% endfor %}
+  </div><!-- Закрываем .product-grid перед empty-state -->
+  <div class="empty-state" style="margin-top: 32px;">
+      <div class="empty-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </div>
+      <h2 style="margin:0 0 6px;">{% trans "Товары не найдены" %}</h2>
+      <p style="color: var(--text-secondary); margin:0 0 16px;">{% trans "Попробуйте изменить параметры фильтра или сбросить их." %}</p>
+      <a class="btn secondary" href="{% url 'catalog:product_list' %}">{% trans "Сбросить фильтры" %}</a>
   </div>
+    {% endfor %}
+  {% if page_obj.object_list %}
+  </div><!-- Закрываем .product-grid только если есть товары -->
+  {% endif %}
 
+  {% if page_obj.paginator.num_pages > 1 %}
   <nav class="pager">
     {% if page_obj.has_previous %}
       <a class="btn secondary"
@@ -43,4 +56,5 @@
          hx-target="#product-grid" hx-swap="outerHTML">{% trans "Вперёд" %}</a>
     {% endif %}
   </nav>
+  {% endif %}
 </div>

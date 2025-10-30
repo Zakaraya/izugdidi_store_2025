@@ -1,0 +1,10 @@
+{% load i18n %}
+<table class="table"><tbody>
+  <tr><td>
+    <div class="empty-state">
+      <div class="empty-icon" aria-hidden="true">🛒</div>
+      <h2>{% trans "Корзина пуста" %}</h2>
+      <a class="btn" href="{% url 'catalog:product_list' %}">{% trans "Перейти в каталог" %}</a>
+    </div>
+  </td></tr>
+</tbody></table>

@@ -4,73 +4,86 @@
 {% block title %}{{ product.title|default:product }}{% endblock %}
 
 {% block content %}
-  <p><a href="/catalog/" class="btn secondary">← {% trans "Каталог" %}</a></p>
+<div class="container">
+  <p style="margin-bottom: 24px;"><a href="{% url 'catalog:product_list' %}" class="btn secondary" style="width: auto; padding: 8px 16px;">← {% trans "Назад в каталог" %}</a></p>
 
-  <div class="grid" style="grid-template-columns: 1.2fr 1fr;">
+  {# Обертка для мобильной адаптации #}
+  <div class="product-detail grid-2" style="align-items: flex-start;">
+
+    <!-- Левая колонка: Галерея -->
     <div class="gallery" id="gallery">
       <div class="main">
         <div class="main img-frame">
           {% with first=product.images.all.0 %}
             {% if first %}
-              <img id="mainImage" src="{{ first.file.url }}" alt="{{ first.alt|default:product }}" class="product-img">
+              <img id="mainImage" src="{{ first.file.url }}" alt="{{ first.alt|default:product }}" class="photo-shadow">
             {% else %}
-              {% trans "No image" as no_image %}
-              {% trans "No photo" as no_photo %}
-              <img
-                id="mainImage"
-                src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='900'><rect fill='%23fff' width='100%' height='100%'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='32' fill='%23999'>{{ no_image|urlencode }}</text></svg>"
-                alt="{{ no_photo }}"
-                class="product-img">
+              <div style="aspect-ratio: 4/3; background: #f5f5f7; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+                {% trans "Нет изображения" %}
+              </div>
             {% endif %}
           {% endwith %}
         </div>
       </div>
+      {% if product.images.all|length > 1 %}
       <div class="thumbs" id="thumbs">
         {% for img in product.images.all %}
           <img src="{{ img.file.url }}" alt="{{ img.alt|default:product }}" data-src="{{ img.file.url }}"{% if forloop.first %} class="active"{% endif %}>
         {% endfor %}
       </div>
+      {% endif %}
     </div>
 
-    <div>
-      <h1>{{ product.title|default:product }}</h1>
-      <div class="badge">{% trans "Сост." %} {{ product.condition }}</div>
+    <!-- Правая колонка: Информация о товаре -->
+    <div class="card" style="padding: 24px;">
+      {# Этот класс pd-title нужен для reorder на мобилке #}
+      <h1 class="pd-title" style="font-size: clamp(24px, 4vw, 32px); line-height: 1.2; margin-bottom: 12px;">{{ product.title|default:product }}</h1>
 
-      {% blocktrans with gb=product.storage_gb color=product.color %}
-        {{ gb }} GB · {{ color }}
-      {% endblocktrans %}
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px;">
+        <div class="badge">{% trans "Сост." %} {{ product.condition }}</div>
+        <span style="color: var(--text-secondary); font-size: 15px;">
+        {% blocktrans with gb=product.storage_gb color=product.color %}
+          {{ gb }} GB · {{ color }}
+        {% endblocktrans %}
+        </span>
+      </div>
 
-      <p class="price">{{ product.price }} {{ product.currency }}</p>
-      {% if product.old_price %}<p><s>{{ product.old_price }} {{ product.currency }}</s></p>{% endif %}
-      <div style="margin:12px 0;">{{ product.description|default:"" }}</div>
+      <div style="margin-bottom: 24px;">
+        <span class="price" style="font-size: 36px;">{{ product.price }} {{ product.currency }}</span>
+        {% if product.old_price %}<s style="margin-left: 12px; font-size: 20px; color: var(--text-secondary);">{{ product.old_price }} {{ product.currency }}</s>{% endif %}
+      </div>
+
+      <div style="margin-bottom: 24px; color: var(--text-secondary); line-height: 1.6;">{{ product.description|default:""|linebreaks }}</div>
 
       <form action="/cart/add/" method="post">
         {% csrf_token %}
         <input type="hidden" name="product_id" value="{{ product.id }}">
-        <button class="btn" type="submit">{% trans "В корзину" %}</button>
+        <button class="btn" type="submit" style="width: 100%;">{% trans "Добавить в корзину" %}</button>
       </form>
     </div>
   </div>
 
   {% if related %}
-    <h2 style="margin-top:24px;">{% trans "Похожие" %}</h2>
-    <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+    <h2 class="section-title" style="margin-top: 80px;">{% trans "Похожие товары" %}</h2>
+    <div class="product-grid">
       {% for p in related %}
-        <div class="card">
-          <a href="/p/{{ p.base_slug }}/" style="text-decoration:none;color:inherit;">
+        <div class="product-card">
+          <a href="{% url 'catalog:product_detail' p.base_slug %}" class="product-link">
             <div class="img-frame">
               {% with img=p.images.first %}
-                {% if img %}<img src="{{ img.file.url }}" class="product-img" alt="">{% endif %}
+                {% if img %}<img src="{{ img.file.url }}" class="product-img" alt="{{ p.translations.title|default:p }}">{% endif %}
               {% endwith %}
             </div>
-            <div style="margin-top:8px;">{{ p.title|default:p }}</div>
-            <div class="price">{{ p.price }} {{ p.currency }}</div>
+            <div class="pad">
+              <div class="product-title">{{ p.title|default:p }}</div>
+              <div class="price" style="margin-top: 8px;">{{ p.price }} {{ p.currency }}</div>
+            </div>
           </a>
         </div>
       {% endfor %}
     </div>
   {% endif %}
-
+</div>
   <script>
     (function(){
       var thumbs = document.getElementById('thumbs');

@@ -1,160 +1,131 @@
 {% extends "base.html" %}
 {% load i18n %}
-
+{% load cart_extras %}
 {% block title %}{% trans "Оформление заказа" %}{% endblock %}
 
 {% block content %}
-  <h1>{% trans "Оформление заказа" %}</h1>
+<div class="container">
+  <h1 class="section-title">{% trans "Оформление заказа" %}</h1>
 
   {% if messages %}
-    <ul>
-      {% for m in messages %}<li>{{ m }}</li>{% endfor %}
-    </ul>
+    <div class="auth-alert" style="margin-bottom: 24px;">
+      {% for m in messages %}{{ m }}{% endfor %}
+    </div>
   {% endif %}
 
   {% if items %}
-    <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 16px;">
-      <div>
-        <form id="checkout-form" method="post" action="">
-          {% csrf_token %}
+    <form id="checkout-form" method="post" action="">
+      {% csrf_token %}
+      <div class="checkout-grid" style="align-items: flex-start;">
 
+        <!-- Левая колонка: Форма -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+
+          <!-- Блок 1: Контакты -->
           <div class="card">
-            <h3>{% trans "Контакты и адрес" %}</h3>
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-              <div>
-                <label>{% trans "Имя и фамилия" %}</label><br>
-                {{ form.customer_name }}
+            <h3>{% trans "1. Ваши контакты" %}</h3>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="grid-2">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label for="{{ form.customer_name.id_for_label }}">{% trans "Имя и фамилия" %}</label>
+                  {{ form.customer_name }}
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label for="{{ form.phone.id_for_label }}">{% trans "Телефон" %}</label>
+                  {{ form.phone }}
+                </div>
               </div>
-              <div>
-                <label>{% trans "Телефон" %}</label><br>
-                {{ form.phone }}
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
               </div>
-            </div>
-
-            <div style="margin-top:10px;">
-              <label>{% trans "Email" %}</label><br>
-              {{ form.email }}
-            </div>
-
-            <hr style="border:none;border-top:1px solid var(--line);margin:12px 0;">
-
-            <div>
-              <label>{% trans "Способ получения" %}</label><br>
-              {% if form.delivery_method %}
-                {{ form.delivery_method }}
-              {% else %}
-                <select name="delivery_method" class="input">
-                  <option value="pickup">{% trans "Самовывоз" %}</option>
-                  <option value="address">{% trans "Доставка по адресу" %}</option>
-                </select>
-              {% endif %}
-            </div>
-
-            <div id="shipping_block" style="margin-top:10px;">
-              <label>{% trans "Адрес доставки" %}</label><br>
-              {% if form.shipping_address %}
-                {{ form.shipping_address }}
-              {% else %}
-                <textarea name="shipping_address" class="input" rows="3" placeholder="{% trans 'Город, улица, дом, квартира/офис' %}"></textarea>
-              {% endif %}
-            </div>
-
-            <div style="margin-top:10px;">
-              {% if form.billing_same %}
-                <label>{{ form.billing_same }} {{ form.billing_same.label }}</label>
-              {% else %}
-                <label><input type="checkbox" name="billing_same" checked> {% trans "Платёжный адрес совпадает с адресом доставки" %}</label>
-              {% endif %}
-            </div>
-
-            <div id="billing_block" style="{% if form.billing_same and form.billing_same.value %}display:none{% endif %};margin-top:10px;">
-              <label>{% trans "Платёжный адрес" %}</label><br>
-              {% if form.billing_address %}
-                {{ form.billing_address }}
-              {% else %}
-                <textarea name="billing_address" class="input" rows="3" placeholder="{% trans 'Город, улица, дом, квартира/офис' %}"></textarea>
-              {% endif %}
             </div>
           </div>
 
-          <div class="card" style="margin-top:12px;">
-            <h3>{% trans "Промокод" %}</h3>
-            <div>
-              {% if form.promo_code %}
-                {{ form.promo_code }}
-              {% else %}
-                <input class="input" type="text" name="promo_code" placeholder="{% trans 'Промокод' %}">
-              {% endif %}
-                <button class="btn secondary" type="submit" name="action" value="apply" style="margin-top:8px;width:100%;">{% trans "Применить" %}</button>
-            </div>
+          <!-- Блок 2: Доставка -->
+          <div class="card">
+            <h3>{% trans "2. Способ получения" %}</h3>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="{{ form.delivery_method.id_for_label }}">{% trans "Способ получения" %}</label>
+                {# Этот select теперь управляет загрузкой полей адреса через HTMX #}
+                <select name="delivery_method" id="{{ form.delivery_method.id_for_label }}" class="input"
+                        hx-get="{% url 'orders:checkout_address_fields' %}"  {# <--- ИЗМЕНЕНИЕ ЗДЕСЬ #}
+                        hx-trigger="change"
+                        hx-target="#address-fields-wrapper"
+                        hx-swap="innerHTML">
+                    <option value="pickup"{% if form.delivery_method.value == 'pickup' %} selected{% endif %}>{% trans "Самовывоз" %}</option>
+                    <option value="address"{% if form.delivery_method.value == 'address' %} selected{% endif %}>{% trans "Доставка по адресу" %}</option>
+                </select>
+              </div>
 
+              <!-- Поля для адреса будут вставлены сюда с помощью HTMX -->
+              <div id="address-fields-wrapper">
+                  {# Первоначальная загрузка полей адреса #}
+                  {% include "orders/_address_fields.html" with method=form.delivery_method.value|default:'pickup' form=form %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Блок 3: Промокод -->
+          <div class="card">
+            <h3>{% trans "Промокод" %}</h3>
+            <div style="display: flex; gap: 8px;">
+                <div style="flex: 1;">
+                    {{ form.promo_code }}
+                </div>
+                <button class="btn secondary" type="submit" name="action" value="apply">{% trans "Применить" %}</button>
+            </div>
             {% if applied_code %}
-              <p style="font-size:12px;color:#666;margin-top:6px;">{% trans "Применён" %}: <b>{{ applied_code }}</b></p>
+              <p style="font-size: 13px; color: var(--success); margin-top: 8px;">{% trans "Применён" %}: <b>{{ applied_code }}</b></p>
             {% endif %}
           </div>
-        </form>
-      </div>
-
-      <div>
-        <div class="card">
-          <h3>{% trans "Ваш заказ" %}</h3>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>{% trans "Товар" %}</th>
-                <th>{% trans "Кол-во" %}</th>
-                <th>{% trans "Цена" %}</th>
-                <th>{% trans "Сумма" %}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for it in items %}
-              <tr>
-                <td><a href="/p/{{ it.product.base_slug }}/">{{ it.product.translations.title|default:it.product }}</a></td>
-                <td>{{ it.qty }}</td>
-                <td>{{ it.unit_price_snapshot }} {{ it.product.currency }}</td>
-                <td>{{ it.unit_price_snapshot|floatformat:2 }} × {{ it.qty }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          <div style="text-align:right;">
-            <p>{% trans "Подытог" %}: <b>{{ subtotal }} GEL</b></p>
-            <p>{% trans "Доставка" %}: <b>{{ shipping_total }} GEL</b></p>
-            <p>{% trans "Скидка" %}{% if applied_code %} ({{ applied_code }}){% endif %}: <b>-{{ discount_total }} GEL</b></p>
-            <p style="font-size:18px;">{% trans "Итого к оплате" %}: <span class="price">{{ total }} GEL</span></p>
-          </div>
         </div>
-        <button class="btn" type="submit" form="checkout-form" name="action" value="place" style="margin-top:8px;width:100%;">
-          {% trans "Оформить заказ" %}
-        </button>
+
+        <!-- Правая колонка: Состав заказа -->
+        <div style="position: sticky; top: 80px; display: flex; flex-direction: column; gap: 16px;">
+          <div class="card">
+            <h3 style="margin-bottom: 16px;">{% trans "Ваш заказ" %}</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              {% for it in items %}
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                <span style="font-size: 14px; line-height: 1.4;">{{ it.product.translations.title|default:it.product }} (×{{ it.qty }})</span>
+                <span style="font-weight: 600; white-space: nowrap;">{{ it.unit_price_snapshot|mul:it.qty }} {{ it.product.currency }}</span>
+              </div>
+              {% endfor %}
+            </div>
+
+            <hr style="border: none; border-top: 1px solid var(--border); margin: 16px 0;">
+            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px;">
+              <div style="display: flex; justify-content: space-between;"><span>{% trans "Подытог" %}:</span> <b>{{ subtotal }} GEL</b></div>
+              <div style="display: flex; justify-content: space-between;"><span>{% trans "Доставка" %}:</span> <b>{{ shipping_total }} GEL</b></div>
+              {% if discount_total > 0 %}
+              <div style="display: flex; justify-content: space-between; color: var(--success);">
+                <span>{% trans "Скидка" %}{% if applied_code %} ({{ applied_code }}){% endif %}:</span>
+                <b>-{{ discount_total }} GEL</b>
+              </div>
+              {% endif %}
+            </div>
+            <hr style="border: none; border-top: 1px solid var(--border); margin: 16px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 18px;">
+              <b>{% trans "Итого к оплате" %}:</b>
+              <span class="price">{{ total }} GEL</span>
+            </div>
+          </div>
+
+          <button class="btn" type="submit" form="checkout-form" name="action" value="place" style="width:100%;">
+            {% trans "Подтвердить и оплатить" %}
+          </button>
+        </div>
       </div>
-    </div>
+    </form>
 
-    <script>
-      (function(){
-        const delivery = document.querySelector('select[name="delivery_method"]') || document.getElementById('{{ form.delivery_method.id_for_label|default:"" }}');
-        const shippingBlock = document.getElementById('shipping_block');
-        const billingSame = document.querySelector('input[name="billing_same"]');
-        const billingBlock = document.getElementById('billing_block');
-
-        function toggleShipping(){
-          if(!delivery || !shippingBlock) return;
-          const v = (delivery.value || '').toLowerCase();
-          shippingBlock.style.display = (v === 'address') ? '' : 'none';
-        }
-
-        function toggleBilling(){
-          if(!billingSame || !billingBlock) return;
-          billingBlock.style.display = billingSame.checked ? 'none' : '';
-        }
-
-        if(delivery){ delivery.addEventListener('change', toggleShipping); toggleShipping(); }
-        if(billingSame){ billingSame.addEventListener('change', toggleBilling); toggleBilling(); }
-      })();
-    </script>
   {% else %}
-    <p>{% trans "Корзина пуста." %} <a class="btn" href="/catalog/">{% trans "Перейти в каталог" %}</a></p>
+    <div class="empty-state">
+      <h2 style="margin:0 0 6px;">{% trans "Ваша корзина пуста" %}</h2>
+      <p style="color: var(--text-secondary); margin:0 0 16px;">{% trans "Вы не можете оформить заказ, пока не добавите товары." %}</p>
+      <a class="btn secondary" href="{% url 'catalog:product_list' %}">{% trans "Перейти в каталог" %}</a>
+    </div>
   {% endif %}
+</div>
 {% endblock %}

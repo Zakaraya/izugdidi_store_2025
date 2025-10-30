@@ -1,0 +1,29 @@
+{% load i18n cart_extras %}
+{# Этот id важен для HTMX, чтобы найти и заменить именно эту строку #}
+<tr id="row-{{ it.id }}" hx-swap-oob="true">
+  <td style="width: 80px; padding-right: 0;">
+    {% if it.product.image %}
+      <img src="{{ it.product.image.url }}" alt="" style="width: 64px; height: 64px; object-fit: cover; border-radius: 8px;">
+    {% endif %}
+  </td>
+  <td>
+    <a href="/p/{{ it.product.base_slug }}/">{{ it.product.translations.title|default:it.product }}</a>
+  </td>
+  <td>{{ it.unit_price_snapshot|money }} {{ it.product.currency }}</td>
+  <td>
+    <input type="number" min="1" class="qty-input"
+           name="qty" value="{{ it.qty }}"
+           hx-post="{% url 'cart:update_item' %}"
+           hx-vals='{"item_id":"{{ it.id }}"}'
+           hx-trigger="change, keyup delay:400ms"
+           hx-target="closest tr"
+           hx-swap="outerHTML">
+  </td>
+  <td><b class="price">{{ it.unit_price_snapshot|mul:it.qty }} {{ it.product.currency }}</b></td>
+  <td>
+    <form action="/cart/remove/{{ it.id }}/" method="post">
+      {% csrf_token %}
+      <button class="btn secondary" type="submit" style="padding: 8px 16px;">{% trans "Удалить" %}</button>
+    </form>
+  </td>
+</tr>

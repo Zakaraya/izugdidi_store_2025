@@ -9,6 +9,7 @@ from cart.utils import get_or_create_cart
 from .forms import CheckoutForm
 from .models import Coupon, Order, OrderItem
 from .tasks import send_order_placed_email
+from django.contrib.auth.decorators import login_required
 
 def _calc_discount(subtotal: Decimal, coupon: Coupon) -> Decimal:
     if not coupon:
@@ -195,6 +196,7 @@ def checkout(request):
         "applied_code": request.session.get("applied_coupon_code", "") or "",
     })
 
+@login_required
 def order_track(request, pk: int):
     order = get_object_or_404(Order, pk=pk)
     flow = ["pending", "paid", "processing", "shipped", "delivered"]

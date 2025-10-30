@@ -4,6 +4,7 @@
 {% block title %}{% trans "Личный кабинет" %}{% endblock %}
 
 {% block content %}
+<div class="container">
   <h1 class="section-title">{% trans "Личный кабинет" %}</h1>
 
   <div class="tabs">
@@ -15,10 +16,8 @@
        hx-push-url="true">
       {% trans "Мои заказы" %}
     </a>
-      <!--       hx-get="{% url 'users:account_tab_profile' %}"-->
     <a href="{% url 'users:account_hub' %}?tab=profile"
        class="tab{% if active_tab == 'profile' %} active{% endif %}"
-
        hx-get="{% url 'users:account_tab_profile' %}"
        hx-target="#tab-panel"
        hx-swap="innerHTML"
@@ -27,7 +26,9 @@
     </a>
   </div>
 
-  <div id="tab-panel" class="tab-panel">
+  <div id="tab-panel" class="tab-panel" style="padding: 0; border: none; background: transparent;">
+    {# Содержимое вставляется сюда, и у него уже есть свой фон (card или table) #}
     {{ tab_html|safe }}
   </div>
+</div>
 {% endblock %}

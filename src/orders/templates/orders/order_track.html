@@ -4,35 +4,54 @@
 {% block title %}{% blocktrans with id=order.id %}Статус заказа №{{ id }}{% endblocktrans %}{% endblock %}
 
 {% block content %}
-  <h1>{% blocktrans with id=order.id %}Статус заказа №{{ id }}{% endblocktrans %}</h1>
+<div class="container">
+  <h1 class="section-title">{% blocktrans with id=order.id %}Заказ №{{ id }}{% endblocktrans %}</h1>
 
-  <div class="card">
-    <p>{% trans "Текущий статус:" %} <b>{{ order.get_status_display }}</b></p>
-    {% if order.tracking_number %}
-      <p>{% trans "Трек-номер:" %} <b>{{ order.tracking_number }}</b></p>
-    {% else %}
-      <p>{% trans "Трек-номер появится после отправки." %}</p>
-    {% endif %}
-
-    <p>
-      {% blocktrans with total=order.total currency=order.currency discount=order.discount_total shipping=order.shipping_total %}
-        Сумма: {{ total }} {{ currency }} (скидка: {{ discount }}, доставка: {{ shipping }})
-      {% endblocktrans %}
-    </p>
-
-    {% if order.status == 'pending' %}
-      <p><a class="btn" href="/pay/{{ order.id }}/">{% trans "Оплатить" %}</a></p>
+  <div class="card" style="margin-bottom: 32px;">
+    <div class="grid-2">
+      <div>
+        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 4px;">{% trans "Текущий статус" %}</div>
+        <div class="badge">{{ order.get_status_display }}</div>
+      </div>
+      <div>
+        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 4px;">{% trans "Сумма заказа" %}</div>
+        <div class="price" style="font-size: 20px;">{{ order.total }} {{ order.currency }}</div>
+      </div>
+      {% if order.tracking_number %}
+      <div>
+        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 4px;">{% trans "Трек-номер" %}</div>
+        <b>{{ order.tracking_number }}</b>
+      </div>
+      {% endif %}
+    </div>
+     {% if order.status == 'pending' %}
+      <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">
+      <a class="btn" href="/pay/{{ order.id }}/">{% trans "Перейти к оплате" %}</a>
     {% endif %}
   </div>
 
-  <h3 style="margin-top:16px;">{% trans "Этапы" %}</h3>
-  <ol>
-    <li{% if step_pending %} class="badge"{% endif %}>{% trans "Принят" %}</li>
-    <li{% if step_paid %} class="badge"{% endif %}>{% trans "Оплачен" %}</li>
-    <li{% if step_processing %} class="badge"{% endif %}>{% trans "В обработке" %}</li>
-    <li{% if step_shipped %} class="badge"{% endif %}>{% trans "В доставке" %}</li>
-    <li{% if step_delivered %} class="badge"{% endif %}>{% trans "Доставлен" %}</li>
-  </ol>
+  <h3 style="text-align: center; margin-bottom: 24px;">{% trans "Этапы выполнения" %}</h3>
 
-  <p><a class="btn secondary" href="/">{% trans "На главную" %}</a></p>
+  {# Десктоп #}
+  <div class="steps">
+    <div class="step {% if step_pending %}done{% endif %}">{% trans "Принят" %}</div>
+    <div class="step {% if step_paid %}done{% endif %}">{% trans "Оплачен" %}</div>
+    <div class="step {% if step_processing %}done{% endif %}">{% trans "В обработке" %}</div>
+    <div class="step {% if step_shipped %}done{% endif %}">{% trans "В доставке" %}</div>
+    <div class="step {% if step_delivered %}done{% endif %}">{% trans "Доставлен" %}</div>
+  </div>
+
+  {# Мобильная версия #}
+  <div class="steps-mobile">
+    <div class="mstep {% if step_pending %}done{% endif %}"><span class="dot"></span><span>{% trans "Принят" %}</span></div>
+    <div class="mstep {% if step_paid %}done{% endif %}"><span class="dot"></span><span>{% trans "Оплачен" %}</span></div>
+    <div class="mstep {% if step_processing %}done{% endif %}"><span class="dot"></span><span>{% trans "В обработке" %}</span></div>
+    <div class="mstep {% if step_shipped %}done{% endif %}"><span class="dot"></span><span>{% trans "В доставке" %}</span></div>
+    <div class="mstep {% if step_delivered %}done{% endif %}"><span class="dot"></span><span>{% trans "Доставлен" %}</span></div>
+  </div>
+
+  <div style="text-align: center; margin-top: 40px;">
+    <a class="btn secondary" href="{% url 'catalog:product_list' %}">{% trans "Вернуться в каталог" %}</a>
+  </div>
+</div>
 {% endblock %}

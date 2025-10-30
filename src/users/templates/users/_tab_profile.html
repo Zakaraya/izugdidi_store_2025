@@ -1,32 +1,39 @@
 {% load i18n %}
 <div class="card">
   <form method="post"
+        style="display: flex; flex-direction: column; gap: 16px;"
         hx-post="{% url 'users:account_tab_profile' %}"
         hx-target="#tab-panel"
         hx-swap="innerHTML">
     {% csrf_token %}
+
+    {# Группа полей с двумя колонками #}
     <div class="grid-2">
-      <div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
         <label for="id_first_name">{% trans "Имя" %}</label>
         {{ form.first_name }}
       </div>
-      <div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
         <label for="id_last_name">{% trans "Фамилия" %}</label>
         {{ form.last_name }}
       </div>
     </div>
-    <div class="grid-2" style="margin-top:8px;">
-      <div>
+
+    {# Вторая группа полей #}
+    <div class="grid-2">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
         <label for="id_email">Email</label>
         {{ form.email }}
       </div>
-      <div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
         <label for="id_phone">{% trans "Телефон" %}</label>
         {{ form.phone }}
       </div>
     </div>
-    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn" type="submit" hx-disable="true">{% trans "Сохранить" %}</button>
+
+    {# Кнопки действий #}
+    <div style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 24px;">
+      <button class="btn" type="submit" hx-indicator="#spinner">{% trans "Сохранить изменения" %}</button>
       <a class="btn secondary" href="{% url 'password_change' %}">{% trans "Сменить пароль" %}</a>
       <a class="btn secondary" href="{% url 'logout' %}">{% trans "Выйти" %}</a>
     </div>

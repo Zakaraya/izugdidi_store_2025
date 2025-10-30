@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block title %}{% trans "Каталог" %}{% endblock %}
+
 {% block content %}
+<div class="container">
   <h1 class="section-title">{% trans "Каталог" %}{% if category %} — {{ category }}{% endif %}</h1>
 
-    <form method="get" class="filters"
+  <form method="get" class="filters"
         hx-get=""
         hx-target="#product-grid"
         hx-push-url="true"
@@ -48,32 +50,7 @@
       {% endif %}
     </div>
   </form>
-    {% include "catalog/_product_grid.html" %}
 
-<!--  <div class="product-grid">-->
-<!--    {% for p in page_obj.object_list %}-->
-<!--      <div class="product-card hvr">-->
-<!--        <a href="{% url 'catalog:product_detail' p.base_slug %}" class="product-link">-->
-<!--          {% with img=p.images.first %}{% if img %}<img src="{{ img.file.url }}" alt="" class="product-img">{% endif %}{% endwith %}-->
-<!--          <div class="pad">-->
-<!--            <div class="badge">{% trans "Сост." %} {{ p.condition }}</div>-->
-<!--            <div class="product-title">{{ p.translations.title|default:p }}</div>-->
-<!--            <div class="price">{{ p.price }} {{ p.currency }}</div>-->
-<!--          </div>-->
-<!--        </a>-->
-<!--      </div>-->
-<!--    {% empty %}-->
-<!--      <p>{% trans "Товары не найдены." %}</p>-->
-<!--    {% endfor %}-->
-<!--  </div>-->
-
-<!--  <nav class="pager">-->
-<!--    {% if page_obj.has_previous %}-->
-<!--      <a class="btn secondary" href="?page={{ page_obj.previous_page_number }}">{% trans "Назад" %}</a>-->
-<!--    {% endif %}-->
-<!--    <span class="pager-info">{% trans "Стр." %} {{ page_obj.number }} {% trans "из" %} {{ page_obj.paginator.num_pages }}</span>-->
-<!--    {% if page_obj.has_next %}-->
-<!--      <a class="btn secondary" href="?page={{ page_obj.next_page_number }}">{% trans "Вперёд" %}</a>-->
-<!--    {% endif %}-->
-<!--  </nav>-->
+  {% include "catalog/_product_grid.html" %}
+</div>
 {% endblock %}

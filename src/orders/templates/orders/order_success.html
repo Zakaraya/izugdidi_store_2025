@@ -1,23 +1,23 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block title %}{% trans "Заказ оформлен" %}{% endblock %}
+
 {% block content %}
-  <div class="card success-card">
-    <div class="success-icon" aria-hidden="true">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="2" fill="none"/>
-        <path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+<div class="container" style="padding-top: 40px; padding-bottom: 40px;">
+  <div class="empty-state" style="max-width: 600px; margin: auto;">
+    <div class="empty-icon" style="background: var(--success); color: white; border-color: var(--success);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
       </svg>
     </div>
-    <h1 style="margin:0 0 6px;">{% trans "Спасибо! Заказ оформлен" %}</h1>
-    <p class="muted" style="margin:0 0 10px;">{% trans "Мы отправили подтверждение на вашу почту." %}</p>
+    <h1 style="margin:0 0 6px; font-size: 28px;">{% trans "Спасибо! Заказ оформлен" %}</h1>
+    <p style="color: var(--text-secondary); margin:0 0 24px;">{% trans "Мы отправили подтверждение на вашу почту." %}</p>
 
-    <div class="btn-row">
-      <a class="btn" href="/pay/{{ order.id }}/">Оплатить сейчас</a>
-      <a class="btn" href="{% url 'users:account_hub' %}?tab=orders">{% trans "Мои заказы" %}</a>
-      <a class="btn secondary" href="{% url 'catalog:product_list' %}">{% trans "Вернуться в каталог" %}</a>
-      <a class="btn secondary" href="/">{% trans "На главную" %}</a>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;">
+      <a class="btn" href="/pay/{{ order.id }}/">{% trans "Оплатить сейчас" %}</a>
+      <a class="btn secondary" href="{% url 'users:account_hub' %}?tab=orders">{% trans "Мои заказы" %}</a>
     </div>
   </div>
+</div>
 {% endblock %}
-
