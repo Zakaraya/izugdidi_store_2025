@@ -34,8 +34,21 @@ DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 # ALLOWED_HOSTS = ["*"]
 
-ALLOWED_HOSTS = [h.strip() for h in os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") if h.strip()]
-CSRF_TRUSTED_ORIGINS = [f"https://{h}" for h in ALLOWED_HOSTS if h not in ("localhost", "127.0.0.1")]
+# ALLOWED_HOSTS = [h.strip() for h in os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") if h.strip()]
+# CSRF_TRUSTED_ORIGINS = [f"https://{h}" for h in ALLOWED_HOSTS if h not in ("localhost", "127.0.0.1")]
+raw_hosts = os.environ.get("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = [h.strip() for h in raw_hosts if h.strip()]
+CSRF_TRUSTED_ORIGINS = []
+for h in ALLOWED_HOSTS:
+    # пропускаем wildcard и локальные адреса
+    if h == "*" or h in ("localhost", "127.0.0.1"):
+        continue
+    CSRF_TRUSTED_ORIGINS.append(f"https://{h}")
+    CSRF_TRUSTED_ORIGINS.append(f"http://{h}")
+
+# Если не задано явно — разрешим любой Host, чтобы health-check не падал
+if not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
