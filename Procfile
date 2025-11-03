@@ -1,2 +1,2 @@
-release: python manage.py migrate && python manage.py collectstatic --noinput
-web: gunicorn your_project.wsgi:application --bind 0.0.0.0:$PORT
+release: python src/manage.py migrate && python src/manage.py collectstatic --noinput
+web: gunicorn config.wsgi:application --chdir src --bind 0.0.0.0:$PORT

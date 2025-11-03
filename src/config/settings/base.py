@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from django.utils.translation import gettext_lazy as _
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -23,14 +24,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*&6q$th5e7uw8_@t(iun8ayq6q!nm+hl7h42!$ocsfeh+v1nv-'
+# SECRET_KEY = 'django-insecure-*&6q$th5e7uw8_@t(iun8ayq6q!nm+hl7h42!$ocsfeh+v1nv-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 # DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["*"]
 
+ALLOWED_HOSTS = [h.strip() for h in os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") if h.strip()]
+CSRF_TRUSTED_ORIGINS = [f"https://{h}" for h in ALLOWED_HOSTS if h not in ("localhost", "127.0.0.1")]
 
 # Application definition
 
@@ -40,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'storages',
 
     # Third-party
     "rest_framework",
@@ -62,6 +69,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -97,17 +105,23 @@ ASGI_APPLICATION = "config.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+#
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("POSTGRES_DB", "shopdb"),
+#         "USER": os.getenv("POSTGRES_USER", "shopuser"),
+#         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "shopsecret"),
+#         "HOST": os.getenv("POSTGRES_HOST", "db"),
+#         "PORT": int(os.getenv("POSTGRES_PORT", "5432")),
+#         "CONN_MAX_AGE": 60,
+#     }
+# }
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "shopdb"),
-        "USER": os.getenv("POSTGRES_USER", "shopuser"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "shopsecret"),
-        "HOST": os.getenv("POSTGRES_HOST", "db"),
-        "PORT": int(os.getenv("POSTGRES_PORT", "5432")),
-        "CONN_MAX_AGE": 60,
-    }
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
+        conn_max_age=600,
+    )
 }
 
 # Сессии и кэш в Redis
@@ -143,6 +157,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # твоя пользовательская директория со статикой проекта (может быть пустой, но ДОЛЖНА существовать)
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -192,3 +207,12 @@ CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_REDIRECT_URL = "/users/account/orders/"
+
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+AWS_ACCESS_KEY_ID = os.environ.get("SPACES_KEY")
+AWS_SECRET_ACCESS_KEY = os.environ.get("SPACES_SECRET")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("SPACES_BUCKET")
+AWS_S3_ENDPOINT_URL = os.environ.get("SPACES_ENDPOINT")
+AWS_S3_REGION_NAME = os.environ.get("SPACES_REGION", "ams3")
+AWS_DEFAULT_ACL = "public-read"
+AWS_QUERYSTRING_AUTH = False  # чистые ссылки без подписи
