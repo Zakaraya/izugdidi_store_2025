@@ -1,14 +1,19 @@
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from django.shortcuts import redirect, render, get_object_or_404
+from django.utils.translation import gettext
 from django.views.decorators.http import require_POST
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, JsonResponse
 from catalog.models import Product
 from .models import CartItem
 from .utils import get_or_create_cart
 from decimal import Decimal
 from django.views.decorators.http import require_POST
+from django.urls import reverse
+from django.template import engines
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
+from .services import get_cart, _get_or_create_cart_for_request
 
 def cart_detail(request):
     cart = get_or_create_cart(request)
@@ -16,6 +21,10 @@ def cart_detail(request):
     subtotal = sum((i.unit_price_snapshot * i.qty for i in items), Decimal("0.00"))
     ctx = {"cart": cart, "items": items, "subtotal": subtotal}
     return render(request, "cart/cart_detail.html", ctx)
+
+def _render_badge_oob(total_qty: int) -> str:
+    inner = render_to_string("cart/_badge.html", {"qty_total": total_qty})
+    return f'<span id="cart-badge" hx-swap-oob="true">{inner}</span>'
 
 @require_POST
 def cart_add(request):
@@ -30,10 +39,14 @@ def cart_add(request):
     if not created:
         item.qty += qty
         item.save(update_fields=["qty", "updated_at"])
+    _, items, _ = get_cart(request)
+    total_qty = sum(i.qty for i in items)
     if request.headers.get("HX-Request") == "true":
+        oob = _render_badge_oob(total_qty)
         resp = HttpResponseRedirect("/cart/")
         resp["HX-Redirect"] = request.META.get("HTTP_REFERER", "/")
-        resp["X-Toast"] = "Товар добавлен в корзину"
+        resp = HttpResponse(oob, content_type="text/html; charset=utf-8")
+        resp["X-Toast"] = "Product added to cart"
         return resp
     messages.success(request, "Товар добавлен в корзину.")
     return redirect("cart:detail")
@@ -97,42 +110,127 @@ def cart_count_fragment(request):
     html = render_to_string("cart/_cart_count.html", {"qty": qty_total}, request=request)
     return HttpResponse(html)
 
+
 @require_POST
 def update_item(request):
+    cart = get_or_create_cart(request)
     try:
         item_id = int(request.POST.get("item_id", "0"))
-        qty = int(request.POST.get("qty", "1"))
+        qty_str = request.POST.get("qty")
+        qty = int(qty_str) if qty_str and qty_str.isdigit() else 1
+        if qty < 1: qty = 1
+    except (ValueError, TypeError):
+        return HttpResponseBadRequest("Bad request")
+
+    item = get_object_or_404(CartItem, id=item_id, cart=cart)
+
+    if item.product.in_stock < qty:
+        qty = item.product.in_stock
         if qty < 1:
-            qty = 1
-    except ValueError:
-        return HttpResponseBadRequest("Bad qty")
+            item.delete()
+            response = HttpResponse(status=204);
+            response['HX-Redirect'] = request.path_info;
+            return response
 
-    cart = get_or_create_cart(request)
-    it = cart.items.select_related("product").filter(id=item_id).first()
-    if not it:
-        return HttpResponseBadRequest("No item")
+    item.qty = qty
+    item.save(update_fields=["qty"])
 
-    # проверка остатков
-    if it.product.in_stock < qty:
-        qty = it.product.in_stock
+    # Вызываем вашу существующую функцию _recalc
+    _, subtotal, _, _, qty_total = _recalc(cart)
+
+    # Рендерим все 4 фрагмента, которые нужно обновить
+    row_html = render_to_string("cart/_row.html", {"it": item}, request=request)
+    card_html = render_to_string("cart/_card.html", {"it": item}, request=request)
+    summary_html = render_to_string("cart/_summary.html", {"subtotal": subtotal}, request=request)
+    badge_html = render_to_string("cart/_badge.html", {"qty_total": qty_total}, request=request)
+
+    # Собираем все в один ответ. HTMX сам найдет элементы по ID и заменит их.
+    return HttpResponse(row_html + card_html + summary_html + badge_html)
+
+
+
+
+def _render_money_html(amount, currency):
+    tpl = engines["django"].from_string(
+        "{% load cart_extras %}{{ amount|money }} {{ currency }}"
+    )
+    return tpl.render({"amount": amount, "currency": currency})
+
+def _render_badge_html(total_qty: int) -> str:
+    return render_to_string("cart/_badge.html", {"qty_total": total_qty})
+
+@require_POST
+@login_required
+def update_item_qty(request, item_id: int):
+    try:
+        qty_raw = request.POST.get("qty")
+        qty = int(qty_raw)
         if qty < 1:
-            # удаляем строку и просто перезагружаем страницу корзины (надёжно)
-            it.delete()
-            resp = HttpResponseRedirect("/cart/")
-            resp["HX-Redirect"] = "/cart/"
-            return resp
+            raise ValueError("Quantity must be >= 1")
+    except (TypeError, ValueError, InvalidOperation):
+        return HttpResponseBadRequest("Invalid quantity")
 
-    it.qty = qty
-    it.save(update_fields=["qty", "updated_at"])
+    try:
+        item = CartItem.objects.select_related("product").get(id=item_id, cart__user=request.user)
+    except CartItem.DoesNotExist:
+        return HttpResponseBadRequest("Item not found")
 
-    # пересчитать
-    items, subtotal, shipping_total, total, qty_total = _recalc(cart)
+    # при желании можно проверять наличие stock и т.п.
+    item.qty = qty
+    item.save(update_fields=["qty"])
 
-    # вернуть обновлённую строку
-    row_html = render_to_string("cart/_row.html", {"it": it}, request=request)
-    resp = HttpResponse(row_html)
+    cart_obj, items, subtotal = get_cart(request)
+    total_qty = sum(i.qty for i in items)
 
-    # триггерим «пересчитать фрагменты» (итоги и бейдж в шапке)
-    # оба фрагмента на странице подписаны на это событие
-    resp["HX-Trigger"] = json.dumps({"cart-recalc": 1})
-    return resp
+    item_total = (item.unit_price_snapshot or Decimal("0")) * item.qty
+    item_total_html = _render_money_html(item_total, item.product.currency)
+
+    summary_html = render_to_string("cart/_summary.html", {"subtotal": subtotal}, request=request)
+    badge_html = _render_badge_html(total_qty)
+
+    return JsonResponse({
+        "ok": True,
+        "item_id": item.id,
+        "item_total_html": item_total_html,
+        "summary_html": summary_html,
+        "badge_html": badge_html,
+        "total_qty": total_qty,
+        "qty": item.qty,
+    })
+
+
+@require_POST
+def remove_item(request, item_id: int):
+    cart = _get_or_create_cart_for_request(request)
+
+    try:
+        item = CartItem.objects.select_related("product").get(id=item_id, cart=cart)
+    except CartItem.DoesNotExist:
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"ok": False, "error": "Item not found"}, status=400)
+        return HttpResponseBadRequest("Item not found")
+
+    item.delete()
+
+    cart_obj, items, subtotal = get_cart(request)
+    total_qty = sum(i.qty for i in items)
+
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        summary_html = render_to_string("cart/_summary.html", {"subtotal": subtotal}, request=request)
+        badge_html = _render_badge_html(total_qty)
+        return JsonResponse({
+            "ok": True,
+            "removed_id": item_id,
+            "items_count": len(items),
+            "summary_html": summary_html,
+            "badge_html": badge_html,
+            "total_qty": total_qty,
+        })
+
+    messages.success(request, gettext("Товар удалён из корзины."))
+    return HttpResponseRedirect(reverse("cart:detail"))
+
+
+def cart_page(request):
+    cart, items, subtotal = get_cart(request)
+    return render(request, "cart/cart.html", {"items": items, "subtotal": subtotal})

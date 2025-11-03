@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-25 16:20+0300\n"
+"POT-Creation-Date: 2025-11-02 15:33+0300\n"
 "PO-Revision-Date: 2025-10-25 16:20+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: English <en@li.org>\n"
@@ -34,62 +34,94 @@ msgstr "Cart item"
 msgid "Cart items"
 msgstr "Cart items"
 
-#: cart/templates/cart/cart_detail.html:5
-#: cart/templates/cart/cart_detail.html:8 templates/base.html:20
-#: templates/base.html:23
-msgid "Корзина"
-msgstr "Cart"
+#: cart/templates/cart/_badge.html:2
+#, fuzzy
+#| msgid "Товары не найдены."
+msgid "Товаров в корзине"
+msgstr "Products not found."
 
-#: cart/templates/cart/cart_detail.html:19
-#: orders/templates/orders/checkout.html:105
-msgid "Товар"
-msgstr "Product"
+#: cart/templates/cart/_card.html:7 cart/templates/cart/cart_detail.html:69
+msgid "шт."
+msgstr "pc."
 
-#: cart/templates/cart/cart_detail.html:20
-#: orders/templates/orders/checkout.html:107
-msgid "Цена"
-msgstr "Price"
-
-#: cart/templates/cart/cart_detail.html:21
-#: orders/templates/orders/checkout.html:106
-msgid "Кол-во"
-msgstr "Qty"
-
-#: cart/templates/cart/cart_detail.html:22
-#: orders/templates/orders/checkout.html:108
-#: users/templates/users/_tab_orders.html:8
-msgid "Сумма"
-msgstr "Total"
-
-#: cart/templates/cart/cart_detail.html:37
-msgid "OK"
-msgstr "OK"
-
-#: cart/templates/cart/cart_detail.html:44
+#: cart/templates/cart/_card.html:20 cart/templates/cart/_row.html:19
+#: cart/templates/cart/cart_detail.html:52
+#: cart/templates/cart/cart_detail.html:86
 msgid "Удалить"
 msgstr "Remove"
 
-#: cart/templates/cart/cart_detail.html:52
+#: cart/templates/cart/_summary.html:5
 msgid "Итого"
 msgstr "Total"
 
-#: cart/templates/cart/cart_detail.html:54
-#: orders/templates/orders/checkout.html:130
+#: cart/templates/cart/_summary.html:8
+#: orders/templates/orders/checkout.html:111
+msgid "Подытог"
+msgstr "Subtotal"
+
+#: cart/templates/cart/_summary.html:16
+#: orders/templates/orders/checkout.html:122
+msgid "Итого к оплате"
+msgstr "Total due"
+
+#: cart/templates/cart/_summary.html:21
 msgid "Оформить заказ"
 msgstr "Checkout"
 
-#: cart/templates/cart/cart_detail.html:65
+#: cart/templates/cart/_table_empty.html:6
+#, fuzzy
+#| msgid "Корзина пуста."
+msgid "Корзина пуста"
+msgstr "Your cart is empty."
+
+#: cart/templates/cart/_table_empty.html:7
+#: cart/templates/cart/cart_detail.html:109
+#: orders/templates/orders/checkout.html:178
+msgid "Перейти в каталог"
+msgstr "Go to catalog"
+
+#: cart/templates/cart/cart_detail.html:5
+#: cart/templates/cart/cart_detail.html:9 templates/base.html:18
+#: templates/base.html:21
+msgid "Корзина"
+msgstr "Cart"
+
+#: cart/templates/cart/cart_detail.html:22
+msgid "Товар"
+msgstr "Product"
+
+#: cart/templates/cart/cart_detail.html:23
+msgid "Цена"
+msgstr "Price"
+
+#: cart/templates/cart/cart_detail.html:24
+msgid "Кол-во"
+msgstr "Qty"
+
+#: cart/templates/cart/cart_detail.html:25
+#: users/templates/users/_tab_orders.html:11
+#: users/templates/users/my_orders.html:13
+#: users/templates/users/my_orders.html:38
+msgid "Сумма"
+msgstr "Total"
+
+#: cart/templates/cart/cart_detail.html:107
 msgid "Тут пусто"
 msgstr "It's empty here"
 
-#: cart/templates/cart/cart_detail.html:66
+#: cart/templates/cart/cart_detail.html:108
 msgid "Добавьте товары из каталога, чтобы оформить заказ."
 msgstr "Add items from the catalog to place an order."
 
-#: cart/templates/cart/cart_detail.html:67
-#: orders/templates/orders/checkout.html:158
-msgid "Перейти в каталог"
-msgstr "Go to catalog"
+#: cart/templates/cart/cart_detail.html:176
+msgid "Не удалось обновить количество. Попробуйте ещё раз."
+msgstr "Couldn't update the quantity. Try again."
+
+#: cart/views.py:230
+#, fuzzy
+#| msgid "Товары не найдены."
+msgid "Товар удалён из корзины."
+msgstr "Products not found."
 
 #: catalog/models.py:19
 msgid "Category"
@@ -139,125 +171,143 @@ msgstr "Product images"
 msgid "Maximum 10 images per product."
 msgstr "Maximum 10 images per product."
 
-#: catalog/templates/catalog/_product_grid.html:13
-#: catalog/templates/catalog/product_detail.html:37
-#: catalog/templates/catalog/product_list.html:42
-#: catalog/templates/catalog/product_list.html:59
+#: catalog/templates/catalog/_product_grid.html:15
+#: catalog/templates/catalog/product_detail.html:43
+#: catalog/templates/catalog/product_list.html:44
 #: cms/templates/cms/home.html:36
 msgid "Сост."
 msgstr "Cond."
 
-#: catalog/templates/catalog/_product_grid.html:25
-#: catalog/templates/catalog/product_detail.html:50
+#: catalog/templates/catalog/_product_grid.html:26
 msgid "В корзину"
 msgstr "Add to cart"
 
-#: catalog/templates/catalog/_product_grid.html:29
-#: catalog/templates/catalog/product_list.html:66
-msgid "Товары не найдены."
+#: catalog/templates/catalog/_product_grid.html:36
+#, fuzzy
+#| msgid "Товары не найдены."
+msgid "Товары не найдены"
 msgstr "Products not found."
 
 #: catalog/templates/catalog/_product_grid.html:37
-#: catalog/templates/catalog/product_list.html:72
+msgid "Попробуйте изменить параметры фильтра или сбросить их."
+msgstr "Try changing the filter settings or resetting them."
+
+#: catalog/templates/catalog/_product_grid.html:38
+#, fuzzy
+#| msgid "Сбросить"
+msgid "Сбросить фильтры"
+msgstr "Reset"
+
+#: catalog/templates/catalog/_product_grid.html:50
 msgid "Назад"
 msgstr "Back"
 
-#: catalog/templates/catalog/_product_grid.html:39
-#: catalog/templates/catalog/product_list.html:74
+#: catalog/templates/catalog/_product_grid.html:52
 msgid "Стр."
 msgstr "Page"
 
-#: catalog/templates/catalog/_product_grid.html:39
-#: catalog/templates/catalog/product_list.html:74
+#: catalog/templates/catalog/_product_grid.html:52
 msgid "из"
 msgstr "of"
 
-#: catalog/templates/catalog/_product_grid.html:43
-#: catalog/templates/catalog/product_list.html:76
+#: catalog/templates/catalog/_product_grid.html:56
 msgid "Вперёд"
 msgstr "Next"
 
-#: catalog/templates/catalog/product_detail.html:7
-#: catalog/templates/catalog/product_list.html:3
-#: catalog/templates/catalog/product_list.html:5 templates/base.html:17
-#: templates/base.html:79
-msgid "Каталог"
-msgstr "Catalog"
+#: catalog/templates/catalog/product_detail.html:8
+#, fuzzy
+#| msgid "Перейти в каталог"
+msgid "Назад в каталог"
+msgstr "Go to catalog"
 
-#: catalog/templates/catalog/product_detail.html:17
-msgid "No image"
-msgstr "No image"
+#: catalog/templates/catalog/product_detail.html:22
+msgid "Нет изображения"
+msgstr "There is no image"
 
-#: catalog/templates/catalog/product_detail.html:18
-msgid "No photo"
-msgstr "No photo"
-
-#: catalog/templates/catalog/product_detail.html:39
-#, python-format
+#: catalog/templates/catalog/product_detail.html:45
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "        %(gb)s GB · %(color)s\n"
+#| "      "
 msgid ""
 "\n"
-"        %(gb)s GB · %(color)s\n"
-"      "
+"          %(gb)s GB · %(color)s\n"
+"        "
 msgstr ""
 "\n"
 "        %(gb)s GB · %(color)s\n"
 "      "
 
-#: catalog/templates/catalog/product_detail.html:56
-msgid "Похожие"
-msgstr "Similar products"
+#: catalog/templates/catalog/product_detail.html:63
+#, fuzzy
+#| msgid "В корзину"
+msgid "Добавить в корзину"
+msgstr "Add to cart"
 
-#: catalog/templates/catalog/product_list.html:13
+#: catalog/templates/catalog/product_detail.html:70
+#, fuzzy
+#| msgid "Пока нет товаров."
+msgid "Похожие товары"
+msgstr "No products yet."
+
+#: catalog/templates/catalog/product_list.html:3
+#: catalog/templates/catalog/product_list.html:7 templates/base.html:15
+#: templates/base.html:49
+msgid "Каталог"
+msgstr "Catalog"
+
+#: catalog/templates/catalog/product_list.html:15
 msgid "Поиск…"
 msgstr "Search…"
 
-#: catalog/templates/catalog/product_list.html:15
+#: catalog/templates/catalog/product_list.html:17
 msgid "Бренд"
 msgstr "Brand"
 
-#: catalog/templates/catalog/product_list.html:19
+#: catalog/templates/catalog/product_list.html:21
 msgid "Память"
 msgstr "Storage"
 
-#: catalog/templates/catalog/product_list.html:23
+#: catalog/templates/catalog/product_list.html:25
 msgid "Состояние"
 msgstr "Condition"
 
-#: catalog/templates/catalog/product_list.html:28
+#: catalog/templates/catalog/product_list.html:30
 msgid "Цена от"
 msgstr "Price from"
 
-#: catalog/templates/catalog/product_list.html:29
+#: catalog/templates/catalog/product_list.html:31
 msgid "Цена до"
 msgstr "Price to"
 
-#: catalog/templates/catalog/product_list.html:31
+#: catalog/templates/catalog/product_list.html:33
 msgid "Сортировка"
 msgstr "Sort by"
 
-#: catalog/templates/catalog/product_list.html:32
+#: catalog/templates/catalog/product_list.html:34
 msgid "Цена ↑"
 msgstr "Price ↑"
 
-#: catalog/templates/catalog/product_list.html:33
+#: catalog/templates/catalog/product_list.html:35
 msgid "Цена ↓"
 msgstr "Price ↓"
 
-#: catalog/templates/catalog/product_list.html:34
+#: catalog/templates/catalog/product_list.html:36
 msgid "Сначала новые"
 msgstr "Newest first"
 
-#: catalog/templates/catalog/product_list.html:36
-#: orders/templates/orders/checkout.html:89
+#: catalog/templates/catalog/product_list.html:38
+#: orders/templates/orders/checkout.html:88
 msgid "Применить"
 msgstr "Apply"
 
-#: catalog/templates/catalog/product_list.html:47
+#: catalog/templates/catalog/product_list.html:49
 msgid "Сбросить"
 msgstr "Reset"
 
 #: cms/templates/cms/contacts.html:3 cms/templates/cms/contacts.html:5
-#: cms/templates/cms/home.html:11 templates/base.html:18 templates/base.html:80
+#: cms/templates/cms/home.html:11 templates/base.html:16 templates/base.html:50
 msgid "Контакты"
 msgstr "Contacts"
 
@@ -297,11 +347,12 @@ msgstr "Delivery in Georgia"
 msgid ""
 "Сроки 1–3 дня. Отправка курьером/почтой. Стоимость обсуждается при "
 "оформлении."
-msgstr "Terms 1–3 days. Shipped by courier/post. The cost is discussed upon checkout."
+msgstr ""
+"Terms 1–3 days. Shipped by courier/post. The cost is discussed upon checkout."
 
 #: cms/templates/cms/delivery.html:8
-#: orders/templates/orders/_address_fields.html:32
-#: orders/templates/orders/checkout.html:48
+#: orders/templates/orders/_address_fields.html:13
+#: orders/templates/orders/checkout.html:56
 msgid "Самовывоз"
 msgstr "Pickup"
 
@@ -331,7 +382,8 @@ msgstr "Is installment payment available?"
 
 #: cms/templates/cms/faq.html:9
 msgid "Уточняйте в магазине — доступны варианты в зависимости от банка."
-msgstr "Please check in the store — options are available depending on the bank."
+msgstr ""
+"Please check in the store — options are available depending on the bank."
 
 #: cms/templates/cms/home.html:3
 msgid "Главная"
@@ -378,7 +430,8 @@ msgid "Гарантия"
 msgstr "Warranty"
 
 #: cms/templates/cms/warranty.html:7
-msgid "На все устройства предоставляется гарантия 1 месяц, если не указано иначе."
+msgid ""
+"На все устройства предоставляется гарантия 1 месяц, если не указано иначе."
 msgstr "All devices come with a 1-month warranty, unless stated otherwise."
 
 #: cms/templates/cms/warranty.html:8
@@ -386,8 +439,12 @@ msgid "Возврат/обмен"
 msgstr "Return/Exchange"
 
 #: cms/templates/cms/warranty.html:9
-msgid "Если устройство не соответствует описанию, мы обменяем или вернём деньги согласно законодательству."
-msgstr "If the device does not match the description, we will exchange it or refund the money in accordance with the law."
+msgid ""
+"Если устройство не соответствует описанию, мы обменяем или вернём деньги "
+"согласно законодательству."
+msgstr ""
+"If the device does not match the description, we will exchange it or refund "
+"the money in accordance with the law."
 
 #: config/settings/base.py:127
 msgid "ქართული"
@@ -461,209 +518,214 @@ msgstr "Order item"
 msgid "Order items"
 msgstr "Order items"
 
-#: orders/templates/orders/_address_fields.html:6
-msgid "Город"
-msgstr "City"
-
-#: orders/templates/orders/_address_fields.html:11
-msgid "Улица"
-msgstr "Street"
-
-#: orders/templates/orders/_address_fields.html:18
-msgid "Дом"
-msgstr "Building"
-
-#: orders/templates/orders/_address_fields.html:23
-msgid "Квартира/офис"
-msgstr "Apartment/office"
-
-#: orders/templates/orders/_address_fields.html:32
-msgid "Зугдиди, наш офлайн-магазин. Точный адрес и время подтверждаются после оформления."
-msgstr "Zugdidi, our offline store. The exact address and time are confirmed after placing the order."
-
-#: orders/templates/orders/checkout.html:4
-#: orders/templates/orders/checkout.html:7
-msgid "Оформление заказа"
-msgstr "Checkout"
-
-#: orders/templates/orders/checkout.html:22
-msgid "Контакты и адрес"
-msgstr "Contact and address"
-
-#: orders/templates/orders/checkout.html:26
-msgid "Имя и фамилия"
-msgstr "First and last name"
-
-#: orders/templates/orders/checkout.html:30
-#: users/templates/users/_tab_profile.html:24
-msgid "Телефон"
-msgstr "Phone"
-
-#: orders/templates/orders/checkout.html:36
-msgid "Email"
-msgstr "Email"
-
-#: orders/templates/orders/checkout.html:43
-msgid "Способ получения"
-msgstr "Delivery method"
-
-#: orders/templates/orders/checkout.html:49
-msgid "Доставка по адресу"
-msgstr "Delivery to address"
-
-#: orders/templates/orders/checkout.html:55
+#: orders/templates/orders/_address_fields.html:4
 msgid "Адрес доставки"
 msgstr "Shipping address"
 
-#: orders/templates/orders/checkout.html:59
-#: orders/templates/orders/checkout.html:76
-msgid "Город, улица, дом, квартира/офис"
-msgstr "City, street, building, apartment/office"
+#: orders/templates/orders/_address_fields.html:13
+msgid ""
+"Зугдиди, наш офлайн-магазин. Точный адрес и время подтверждаются после "
+"оформления."
+msgstr ""
+"Zugdidi, our offline store. The exact address and time are confirmed after "
+"placing the order."
 
-#: orders/templates/orders/checkout.html:67
-msgid "Платёжный адрес совпадает с адресом доставки"
-msgstr "Billing address is the same as shipping address"
+#: orders/templates/orders/checkout.html:4
+#: orders/templates/orders/checkout.html:8
+msgid "Оформление заказа"
+msgstr "Checkout"
 
-#: orders/templates/orders/checkout.html:72
+#: orders/templates/orders/checkout.html:26
+#, fuzzy
+#| msgid "Контакты"
+msgid "1. Ваши контакты"
+msgstr "1. Contacts"
+
+#: orders/templates/orders/checkout.html:30
+msgid "Имя и фамилия"
+msgstr "First and last name"
+
+#: orders/templates/orders/checkout.html:34
+#: users/templates/users/_tab_profile.html:29
+msgid "Телефон"
+msgstr "Phone"
+
+#: orders/templates/orders/checkout.html:47
+#, fuzzy
+#| msgid "Способ получения"
+msgid "2. Способ получения"
+msgstr "2. Delivery method"
+
+#: orders/templates/orders/checkout.html:50
+msgid "Способ получения"
+msgstr "Delivery method"
+
+#: orders/templates/orders/checkout.html:57
+msgid "Доставка по адресу"
+msgstr "Delivery to address"
+
+#: orders/templates/orders/checkout.html:73
 msgid "Платёжный адрес"
 msgstr "Billing address"
 
-#: orders/templates/orders/checkout.html:82
-#: orders/templates/orders/checkout.html:87
+#: orders/templates/orders/checkout.html:83
 msgid "Промокод"
-msgstr "Promo code"
+msgstr "Promocode"
 
-#: orders/templates/orders/checkout.html:93
+#: orders/templates/orders/checkout.html:91
 msgid "Применён"
 msgstr "Applied"
 
-#: orders/templates/orders/checkout.html:101
+#: orders/templates/orders/checkout.html:100
 msgid "Ваш заказ"
 msgstr "Your order"
 
-#: orders/templates/orders/checkout.html:123
-msgid "Подытог"
-msgstr "Subtotal"
-
-#: orders/templates/orders/checkout.html:124
+#: orders/templates/orders/checkout.html:112
 msgid "Доставка"
 msgstr "Shipping"
 
-#: orders/templates/orders/checkout.html:125
+#: orders/templates/orders/checkout.html:115
 msgid "Скидка"
 msgstr "Discount"
 
-#: orders/templates/orders/checkout.html:126
-msgid "Итого к оплате"
-msgstr "Total due"
+#: orders/templates/orders/checkout.html:127
+#, fuzzy
+#| msgid "Подтверждение пароля"
+msgid "Подтвердить и оплатить"
+msgstr "Confirm password"
 
-#: orders/templates/orders/checkout.html:158
-msgid "Корзина пуста."
+#: orders/templates/orders/checkout.html:176
+#, fuzzy
+#| msgid "Корзина пуста."
+msgid "Ваша корзина пуста"
 msgstr "Your cart is empty."
+
+#: orders/templates/orders/checkout.html:177
+#, fuzzy
+#| msgid "Вы можете забрать заказ в магазине в Зугдиди."
+msgid "Вы не можете оформить заказ, пока не добавите товары."
+msgstr "You can pick up your order at the store in Zugdidi."
 
 #: orders/templates/orders/order_success.html:3
 msgid "Заказ оформлен"
 msgstr "Order placed"
 
-#: orders/templates/orders/order_success.html:12
+#: orders/templates/orders/order_success.html:14
 msgid "Спасибо! Заказ оформлен"
 msgstr "Thank you! Your order has been placed"
 
-#: orders/templates/orders/order_success.html:13
+#: orders/templates/orders/order_success.html:15
 msgid "Мы отправили подтверждение на вашу почту."
 msgstr "We have sent a confirmation to your email."
 
-#: orders/templates/orders/order_success.html:17 templates/base.html:33
-#: templates/base.html:34 templates/base.html:82
-#: users/templates/users/account_tabs.html:16
+#: orders/templates/orders/order_success.html:18
+#, fuzzy
+#| msgid "Оплатить"
+msgid "Оплатить сейчас"
+msgstr "Pay"
+
+#: orders/templates/orders/order_success.html:19 templates/base.html:33
+#: templates/base.html:52 users/templates/users/account_tabs.html:17
 msgid "Мои заказы"
 msgstr "My orders"
 
-#: orders/templates/orders/order_success.html:18
-msgid "Вернуться в каталог"
-msgstr "Back to catalog"
-
-#: orders/templates/orders/order_success.html:19
-#: orders/templates/orders/order_track.html:37
-msgid "На главную"
-msgstr "To homepage"
-
 #: orders/templates/orders/order_track.html:4
-#: orders/templates/orders/order_track.html:7
 #, python-format
 msgid "Статус заказа №%(id)s"
 msgstr "Order status #%(id)s"
 
-#: orders/templates/orders/order_track.html:10
-msgid "Текущий статус:"
+#: orders/templates/orders/order_track.html:8
+#, fuzzy, python-format
+#| msgid "Статус заказа №%(id)s"
+msgid "Заказ №%(id)s"
+msgstr "Order status #%(id)s"
+
+#: orders/templates/orders/order_track.html:13
+#, fuzzy
+#| msgid "Текущий статус:"
+msgid "Текущий статус"
 msgstr "Current status:"
 
-#: orders/templates/orders/order_track.html:12
-msgid "Трек-номер:"
+#: orders/templates/orders/order_track.html:17
+#, fuzzy
+#| msgid "Ваш заказ"
+msgid "Сумма заказа"
+msgstr "Your order"
+
+#: orders/templates/orders/order_track.html:22
+#, fuzzy
+#| msgid "Трек-номер:"
+msgid "Трек-номер"
 msgstr "Tracking number:"
 
-#: orders/templates/orders/order_track.html:14
-msgid "Трек-номер появится после отправки."
-msgstr "The tracking number will appear after shipment."
+#: orders/templates/orders/order_track.html:29
+#, fuzzy
+#| msgid "Итого к оплате"
+msgid "Перейти к оплате"
+msgstr "Total due"
 
-#: orders/templates/orders/order_track.html:18
-#, python-format
-msgid ""
-"\n"
-"        Сумма: %(total)s %(currency)s (скидка: %(discount)s, доставка: "
-"%(shipping)s)\n"
-"      "
-msgstr ""
-"\n"
-"        Total: %(total)s %(currency)s (discount: %(discount)s, shipping: "
-"%(shipping)s)\n"
-"      "
+#: orders/templates/orders/order_track.html:33
+#, fuzzy
+#| msgid "Способ получения"
+msgid "Этапы выполнения"
+msgstr "Delivery method"
 
-#: orders/templates/orders/order_track.html:24
-msgid "Оплатить"
-msgstr "Pay"
-
-#: orders/templates/orders/order_track.html:28
-msgid "Этапы"
-msgstr "Stages"
-
-#: orders/templates/orders/order_track.html:30
+#: orders/templates/orders/order_track.html:37
+#: orders/templates/orders/order_track.html:46
 msgid "Принят"
 msgstr "Accepted"
 
-#: orders/templates/orders/order_track.html:31
+#: orders/templates/orders/order_track.html:38
+#: orders/templates/orders/order_track.html:47
 msgid "Оплачен"
 msgstr "Paid"
 
-#: orders/templates/orders/order_track.html:32
+#: orders/templates/orders/order_track.html:39
+#: orders/templates/orders/order_track.html:48
 msgid "В обработке"
 msgstr "Processing"
 
-#: orders/templates/orders/order_track.html:33
+#: orders/templates/orders/order_track.html:40
+#: orders/templates/orders/order_track.html:49
 msgid "В доставке"
 msgstr "In transit"
 
-#: orders/templates/orders/order_track.html:34
+#: orders/templates/orders/order_track.html:41
+#: orders/templates/orders/order_track.html:50
 msgid "Доставлен"
 msgstr "Delivered"
 
-#: templates/base.html:42 templates/base.html:83
-#: users/templates/users/_tab_profile.html:31
+#: orders/templates/orders/order_track.html:54
+msgid "Вернуться в каталог"
+msgstr "Back to catalog"
+
+#: payments/templates/payments/pay_page.html:11
+msgid "Оплатить"
+msgstr "Pay"
+
+#: payments/templates/payments/pay_page.html:14
+#, fuzzy
+#| msgid "Вернуться в каталог"
+msgid "Вернуться к заказу"
+msgstr "Back to catalog"
+
+#: templates/base.html:38 templates/base.html:53
+#: users/templates/users/_tab_profile.html:38
 msgid "Выйти"
 msgstr "Logout"
 
-#: templates/base.html:51 templates/base.html:85
+#: templates/base.html:41 templates/base.html:55
 #: templates/registration/login.html:3 templates/registration/login.html:18
 #: templates/registration/signup.html:19
 msgid "Войти"
 msgstr "Login"
 
-#: templates/base.html:58 templates/base.html:86
+#: templates/base.html:42 templates/base.html:56
 #: templates/registration/signup.html:3
 msgid "Регистрация"
 msgstr "Sign up"
 
-#: templates/base.html:98
+#: templates/base.html:74
 msgid "поддержанные iPhone в Зугдиди"
 msgstr "used iPhones in Zugdidi"
 
@@ -707,43 +769,136 @@ msgstr "Confirm password"
 msgid "Уже есть аккаунт?"
 msgstr "Already have an account?"
 
-#: users/templates/users/_tab_orders.html:7
+#: users/templates/users/_tab_orders.html:10
+#: users/templates/users/_tab_orders.html:48
+#: users/templates/users/my_orders.html:12
+#: users/templates/users/my_orders.html:37
 msgid "Статус"
 msgstr "Status"
 
-#: users/templates/users/_tab_orders.html:9
-msgid "Создан"
-msgstr "Created"
+#: users/templates/users/_tab_orders.html:12
+#: users/templates/users/_tab_orders.html:44
+msgid "Дата"
+msgstr "Date"
 
-#: users/templates/users/_tab_orders.html:20
-msgid "Открыть"
-msgstr "Open"
+#: users/templates/users/_tab_orders.html:24
+msgid "Подробнее"
+msgstr "More detailed"
 
-#: users/templates/users/_tab_orders.html:23
+#: users/templates/users/_tab_orders.html:28
 msgid "Пока нет заказов."
 msgstr "No orders yet."
 
-#: users/templates/users/_tab_profile.html:10
+#: users/templates/users/_tab_orders.html:52
+#, fuzzy
+#| msgid "Оформление заказа"
+msgid "Подробнее о заказе"
+msgstr "Checkout"
+
+#: users/templates/users/_tab_orders.html:60
+#, fuzzy
+#| msgid "Пока нет заказов."
+msgid "У вас еще нет заказов"
+msgstr "No orders yet."
+
+#: users/templates/users/_tab_orders.html:61
+msgid "Все ваши будущие покупки появятся здесь."
+msgstr "All your future purchases will appear here."
+
+#: users/templates/users/_tab_profile.html:13
 msgid "Имя"
 msgstr "First name"
 
-#: users/templates/users/_tab_profile.html:14
+#: users/templates/users/_tab_profile.html:17
 msgid "Фамилия"
 msgstr "Last name"
 
-#: users/templates/users/_tab_profile.html:29
-msgid "Сохранить"
+#: users/templates/users/_tab_profile.html:36
+#, fuzzy
+#| msgid "Сохранить"
+msgid "Сохранить изменения"
 msgstr "Save"
 
-#: users/templates/users/_tab_profile.html:30
+#: users/templates/users/_tab_profile.html:37
 msgid "Сменить пароль"
 msgstr "Change password"
 
 #: users/templates/users/account_tabs.html:4
-#: users/templates/users/account_tabs.html:7
+#: users/templates/users/account_tabs.html:8
 msgid "Личный кабинет"
 msgstr "My account"
 
-#: users/templates/users/account_tabs.html:26
+#: users/templates/users/account_tabs.html:25
 msgid "Профиль"
 msgstr "Profile"
+
+#: users/templates/users/my_orders.html:14
+#: users/templates/users/my_orders.html:39
+msgid "Создан"
+msgstr "Created"
+
+#: users/templates/users/my_orders.html:25
+#: users/templates/users/my_orders.html:41
+msgid "Открыть"
+msgstr "Open"
+
+#: users/templates/users/my_orders.html:42
+msgid "Квитанция"
+msgstr "Receipt"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "No image"
+#~ msgstr "No image"
+
+#~ msgid "No photo"
+#~ msgstr "No photo"
+
+#~ msgid "Похожие"
+#~ msgstr "Similar products"
+
+#~ msgid "Город"
+#~ msgstr "City"
+
+#~ msgid "Улица"
+#~ msgstr "Street"
+
+#~ msgid "Дом"
+#~ msgstr "Building"
+
+#~ msgid "Квартира/офис"
+#~ msgstr "Apartment/office"
+
+#~ msgid "Контакты и адрес"
+#~ msgstr "Contact and address"
+
+#~ msgid "Email"
+#~ msgstr "Email"
+
+#~ msgid "Город, улица, дом, квартира/офис"
+#~ msgstr "City, street, building, apartment/office"
+
+#~ msgid "Платёжный адрес совпадает с адресом доставки"
+#~ msgstr "Billing address is the same as shipping address"
+
+#~ msgid "На главную"
+#~ msgstr "To homepage"
+
+#~ msgid "Трек-номер появится после отправки."
+#~ msgstr "The tracking number will appear after shipment."
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "        Сумма: %(total)s %(currency)s (скидка: %(discount)s, доставка: "
+#~ "%(shipping)s)\n"
+#~ "      "
+#~ msgstr ""
+#~ "\n"
+#~ "        Total: %(total)s %(currency)s (discount: %(discount)s, shipping: "
+#~ "%(shipping)s)\n"
+#~ "      "
+
+#~ msgid "Этапы"
+#~ msgstr "Stages"

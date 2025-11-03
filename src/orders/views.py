@@ -20,26 +20,26 @@ def _calc_discount(subtotal: Decimal, coupon: Coupon) -> Decimal:
 
 def _get_valid_coupon_or_none(code: str, user, email: str, subtotal: Decimal):
     if not code:
-        return None, "Промокод не указан."
+        return None, "The promocode is not specified."
     try:
         coupon = Coupon.objects.get(code__iexact=code.strip())
     except Coupon.DoesNotExist:
-        return None, "Промокод не найден."
+        return None, "The promocode was not found."
     if not coupon.is_valid_now():
-        return None, "Срок действия промокода истёк или он не активен."
+        return None, "The promocode has expired or is inactive."
     if subtotal < coupon.min_total:
-        return None, f"Минимальная сумма для применения промокода: {coupon.min_total}."
+        return None, f"The minimum amount to apply the promocode: {coupon.min_total}."
     if coupon.usage_limit_total is not None:
         used_total = Order.objects.filter(coupon=coupon).count()
         if used_total >= coupon.usage_limit_total:
-            return None, "Лимит использования промокода исчерпан."
+            return None, "The promocode usage limit has been reached."
     if coupon.usage_limit_per_user is not None:
         if user and getattr(user, "is_authenticated", False):
             used_by_user = Order.objects.filter(coupon=coupon, user=user).count()
         else:
             used_by_user = Order.objects.filter(coupon=coupon, email=email).count()
         if used_by_user >= coupon.usage_limit_per_user:
-            return None, "Вы уже использовали этот промокод максимально допустимое число раз."
+            return None, "You have already used this promocode as many times as possible."
     return coupon, None
 
 def checkout(request):
@@ -82,7 +82,7 @@ def checkout(request):
             else:
                 request.session["applied_coupon_code"] = coupon.code
                 discount_total = _calc_discount(subtotal, coupon)
-                messages.success(request, "Промокод применён.")
+                messages.success(request, "The promocode has been applied.")
 
             total = (subtotal - discount_total + shipping_total).quantize(Decimal("0.01"))
             return render(request, "orders/checkout.html", {
@@ -98,7 +98,7 @@ def checkout(request):
         # 2) Оформление заказа — валидируем форму и создаём заказ
         if action == "place":
             if not form.is_valid():
-                messages.error(request, "Проверьте корректность данных.")
+                messages.error(request, "Check the correctness of the data.")
             else:
                 email = form.cleaned_data["email"]
                 # финальное определение купона: приоритет — то, что ввёл пользователь; иначе — купон из сессии
@@ -129,7 +129,7 @@ def checkout(request):
                         discount_total = _calc_discount(subtotal, coupon)
 
                 if not items:
-                    messages.error(request, "Корзина пуста.")
+                    messages.error(request, "The shopping cart is empty.")
                     return redirect("cart:detail")
 
                 total = (subtotal - discount_total + shipping_total).quantize(Decimal("0.01"))
@@ -172,7 +172,7 @@ def checkout(request):
                 except Exception:
                     pass
 
-                messages.success(request, "Заказ создан. Спасибо!")
+                messages.success(request, "The order has been created. Thanks!")
                 return redirect("orders:success", pk=order.pk)
 
         # если action неожиданный или форма невалидна — падаем к общему рендеру ниже

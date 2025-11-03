@@ -1,9 +1,26 @@
-{% load i18n %}
-<div id="cart-summary">
-  <p style="text-align:right;font-size:18px;">
-    {% trans "Итого" %}: <span class="price">{{ total }} GEL</span>
-  </p>
-  <p style="text-align:right;">
-    <a class="btn" href="/checkout/">{% trans "Оформить заказ" %}</a>
-  </p>
+{# templates/cart/_summary.html #}
+{% load cart_extras i18n %}
+<div class="summary-card" style="position: sticky; top: 16px;">
+  <div class="card" style="padding: 16px; border: 1px solid var(--border); border-radius: 12px;">
+    <h3 style="margin: 0 0 12px;">{% trans "Итого" %}</h3>
+
+    <div style="display:flex; justify-content:space-between; margin: 6px 0;">
+      <span style="color:var(--text-secondary);">{% trans "Подытог" %}</span>
+      <b>{{ subtotal|money }}</b>
+    </div>
+
+
+    <hr style="border:none; border-top:1px solid var(--border); margin: 12px 0;">
+
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size: 18px; font-weight: 600;">{% trans "Итого к оплате" %}</span>
+      <span style="font-size: 18px; font-weight: 700;">{{ subtotal|money }}</span>
+    </div>
+
+    <a href="{% url 'orders:checkout' %}" class="btn primary" style="width:100%; margin-top: 12px;">
+      {% trans "Оформить заказ" %}
+    </a>
+  </div>
 </div>
+
+

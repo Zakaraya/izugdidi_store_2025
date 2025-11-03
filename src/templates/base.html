@@ -1,130 +1,83 @@
 {% load static i18n %}
 <!doctype html>
 <html lang="{{ request.LANGUAGE_CODE|default:'ka' }}">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>{% block title %}iZugdidi — Used iPhones{% endblock %}</title>
-    {% load static i18n %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
-  </head>
-  <body>
-    <header class="site-header">
-  <div class="container header-row">
-    <a class="logo" href="/">iZugdidi</a>
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-row">
+        <a class="logo" href="/">iZugdidi</a>
+        <nav class="nav">
+            <a href="{% url 'catalog:product_list' %}">{% trans "Каталог" %}</a>
+            <a href="{% url 'cms:contacts' %}">{% trans "Контакты" %}</a>
 
-    <nav class="nav">
-      <a href="{% url 'catalog:product_list' %}">{% trans "Каталог" %}</a>
-      <a href="{% url 'cms:contacts' %}">{% trans "Контакты" %}</a>
+            <a title="{% trans 'Корзина' %}"
+               href="{% url 'cart:detail' %}"
+               class="icon-link cart-link"
+               aria-label="{% trans 'Корзина' %}">
+              <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 6h15l-1.5 9h-12L6 6Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                <circle cx="9" cy="20" r="1.5" fill="currentColor"/>
+                <circle cx="17" cy="20" r="1.5" fill="currentColor"/>
+              </svg>
+              <span id="cart-badge">
+                  {% include "cart/_badge.html" with qty_total=cart_items_count|default:0 %}
+              </span>
+            </a>
 
-      <a title="{% trans 'Корзина' %}"
-         href="{% url 'cart:detail' %}"
-         class="icon-link cart-link"
-         aria-label="{% trans 'Корзина' %}">
-        <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M6 6h15l-1.5 9h-12L6 6Z" stroke="currentColor" stroke-width="2" fill="none"/>
-          <circle cx="9" cy="20" r="1.5" fill="currentColor"/>
-          <circle cx="17" cy="20" r="1.5" fill="currentColor"/>
-        </svg>
-        {% include "cart/_badge.html" %}
-      </a>
+            {% if request.user.is_authenticated %}
+                <a title="{% trans 'Мои заказы' %}" href="{% url 'users:account_hub' %}" class="icon-link" aria-label="{% trans 'Мои заказы' %}">
+                    <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20c2-4 6-6 8-6s6 2 8 6" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                </a>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" title="{% trans 'Выйти' %}" class="icon-link" aria-label="{% trans 'Выйти' %}" style="background:none;border:none;padding:0;cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"></path><path d="M17 16l4-4-4-4"></path><path d="M21 12H9"></path></svg></button>
+                </form>
+            {% else %}
+                <a title="{% trans 'Войти' %}" href="{% url 'login' %}" class="icon-link" aria-label="{% trans 'Войти' %}"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg></a>
+                <a href="{% url 'users:signup' %}" class="nav-link-text">{% trans "Регистрация" %}</a>
+            {% endif %}
+            <form action="{% url 'set_language' %}" method="post" class="lang-form">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><select name="language" onchange="this.form.submit()"><option value="ka"{% if request.LANGUAGE_CODE == 'ka' %} selected{% endif %}>ქართული</option><option value="en"{% if request.LANGUAGE_CODE == 'en' %} selected{% endif %}>English</option></select></form>
+        </nav>
+        <button class="burger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu" onclick="(function(btn){var m=document.getElementById('mobile-menu');var o=m.classList.toggle('open');btn.setAttribute('aria-expanded', o);})(this)"><span></span><span></span><span></span></button>
+    </div>
+    <div id="mobile-menu" class="mobile-menu">
+  <a href="{% url 'catalog:product_list' %}">{% trans "Каталог" %}</a>
+  <a href="{% url 'cms:contacts' %}">{% trans "Контакты" %}</a>
+  {% if request.user.is_authenticated %}
+    <a href="{% url 'users:account_hub' %}">{% trans "Мои заказы" %}</a>
+    <a href="{% url 'logout' %}">{% trans "Выйти" %}</a>
+  {% else %}
+    <a href="{% url 'login' %}">{% trans "Войти" %}</a>
+    <a href="{% url 'users:signup' %}">{% trans "Регистрация" %}</a>
+  {% endif %}
 
-      {% if request.user.is_authenticated %}
-<!--        <a title="{% trans 'Мои заказы' %}" href="{% url 'users:my_orders' %}" class="icon-link" aria-label="{% trans 'Мои заказы' %}">-->
-        <a title="{% trans 'Мои заказы' %}" href="{% url 'users:account_hub' %}" class="icon-link" aria-label="{% trans 'Мои заказы' %}">
-          <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
-            <path d="M4 20c2-4 6-6 8-6s6 2 8 6" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
-        </a>
-    <form action="{% url 'logout' %}" method="post" style="display:inline;">
-      {% csrf_token %}
-      <button type="submit" title="{% trans 'Выйти' %}" class="icon-link" aria-label="{% trans 'Выйти' %}" style="background:none;border:none;padding:0;cursor:pointer;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"></path>
-            <path d="M17 16l4-4-4-4"></path>
-            <path d="M21 12H9"></path>
-        </svg>
-      </button>
-    </form>
-      {% else %}
-    <a title="{% trans 'Войти' %}" href="{% url 'login' %}" class="icon-link" aria-label="{% trans 'Войти' %}">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-        <polyline points="10 17 15 12 10 7"></polyline>
-        <line x1="15" y1="12" x2="3" y2="12"></line>
-      </svg>
-    </a>
-        <a href="{% url 'users:signup' %}" class="nav-link-text">{% trans "Регистрация" %}</a>
-      {% endif %}
+  {# Языковой селектор для мобильного меню #}
+  <form action="{% url 'set_language' %}" method="post" class="lang-form mobile">{% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <select name="language" onchange="this.form.submit()">
+      <option value="ka"{% if request.LANGUAGE_CODE == 'ka' %} selected{% endif %}>ქართული</option>
+      <option value="en"{% if request.LANGUAGE_CODE == 'en' %} selected{% endif %}>English</option>
+    </select>
+  </form>
+</div>
 
-      <form action="{% url 'set_language' %}" method="post" class="lang-form">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-        <select name="language" onchange="this.form.submit()">
-          <option value="ka"{% if request.LANGUAGE_CODE == 'ka' %} selected{% endif %}>ქართული</option>
-          <option value="en"{% if request.LANGUAGE_CODE == 'en' %} selected{% endif %}>English</option>
-        </select>
-      </form>
-    </nav>
-
-    <!-- КНОПКА БУРГЕРА ВНУТРИ header-row -->
-    <button class="burger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu"
-            onclick="(function(btn){var m=document.getElementById('mobile-menu');var o=m.classList.toggle('open');btn.setAttribute('aria-expanded', o);})(this)">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-
-  <div id="mobile-menu" class="mobile-menu">
-    <a href="{% url 'catalog:product_list' %}">{% trans "Каталог" %}</a>
-    <a href="{% url 'cms:contacts' %}">{% trans "Контакты" %}</a>
-    {% if request.user.is_authenticated %}
-      <a href="{% url 'users:my_orders' %}">{% trans "Мои заказы" %}</a>
-      <a href="{% url 'logout' %}">{% trans "Выйти" %}</a>
-    {% else %}
-      <a href="{% url 'login' %}">{% trans "Войти" %}</a>
-      <a href="{% url 'users:signup' %}">{% trans "Регистрация" %}</a>
-    {% endif %}
-  </div>
 </header>
-
-
-    <main class="container">
-      {% block content %}{% endblock %}
-    </main>
-
-    <footer class="site-footer">
-      <div class="container">
-        © {{ now|date:"Y" }} iZugdidi — {% trans "поддержанные iPhone в Зугдиди" %}
-      </div>
-    </footer>
-  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-  <div id="toast" class="toast" hx-ext="class-tools"></div>
+<main class="container">
+    {% block content %}{% endblock %}
+</main>
+<footer class="site-footer">
+    <div class="container">© {% now "Y" %} iZugdidi — {% trans "поддержанные iPhone в Зугдиди" %}</div>
+</footer>
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+<div id="toast" class="toast"></div>
 <script>
-  (function(){
-    var t = document.getElementById('toast');
-    window.showToast = function(msg){
-      if(!t) return;
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(function(){ t.classList.remove('show'); t.textContent=''; }, 2000);
-    }
-    document.body.addEventListener('htmx:afterRequest', function(e){
-      var m = e.detail.xhr.getResponseHeader('X-Toast');
-      if(m){ showToast(m); }
-    });
-  })();
+    (function(){var t=document.getElementById('toast');if(!t)return;document.body.addEventListener('htmx:afterRequest',function(e){var m=e.detail.xhr.getResponseHeader('X-Toast');if(m){t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2000);}});})();
+    document.addEventListener('htmx:configRequest',function(e){e.detail.headers['X-CSRFToken']=(function(n){const m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)');return m?m.pop():'';})('csrftoken');});
 </script>
-  <script>
-  function getCookie(name){
-    const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-    return m ? m.pop() : '';
-  }
-  document.addEventListener('htmx:configRequest', function (e) {
-    e.detail.headers['X-CSRFToken'] = getCookie('csrftoken');
-  });
-</script>
-
-
-  </body>
+</body>
 </html>

@@ -1,7 +1,12 @@
 {% load i18n %}
-<span id="cart-badge"
-      class="cart-badge"
-      {% if cart_count|default:0 == 0 %}style="display:none"{% endif %}
-      hx-swap-oob="true">
-  {{ cart_count|default:0 }}
+<span class="badge" aria-label="{% trans 'Товаров в корзине' %}">
+  {{ qty_total|default:0 }}
 </span>
+<style>
+    .icon-link .badge {
+  display:inline-flex; min-width:18px; height:18px; padding:0 6px;
+  border-radius:999px; align-items:center; justify-content:center;
+  font-size:11px; line-height:1; background:var(--primary,#111); color:#fff; margin-left:6px;
+}
+.icon-link .badge.empty { background:transparent; color:transparent; }
+</style>

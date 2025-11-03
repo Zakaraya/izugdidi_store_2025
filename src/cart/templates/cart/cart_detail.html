@@ -8,19 +8,13 @@
 <div class="container">
   <h1 class="section-title">{% trans "Корзина" %}</h1>
 
-  {% if messages %}
-    <div class="auth-alert" style="margin-bottom: 24px;">
-      {% for m in messages %}{{ m }}{% endfor %}
-    </div>
-  {% endif %}
+  {% if messages %}<div class="auth-alert" style="margin-bottom: 24px;">{% for m in messages %}{{ m }}{% endfor %}</div>{% endif %}
 
   {% if items %}
     <div class="grid-2" style="align-items: flex-start; gap: 32px;">
-
-      <!-- Левая колонка: товары -->
       <div style="display: flex; flex-direction: column; gap: 16px;">
 
-        <!-- ВЕРСИЯ ДЛЯ ДЕСКТОПА: ТАБЛИЦА -->
+        <!-- ДЕСКТОП: ТАБЛИЦА -->
         <div class="orders-table">
           <table class="table">
             <thead>
@@ -36,30 +30,27 @@
               {% for it in items %}
               <tr id="row-{{ it.id }}">
                 <td style="width: 80px; padding-right: 0;">
-                  {% if it.product.image %}
-                    <img src="{{ it.product.image.url }}" alt="" style="width: 64px; height: 64px; object-fit: cover; border-radius: 8px;">
-                  {% endif %}
+                  {% if it.product.image %}<img src="{{ it.product.image.url }}" alt="" style="width: 64px; height: 64px; object-fit: cover; border-radius: 8px;">{% endif %}
                 </td>
-                <td>
-                  <a href="/p/{{ it.product.base_slug }}/">{{ it.product.translations.title|default:it.product }}</a>
-                </td>
+                <td><a href="/p/{{ it.product.base_slug }}/">{{ it.product.translations.title|default:it.product }}</a></td>
                 <td>{{ it.unit_price_snapshot|money }} {{ it.product.currency }}</td>
                 <td>
-                  <input type="number" min="1" class="qty-input"
-                         name="qty" value="{{ it.qty }}"
-                         hx-post="{% url 'cart:update_item' %}"
-                         hx-include="closest tr"
-                         hx-vals='{"item_id":"{{ it.id }}"}'
-                         hx-trigger="change, keyup delay:400ms"
-                         hx-target="#row-{{ it.id }}"
-                         hx-swap="outerHTML">
+                  <input
+                    type="number"
+                    min="1"
+                    class="qty-input"
+                    name="qty"
+                    value="{{ it.qty }}"
+                    data-id="{{ it.id }}"
+                    data-update-url="{% url 'cart:update' it.id %}"
+                  >
                 </td>
                 <td><b class="price">{{ it.unit_price_snapshot|mul:it.qty }} {{ it.product.currency }}</b></td>
                 <td>
-                  <form action="/cart/remove/{{ it.id }}/" method="post">
-                    {% csrf_token %}
-                    <button class="btn secondary" type="submit" style="padding: 8px 16px;">{% trans "Удалить" %}</button>
-                  </form>
+                    <form action="{% url 'cart:remove' it.id %}" method="post" data-item-id="{{ it.id }}">
+                      {% csrf_token %}
+                      <button class="btn secondary" type="submit" style="padding: 8px 16px;">{% trans "Удалить" %}</button>
+                    </form>
                 </td>
               </tr>
               {% endfor %}
@@ -67,71 +58,209 @@
           </table>
         </div>
 
-        <!-- ВЕРСИЯ ДЛЯ МОБИЛЬНЫХ: КАРТОЧКИ -->
+        <!-- МОБИЛЬНЫЕ: КАРТОЧКИ -->
         <div class="orders-cards">
-          {% for it in items %}
-          <div class="order-card" id="card-{{ it.id }}">
-            <!-- Верхняя часть: фото и название -->
-            <div style="display: flex; gap: 16px; align-items: flex-start;">
-                {% if it.product.image %}
-                  <img src="{{ it.product.image.url }}" alt="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
-                {% endif %}
-              <div style="flex: 1;">
-                <a href="/p/{{ it.product.base_slug }}/" style="font-weight: 600; color: var(--text); line-height: 1.3;">{{ it.product.translations.title|default:it.product }}</a>
-                <div style="font-size: 14px; color: var(--text-secondary); margin-top: 4px;">{{ it.unit_price_snapshot|money }} {{ it.product.currency }} / шт.</div>
-              </div>
-            </div>
-
-            <!-- Нижняя часть: управление и цена -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-              <input type="number" min="1" class="qty-input"
-                     name="qty" value="{{ it.qty }}"
-                     hx-post="{% url 'cart:update_item' %}"
-                     hx-vals='{"item_id":"{{ it.id }}"}'
-                     hx-trigger="change, keyup delay:400ms"
-                     hx-target="#card-{{ it.id }}"
-                     hx-swap="outerHTML">
-
-              <div style="text-align: right;">
-                <div class="price" style="font-size: 20px;">{{ it.unit_price_snapshot|mul:it.qty }} {{ it.product.currency }}</div>
-                <form action="/cart/remove/{{ it.id }}/" method="post" style="margin-top: 4px;">
-                    {% csrf_token %}
-                    <button type="submit" style="background:none; border:none; color:var(--danger); font-size:13px; cursor:pointer; padding: 4px;">{% trans "Удалить" %}</button>
-                </form>
-              </div>
+   {% for it in items %}
+        <div class="order-card" id="card-{{ it.id }}">
+          <div style="display: flex; gap: 16px; align-items: flex-start;">
+            {% if it.product.image %}<img src="{{ it.product.image.url }}" alt="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">{% endif %}
+            <div style="flex: 1;">
+              <a href="/p/{{ it.product.base_slug }}/" style="font-weight: 600; color: var(--text); line-height: 1.3;">{{ it.product.translations.title|default:it.product }}</a>
+              <div style="font-size: 14px; color: var(--text-secondary); margin-top: 4px;">{{ it.unit_price_snapshot|money }} {{ it.product.currency }} / {% trans "шт." %}</div>
             </div>
           </div>
-          {% endfor %}
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+            <input
+              type="number"
+              min="1"
+              class="qty-input"
+              name="qty"
+              value="{{ it.qty }}"
+              data-id="{{ it.id }}"
+              data-update-url="{% url 'cart:update' it.id %}"
+            >
+            <div style="text-align: right;">
+              <div class="price">{{ it.unit_price_snapshot|mul:it.qty }} {{ it.product.currency }}</div>
+            <form action="{% url 'cart:remove' it.id %}" method="post" data-item-id="{{ it.id }}" style="margin-top: 4px;">
+              {% csrf_token %}
+              <button type="submit" style="background:none; border:none; color:var(--danger); font-size:13px; cursor:pointer; padding: 4px;">{% trans "Удалить" %}</button>
+            </form>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
         </div>
       </div>
 
       <!-- Правая колонка: итоги -->
-      <div id="cart-summary" class="card" style="position: sticky; top: 80px;"
-           hx-get="{% url 'cart:summary_fragment' %}"
-           hx-trigger="cart-recalc from:body"
-           hx-swap="outerHTML">
-        <h3 style="margin-bottom: 20px;">{% trans "Сумма заказа" %}</h3>
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 18px;">
-          <span>{% trans "Итого" %}:</span>
-          <span class="price">{{ subtotal }} GEL</span>
-        </div>
-        <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border);">
-        <a class="btn" href="/checkout/" style="width: 100%;">{% trans "Оформить заказ" %}</a>
-      </div>
+<!--      {% include "cart/_summary.html" with subtotal=subtotal %}-->
+        <!-- Правая колонка: итоги -->
+<div id="cart-summary">
+  {% include "cart/_summary.html" with subtotal=subtotal %}
+</div>
+
     </div>
   {% else %}
     <div class="empty-state">
-      <div class="empty-icon" aria-hidden="true">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-        </svg>
-      </div>
+      <div class="empty-icon" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></div>
       <h2 style="margin:0 0 6px;">{% trans "Тут пусто" %}</h2>
       <p style="color: var(--text-secondary); margin:0 0 16px;">{% trans "Добавьте товары из каталога, чтобы оформить заказ." %}</p>
       <a class="btn secondary" href="{% url 'catalog:product_list' %}">{% trans "Перейти в каталог" %}</a>
     </div>
   {% endif %}
 </div>
+<script>
+  // Получаем CSRF из cookie (классика из доки Django)
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+  }
+  const CSRF_TOKEN = getCookie('csrftoken');
+
+  // Небольшой debounce, чтобы не слать запросы на каждый тик
+  function debounce(fn, ms) {
+    let t;
+    return function(...args) {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), ms);
+    }
+  }
+
+  async function updateQty(input) {
+    const url = input.dataset.updateUrl;
+    const qty = Math.max(1, parseInt(input.value || "1", 10));
+    input.value = qty; // нормализуем визуально
+
+    input.disabled = true;
+    input.classList.add('loading');
+
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': CSRF_TOKEN,
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: new URLSearchParams({ qty: String(qty) })
+      });
+
+      if (!res.ok) {
+        throw new Error('Server error ' + res.status);
+      }
+
+      const data = await res.json();
+      if (!data.ok) throw new Error('Bad response');
+
+      // Обновляем сумму по позиции (и в десктоп-строке, и в карточке, если есть)
+      const id = data.item_id;
+      const row = document.querySelector(`#row-${id} .price`);
+      const card = document.querySelector(`#card-${id} .price`);
+      if (row) row.innerHTML = data.item_total_html;
+      if (card) card.innerHTML = data.item_total_html;
+
+      // Обновляем правую колонку итогов
+      const summary = document.getElementById('cart-summary');
+      if (summary && data.summary_html) {
+        summary.innerHTML = data.summary_html;
+      }
+      const badge = document.getElementById('cart-badge');
+        if (badge && data.badge_html) {
+          badge.innerHTML = data.badge_html;
+        }
+    } catch (e) {
+      console.error(e);
+      // Можно вывести toast/alert, если у тебя есть системные сообщения
+      alert("{% trans 'Не удалось обновить количество. Попробуйте ещё раз.' %}");
+    } finally {
+      input.disabled = false;
+      input.classList.remove('loading');
+    }
+  }
+
+  const debouncedUpdate = debounce(updateQty, 250);
+
+  // Навесим обработчики на все qty-input
+  document.addEventListener('input', (e) => {
+    const el = e.target;
+    if (el && el.classList && el.classList.contains('qty-input')) {
+      debouncedUpdate(el);
+    }
+  });
+
+  // Чтобы с клавиатуры Enter не отправлял форму, а просто обновлял
+  document.addEventListener('keydown', (e) => {
+    const el = e.target;
+    if (e.key === 'Enter' && el && el.classList && el.classList.contains('qty-input')) {
+      e.preventDefault();
+      updateQty(el);
+    }
+  });
+
+
+      // перехватываем submit у форм удаления
+  document.addEventListener('submit', async (e) => {
+    const form = e.target;
+    if (!(form instanceof HTMLFormElement)) return;
+
+    if (!form.action.includes('/cart/remove/')) return;
+
+    e.preventDefault();
+
+    const CSRF_TOKEN = (function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    })('csrftoken');
+
+    const id = form.dataset.itemId;
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': CSRF_TOKEN,
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+
+      if (!res.ok) throw new Error('Server error ' + res.status);
+
+      const data = await res.json();
+      if (!data.ok) throw new Error('Bad response');
+
+      // Удаляем строку/карточку
+      const row = document.getElementById(`row-${id}`);
+      const card = document.getElementById(`card-${id}`);
+      if (row) row.remove();
+      if (card) card.remove();
+
+      // Обновляем правую колонку итогов
+      const summary = document.getElementById('cart-summary');
+      if (summary && data.summary_html) {
+        summary.innerHTML = data.summary_html;
+      }
+
+      // Если товаров не осталось — перезагрузим, чтобы показать empty-state
+      if (data.items_count === 0) {
+        location.reload();
+      }
+    } catch (err) {
+      console.error(err);
+      // fallback — обычная отправка формы приведёт к редиректу
+      form.submit();
+    }
+  });
+    document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('input.qty-input').forEach(function (inp) {
+    if (!inp.value || String(inp.value).trim() === '') {
+      // восстановим из атрибута value или поставим '1'
+      inp.value = inp.getAttribute('value') || '1';
+    }
+  });
+});
+</script>
+
 {% endblock %}

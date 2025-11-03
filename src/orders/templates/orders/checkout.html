@@ -48,9 +48,8 @@
             <div style="display: flex; flex-direction: column; gap: 16px;">
               <div style="display: flex; flex-direction: column; gap: 6px;">
                 <label for="{{ form.delivery_method.id_for_label }}">{% trans "Способ получения" %}</label>
-                {# Этот select теперь управляет загрузкой полей адреса через HTMX #}
                 <select name="delivery_method" id="{{ form.delivery_method.id_for_label }}" class="input"
-                        hx-get="{% url 'orders:checkout_address_fields' %}"  {# <--- ИЗМЕНЕНИЕ ЗДЕСЬ #}
+                        hx-get="{% url 'orders:checkout_address_fields' %}"
                         hx-trigger="change"
                         hx-target="#address-fields-wrapper"
                         hx-swap="innerHTML">
@@ -59,11 +58,23 @@
                 </select>
               </div>
 
-              <!-- Поля для адреса будут вставлены сюда с помощью HTMX -->
               <div id="address-fields-wrapper">
-                  {# Первоначальная загрузка полей адреса #}
                   {% include "orders/_address_fields.html" with method=form.delivery_method.value|default:'pickup' form=form %}
               </div>
+
+              <!-- ВОЗВРАЩЕННЫЙ БЛОК -->
+              <div id="billing-checkbox-wrapper" style="display: {% if form.delivery_method.value == 'address' %}flex{% else %}none{% endif %}; align-items: center; gap: 8px;">
+                  {{ form.billing_same }}
+                  <label for="{{ form.billing_same.id_for_label }}">{{ form.billing_same.label }}</label>
+              </div>
+
+              <div id="billing-fields-wrapper" style="display:none;">
+                  <div style="display: flex; flex-direction: column; gap: 6px;">
+                      <label for="{{ form.billing_address.id_for_label }}">{% trans "Платёжный адрес" %}</label>
+                      {{ form.billing_address }}
+                  </div>
+              </div>
+              <!-- КОНЕЦ ВОЗВРАЩЕННОГО БЛОКА -->
             </div>
           </div>
 
@@ -84,6 +95,7 @@
 
         <!-- Правая колонка: Состав заказа -->
         <div style="position: sticky; top: 80px; display: flex; flex-direction: column; gap: 16px;">
+          <!-- Содержимое правой колонки без изменений -->
           <div class="card">
             <h3 style="margin-bottom: 16px;">{% trans "Ваш заказ" %}</h3>
             <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -94,7 +106,6 @@
               </div>
               {% endfor %}
             </div>
-
             <hr style="border: none; border-top: 1px solid var(--border); margin: 16px 0;">
             <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px;">
               <div style="display: flex; justify-content: space-between;"><span>{% trans "Подытог" %}:</span> <b>{{ subtotal }} GEL</b></div>
@@ -112,13 +123,53 @@
               <span class="price">{{ total }} GEL</span>
             </div>
           </div>
-
           <button class="btn" type="submit" form="checkout-form" name="action" value="place" style="width:100%;">
             {% trans "Подтвердить и оплатить" %}
           </button>
         </div>
       </div>
     </form>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const deliverySelect = document.querySelector('[name="delivery_method"]');
+      const billingCheckbox = document.querySelector('[name="billing_same"]');
+      const billingCheckboxWrapper = document.getElementById('billing-checkbox-wrapper');
+      const billingFieldsWrapper = document.getElementById('billing-fields-wrapper');
+
+      function toggleBillingFields() {
+        if (!billingCheckbox || !billingFieldsWrapper) return;
+        billingFieldsWrapper.style.display = billingCheckbox.checked ? 'none' : 'block';
+      }
+
+      function toggleBillingCheckboxVisibility() {
+        if (!deliverySelect || !billingCheckboxWrapper) return;
+        billingCheckboxWrapper.style.display = deliverySelect.value === 'address' ? 'flex' : 'none';
+        if (deliverySelect.value !== 'address') {
+            billingFieldsWrapper.style.display = 'none';
+        } else {
+            toggleBillingFields();
+        }
+      }
+
+      if (billingCheckbox) {
+        billingCheckbox.addEventListener('change', toggleBillingFields);
+      }
+      if (deliverySelect) {
+        // Слушаем и стандартное событие, и событие от HTMX
+        deliverySelect.addEventListener('change', toggleBillingCheckboxVisibility);
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            if (event.detail.target.id === 'address-fields-wrapper') {
+                toggleBillingCheckboxVisibility();
+            }
+        });
+      }
+
+      // Первоначальный вызов
+      toggleBillingCheckboxVisibility();
+      toggleBillingFields();
+    });
+    </script>
 
   {% else %}
     <div class="empty-state">

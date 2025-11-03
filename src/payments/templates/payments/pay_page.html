@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block title %}Оплата заказа №{{ order.id }}{% endblock %}
 {% block content %}
   <h1>Оплата заказа №{{ order.id }}</h1>
@@ -7,8 +8,8 @@
     <p>Статус: <b>{{ order.get_status_display }}</b></p>
     <form method="post">
       {% csrf_token %}
-      <button class="btn" type="submit">Оплатить</button>
+      <button class="btn" type="submit">{% trans "Оплатить" %}</button>
     </form>
   </div>
-  <p style="margin-top:12px;"><a class="btn secondary" href="/orders/{{ order.id }}/track/">Вернуться к заказу</a></p>
+  <p style="margin-top:12px;"><a class="btn secondary" href="/orders/{{ order.id }}/track/">{% trans "Вернуться к заказу" %}</a></p>
 {% endblock %}

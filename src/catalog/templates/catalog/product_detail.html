@@ -55,11 +55,14 @@
 
       <div style="margin-bottom: 24px; color: var(--text-secondary); line-height: 1.6;">{{ product.description|default:""|linebreaks }}</div>
 
-      <form action="/cart/add/" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="product_id" value="{{ product.id }}">
-        <button class="btn" type="submit" style="width: 100%;">{% trans "Добавить в корзину" %}</button>
-      </form>
+        <form hx-post="{% url 'cart:add' %}" hx-swap="none">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{ product.id }}">
+          {# если нужно выбирать количество на карточке — раскомментируй: #}
+          {# <input type="number" name="qty" min="1" value="1" class="input-qty"> #}
+          <button class="btn" type="submit" style="width: 100%;">{% trans "Добавить в корзину" %}</button>
+        </form>
+
     </div>
   </div>
 
