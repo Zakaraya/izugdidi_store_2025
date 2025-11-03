@@ -229,3 +229,14 @@ AWS_S3_ENDPOINT_URL = os.environ.get("SPACES_ENDPOINT")
 AWS_S3_REGION_NAME = os.environ.get("SPACES_REGION", "ams3")
 AWS_DEFAULT_ACL = "public-read"
 AWS_QUERYSTRING_AUTH = False  # чистые ссылки без подписи
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = False  # <— ВАЖНО: отключить, иначе /healthz уходит в https и падает
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# (Можно оставить HSTS — это на уровне браузера, не мешает probe)
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
