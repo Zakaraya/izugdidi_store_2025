@@ -30,8 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # DEBUG = True
 # DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
-# DEBUG = os.environ.get("DEBUG", "False") == "True"
-DEBUG = "True"
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 # ALLOWED_HOSTS = ["*"]
 
@@ -79,11 +78,11 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -139,15 +138,25 @@ DATABASES = {
 }
 
 # Сессии и кэш в Redis
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{os.getenv('REDIS_HOST','redis')}:{os.getenv('REDIS_PORT','6379')}/1",
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+USE_REDIS = os.getenv("USE_REDIS", "0") == "1"
+
+if USE_REDIS:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": f"redis://{os.getenv('REDIS_HOST','redis')}:{os.getenv('REDIS_PORT','6379')}/1",
+            "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        }
     }
-}
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
+    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+    SESSION_CACHE_ALIAS = "default"
+else:
+    # Без Redis: локальный кэш и БД-сессии
+    CACHES = {
+        "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}
+    }
+    SESSION_ENGINE = "django.contrib.sessions.backends.db"
+
 
 # I18N / L10N
 LANGUAGE_CODE = "ka"  # по умолчанию грузинский
@@ -231,6 +240,7 @@ AWS_S3_REGION_NAME = os.environ.get("SPACES_REGION", "ams3")
 AWS_DEFAULT_ACL = "public-read"
 AWS_QUERYSTRING_AUTH = False  # чистые ссылки без подписи
 
+USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = False
 
