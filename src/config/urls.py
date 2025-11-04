@@ -6,14 +6,16 @@ from django.views.generic import RedirectView
 from django.views.i18n import set_language
 from django.http import HttpResponse
 
-def healthz(_):
-    return HttpResponse("ok", content_type="text/plain")
+def healthz_view(_):
+    # Никакой логики/редиректов, всегда 200 OK
+    return HttpResponse("ok", content_type="text/plain", status=200)
 
 urlpatterns = [
     # Технические и служебные пути
+    path("healthz", healthz_view, name="healthz"),
+    path("healthz/", healthz_view),
     path("admin/", admin.site.urls),
     path("i18n/setlang/", set_language, name="set_language"),
-    path("healthz", healthz, name="healthz"),
 
     # Основные приложения
     path("cms/", include(("cms.urls", "cms"), namespace="cms")),
