@@ -19,10 +19,10 @@ def _order_accessible(request, order: Order) -> bool:
 def pay_page(request, order_id: int):
     order = get_object_or_404(Order, pk=order_id)
     if not _order_accessible(request, order):
-        messages.error(request, "Нет доступа к заказу.")
+        messages.error(request, "There is no access to the order.")
         return redirect("cms:home")
     if order.status not in (Order.Status.PENDING, Order.Status.PROCESSING):
-        messages.info(request, "Этот заказ уже не требует оплаты.")
+        messages.info(request, "This order no longer requires payment.")
         return redirect("orders:track", pk=order.id)
 
     if request.method == "POST":
@@ -31,7 +31,7 @@ def pay_page(request, order_id: int):
         if not order.placed_at:
             order.placed_at = timezone.now()
         order.save(update_fields=["status", "placed_at", "updated_at"])
-        messages.success(request, "Оплата прошла успешно.")
+        messages.success(request, "The payment was successful.")
         context = {
             "order": order,
             "request_scheme": request.scheme,
@@ -50,7 +50,7 @@ def mockpay_return(request):
     # Страница возврата от «провайдера» — просто редирект на трекинг
     oid = request.GET.get("order_id")
     if not oid or not oid.isdigit():
-        messages.error(request, "Некорректный ответ платёжной системы.")
+        messages.error(request, "Incorrect response from the payment system.")
         return redirect("cms:home")
     return redirect("orders:track", pk=int(oid))
 

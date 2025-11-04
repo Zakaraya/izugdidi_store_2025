@@ -48,7 +48,7 @@ def cart_add(request):
         resp = HttpResponse(oob, content_type="text/html; charset=utf-8")
         resp["X-Toast"] = "Product added to cart"
         return resp
-    messages.success(request, "Товар добавлен в корзину.")
+    messages.success(request, "The product has been added to the cart.")
     return redirect("cart:detail")
 
 @require_POST
@@ -58,14 +58,14 @@ def cart_update(request, item_id):
     qty = int(request.POST.get("qty", "1"))
     if qty <= 0:
         item.delete()
-        messages.info(request, "Товар удалён из корзины.")
+        messages.info(request, "Тhe product has been removed from the shopping cart.")
     else:
         item.qty = qty
         item.save(update_fields=["qty", "updated_at"])
-        messages.success(request, "Количество обновлено.")
+        messages.success(request, "The quantity has been updated.")
     if request.headers.get("HX-Request") == "true":
         resp = redirect("cart:detail")
-        resp["X-Toast"] = "Количество обновлено"  # или "Товар удалён"
+        resp["X-Toast"] = "Quantity updated"  # или "Товар удалён"
         return resp
     return redirect("cart:detail")
 
@@ -74,10 +74,10 @@ def cart_remove(request, item_id):
     cart = get_or_create_cart(request)
     item = get_object_or_404(CartItem, pk=item_id, cart=cart)
     item.delete()
-    messages.info(request, "Товар удалён.")
+    messages.info(request, "The product has been deleted.")
     if request.headers.get("HX-Request") == "true":
         resp = redirect("cart:detail")
-        resp["X-Toast"] = "Количество обновлено"  # или "Товар удалён"
+        resp["X-Toast"] = "Quantity updated"  # или "Товар удалён"
         return resp
     return redirect("cart:detail")
 
@@ -227,7 +227,7 @@ def remove_item(request, item_id: int):
             "total_qty": total_qty,
         })
 
-    messages.success(request, gettext("Товар удалён из корзины."))
+    messages.success(request, gettext("The product has been removed from the shopping cart."))
     return HttpResponseRedirect(reverse("cart:detail"))
 
 

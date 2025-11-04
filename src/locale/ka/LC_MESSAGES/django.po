@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-04 12:52+0300\n"
+"POT-Creation-Date: 2025-11-04 22:32+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,8 +114,8 @@ msgid "Не удалось обновить количество. Попробу
 msgstr "რაოდენობა ვერ განაახლეს. სცადეთ კიდევ ერთხელ."
 
 #: cart/views.py:230
-msgid "Товар удалён из корзины."
-msgstr "პროდუქტები არ მოიძებნა."
+msgid "The product has been removed from the shopping cart."
+msgstr ""
 
 #: catalog/models.py:19
 msgid "Category"
@@ -424,11 +424,11 @@ msgstr ""
 "თუ მოწყობილობა არ შეესაბამება აღწერას, მოვახდენთ შეცვლას ან თანხის "
 "დაბრუნებას კანონმდებლობის შესაბამისად."
 
-#: config/settings/base.py:164
+#: config/settings/base.py:164 config/settings/base_old.py:127
 msgid "ქართული"
 msgstr "ქართული"
 
-#: config/settings/base.py:165
+#: config/settings/base.py:165 config/settings/base_old.py:128
 msgid "English"
 msgstr "ინგლისური"
 
@@ -564,7 +564,7 @@ msgstr "ფასდაკლება"
 
 #: orders/templates/orders/checkout.html:127
 msgid "Подтвердить и оплатить"
-msgstr "პაროლის დადასტურება"
+msgstr "დაადასტურეთ და გადაიხადეთ"
 
 #: orders/templates/orders/checkout.html:176
 msgid "Ваша корзина пуста"
@@ -601,6 +601,7 @@ msgid "Статус заказа №%(id)s"
 msgstr "შეკვეთის სტატუსი №%(id)s"
 
 #: orders/templates/orders/order_track.html:8
+#, python-format
 msgid "Заказ №%(id)s"
 msgstr "შეკვეთის სტატუსი №%(id)s"
 
@@ -791,6 +792,9 @@ msgstr "გახსნა"
 #: users/templates/users/my_orders.html:42
 msgid "Квитанция"
 msgstr "მიღება"
+
+#~ msgid "Товар удалён из корзины."
+#~ msgstr "პროდუქტები არ მოიძებნა."
 
 #~ msgid "OK"
 #~ msgstr "კარგი"
