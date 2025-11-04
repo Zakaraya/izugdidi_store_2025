@@ -26,7 +26,7 @@
     </div>
      {% if order.status == 'pending' %}
       <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">
-      <a class="btn" href="/pay/{{ order.id }}/">{% trans "Перейти к оплате" %}</a>
+      <a class="btn" href="{% url 'payments:pay_page' order.id %}">{% trans "Оплатить" %}</a>
     {% endif %}
   </div>
 
