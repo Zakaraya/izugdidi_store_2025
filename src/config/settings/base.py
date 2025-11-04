@@ -247,7 +247,7 @@ USE_SPACES = all([
 ])
 
 if USE_SPACES:
-    INSTALLED_APPS = [*INSTALLED_APPS, "storages"]  # на случай локального запуска без storages
+    # INSTALLED_APPS = [*INSTALLED_APPS, "storages"]  # на случай локального запуска без storages
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
     AWS_DEFAULT_ACL = "public-read"
     AWS_QUERYSTRING_AUTH = False
