@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-02 15:33+0300\n"
+"POT-Creation-Date: 2025-11-04 12:52+0300\n"
 "PO-Revision-Date: 2025-10-25 16:20+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: English <en@li.org>\n"
@@ -35,8 +35,6 @@ msgid "Cart items"
 msgstr "Cart items"
 
 #: cart/templates/cart/_badge.html:2
-#, fuzzy
-#| msgid "Товары не найдены."
 msgid "Товаров в корзине"
 msgstr "Products not found."
 
@@ -69,8 +67,6 @@ msgid "Оформить заказ"
 msgstr "Checkout"
 
 #: cart/templates/cart/_table_empty.html:6
-#, fuzzy
-#| msgid "Корзина пуста."
 msgid "Корзина пуста"
 msgstr "Your cart is empty."
 
@@ -118,8 +114,6 @@ msgid "Не удалось обновить количество. Попробу
 msgstr "Couldn't update the quantity. Try again."
 
 #: cart/views.py:230
-#, fuzzy
-#| msgid "Товары не найдены."
 msgid "Товар удалён из корзины."
 msgstr "Products not found."
 
@@ -174,7 +168,7 @@ msgstr "Maximum 10 images per product."
 #: catalog/templates/catalog/_product_grid.html:15
 #: catalog/templates/catalog/product_detail.html:43
 #: catalog/templates/catalog/product_list.html:44
-#: cms/templates/cms/home.html:36
+#: cms/templates/cms/home.html:38
 msgid "Сост."
 msgstr "Cond."
 
@@ -183,8 +177,6 @@ msgid "В корзину"
 msgstr "Add to cart"
 
 #: catalog/templates/catalog/_product_grid.html:36
-#, fuzzy
-#| msgid "Товары не найдены."
 msgid "Товары не найдены"
 msgstr "Products not found."
 
@@ -193,8 +185,6 @@ msgid "Попробуйте изменить параметры фильтра �
 msgstr "Try changing the filter settings or resetting them."
 
 #: catalog/templates/catalog/_product_grid.html:38
-#, fuzzy
-#| msgid "Сбросить"
 msgid "Сбросить фильтры"
 msgstr "Reset"
 
@@ -215,8 +205,6 @@ msgid "Вперёд"
 msgstr "Next"
 
 #: catalog/templates/catalog/product_detail.html:8
-#, fuzzy
-#| msgid "Перейти в каталог"
 msgid "Назад в каталог"
 msgstr "Go to catalog"
 
@@ -225,11 +213,6 @@ msgid "Нет изображения"
 msgstr "There is no image"
 
 #: catalog/templates/catalog/product_detail.html:45
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "        %(gb)s GB · %(color)s\n"
-#| "      "
 msgid ""
 "\n"
 "          %(gb)s GB · %(color)s\n"
@@ -240,14 +223,10 @@ msgstr ""
 "      "
 
 #: catalog/templates/catalog/product_detail.html:63
-#, fuzzy
-#| msgid "В корзину"
 msgid "Добавить в корзину"
 msgstr "Add to cart"
 
 #: catalog/templates/catalog/product_detail.html:70
-#, fuzzy
-#| msgid "Пока нет товаров."
 msgid "Похожие товары"
 msgstr "No products yet."
 
@@ -413,11 +392,11 @@ msgstr "Battery and functionality check"
 msgid "Поддержка на двух языках"
 msgstr "Support in two languages"
 
-#: cms/templates/cms/home.html:27
+#: cms/templates/cms/home.html:29
 msgid "Новинки в наличии"
 msgstr "New arrivals"
 
-#: cms/templates/cms/home.html:43
+#: cms/templates/cms/home.html:45
 msgid "Пока нет товаров."
 msgstr "No products yet."
 
@@ -446,11 +425,11 @@ msgstr ""
 "If the device does not match the description, we will exchange it or refund "
 "the money in accordance with the law."
 
-#: config/settings/base.py:127
+#: config/settings/base.py:164
 msgid "ქართული"
 msgstr "Georgian"
 
-#: config/settings/base.py:128
+#: config/settings/base.py:165
 msgid "English"
 msgstr "English"
 
@@ -536,8 +515,6 @@ msgid "Оформление заказа"
 msgstr "Checkout"
 
 #: orders/templates/orders/checkout.html:26
-#, fuzzy
-#| msgid "Контакты"
 msgid "1. Ваши контакты"
 msgstr "1. Contacts"
 
@@ -551,8 +528,6 @@ msgid "Телефон"
 msgstr "Phone"
 
 #: orders/templates/orders/checkout.html:47
-#, fuzzy
-#| msgid "Способ получения"
 msgid "2. Способ получения"
 msgstr "2. Delivery method"
 
@@ -589,20 +564,14 @@ msgid "Скидка"
 msgstr "Discount"
 
 #: orders/templates/orders/checkout.html:127
-#, fuzzy
-#| msgid "Подтверждение пароля"
 msgid "Подтвердить и оплатить"
 msgstr "Confirm password"
 
 #: orders/templates/orders/checkout.html:176
-#, fuzzy
-#| msgid "Корзина пуста."
 msgid "Ваша корзина пуста"
 msgstr "Your cart is empty."
 
 #: orders/templates/orders/checkout.html:177
-#, fuzzy
-#| msgid "Вы можете забрать заказ в магазине в Зугдиди."
 msgid "Вы не можете оформить заказ, пока не добавите товары."
 msgstr "You can pick up your order at the store in Zugdidi."
 
@@ -619,8 +588,6 @@ msgid "Мы отправили подтверждение на вашу почт
 msgstr "We have sent a confirmation to your email."
 
 #: orders/templates/orders/order_success.html:18
-#, fuzzy
-#| msgid "Оплатить"
 msgid "Оплатить сейчас"
 msgstr "Pay"
 
@@ -635,38 +602,26 @@ msgid "Статус заказа №%(id)s"
 msgstr "Order status #%(id)s"
 
 #: orders/templates/orders/order_track.html:8
-#, fuzzy, python-format
-#| msgid "Статус заказа №%(id)s"
 msgid "Заказ №%(id)s"
 msgstr "Order status #%(id)s"
 
 #: orders/templates/orders/order_track.html:13
-#, fuzzy
-#| msgid "Текущий статус:"
 msgid "Текущий статус"
 msgstr "Current status:"
 
 #: orders/templates/orders/order_track.html:17
-#, fuzzy
-#| msgid "Ваш заказ"
 msgid "Сумма заказа"
 msgstr "Your order"
 
 #: orders/templates/orders/order_track.html:22
-#, fuzzy
-#| msgid "Трек-номер:"
 msgid "Трек-номер"
 msgstr "Tracking number:"
 
 #: orders/templates/orders/order_track.html:29
-#, fuzzy
-#| msgid "Итого к оплате"
 msgid "Перейти к оплате"
 msgstr "Total due"
 
 #: orders/templates/orders/order_track.html:33
-#, fuzzy
-#| msgid "Способ получения"
 msgid "Этапы выполнения"
 msgstr "Delivery method"
 
@@ -704,8 +659,6 @@ msgid "Оплатить"
 msgstr "Pay"
 
 #: payments/templates/payments/pay_page.html:14
-#, fuzzy
-#| msgid "Вернуться в каталог"
 msgid "Вернуться к заказу"
 msgstr "Back to catalog"
 
@@ -790,14 +743,10 @@ msgid "Пока нет заказов."
 msgstr "No orders yet."
 
 #: users/templates/users/_tab_orders.html:52
-#, fuzzy
-#| msgid "Оформление заказа"
 msgid "Подробнее о заказе"
 msgstr "Checkout"
 
 #: users/templates/users/_tab_orders.html:60
-#, fuzzy
-#| msgid "Пока нет заказов."
 msgid "У вас еще нет заказов"
 msgstr "No orders yet."
 
@@ -814,8 +763,6 @@ msgid "Фамилия"
 msgstr "Last name"
 
 #: users/templates/users/_tab_profile.html:36
-#, fuzzy
-#| msgid "Сохранить"
 msgid "Сохранить изменения"
 msgstr "Save"
 
