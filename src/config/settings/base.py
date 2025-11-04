@@ -231,36 +231,58 @@ CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_REDIRECT_URL = "/users/account/orders/"
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 # --- Media / Spaces (S3 совместимый) ---
+# AWS_ACCESS_KEY_ID = os.environ.get("SPACES_KEY")
+# AWS_SECRET_ACCESS_KEY = os.environ.get("SPACES_SECRET")
+# AWS_STORAGE_BUCKET_NAME = os.environ.get("SPACES_BUCKET")
+# AWS_S3_ENDPOINT_URL = os.environ.get("SPACES_ENDPOINT")  # например: https://ams3.digitaloceanspaces.com
+# AWS_S3_REGION_NAME = os.environ.get("SPACES_REGION", "ams3")
+#
+# USE_SPACES = all([
+#     AWS_ACCESS_KEY_ID,
+#     AWS_SECRET_ACCESS_KEY,
+#     AWS_STORAGE_BUCKET_NAME,
+#     AWS_S3_ENDPOINT_URL,
+# ])
+#
+# if USE_SPACES:
+#     # INSTALLED_APPS = [*INSTALLED_APPS, "storages"]  # на случай локального запуска без storages
+#     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+#     AWS_DEFAULT_ACL = "public-read"
+#     AWS_QUERYSTRING_AUTH = False
+#     AWS_S3_SIGNATURE_VERSION = "s3v4"
+#     AWS_S3_ADDRESSING_STYLE = "virtual"  # важен для Spaces
+#
+#     # Красивый CDN-домен (если включишь CDN — подставь сюда свой):
+#     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}.digitaloceanspaces.com"
+#     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+# else:
+#     # Фоллбэк на локальные медиа (dev)
+#     MEDIA_URL = "/media/"
+#     MEDIA_ROOT = BASE_DIR / "media"
+
 AWS_ACCESS_KEY_ID = os.environ.get("SPACES_KEY")
 AWS_SECRET_ACCESS_KEY = os.environ.get("SPACES_SECRET")
-AWS_STORAGE_BUCKET_NAME = os.environ.get("SPACES_BUCKET")
-AWS_S3_ENDPOINT_URL = os.environ.get("SPACES_ENDPOINT")  # например: https://ams3.digitaloceanspaces.com
-AWS_S3_REGION_NAME = os.environ.get("SPACES_REGION", "ams3")
 
-USE_SPACES = all([
-    AWS_ACCESS_KEY_ID,
-    AWS_SECRET_ACCESS_KEY,
-    AWS_STORAGE_BUCKET_NAME,
-    AWS_S3_ENDPOINT_URL,
-])
+AWS_STORAGE_BUCKET_NAME = "izugdidi-media"                 # твой Space
+AWS_S3_REGION_NAME = "ams3"
+AWS_S3_ENDPOINT_URL = "https://ams3.digitaloceanspaces.com"
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_S3_ADDRESSING_STYLE = "virtual"                        # важно для <bucket>.<region>.digitaloceanspaces.com
 
-if USE_SPACES:
-    # INSTALLED_APPS = [*INSTALLED_APPS, "storages"]  # на случай локального запуска без storages
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-    AWS_DEFAULT_ACL = "public-read"
-    AWS_QUERYSTRING_AUTH = False
-    AWS_S3_SIGNATURE_VERSION = "s3v4"
-    AWS_S3_ADDRESSING_STYLE = "virtual"  # важен для Spaces
+AWS_DEFAULT_ACL = None
+AWS_S3_FILE_OVERWRITE = False                              # чтобы не перетирать файлы с одинаковым именем
+AWS_QUERYSTRING_AUTH = False                               # True -> подписанные приватные ссылки
 
-    # Красивый CDN-домен (если включишь CDN — подставь сюда свой):
-    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}.digitaloceanspaces.com"
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-else:
-    # Фоллбэк на локальные медиа (dev)
-    MEDIA_URL = "/media/"
-    MEDIA_ROOT = BASE_DIR / "media"
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}.digitaloceanspaces.com"
+
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+MEDIA_ROOT = ""                                            # НЕ пишем медиа локально
+
+STORAGES = {
+    "default": { "BACKEND": "storages.backends.s3boto3.S3Boto3Storage" },
+    "staticfiles": { "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage" },
+}
 
 
 USE_X_FORWARDED_HOST = True
