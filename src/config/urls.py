@@ -27,7 +27,7 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
 
     # Главная страница — редирект на каталог
-    path("", RedirectView.as_view(pattern_name="catalog:product_list", permanent=False)),
+    path("", RedirectView.as_view(pattern_name="cms:home", permanent=False)),
 ]
 
 # В DEBUG режиме — отдаём медиа локально
