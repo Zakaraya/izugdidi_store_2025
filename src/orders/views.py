@@ -176,7 +176,8 @@ def checkout(request):
                 #     send_order_placed_email.delay(order.id, order.email, context)
                 # except Exception:
                 #     pass
-                send_order_created_email.delay(order.id)
+                # send_order_created_email.delay(order.id)
+                send_order_created_email(order.id)
                 messages.success(request, "The order has been created. Thanks!")
                 return redirect("orders:success", pk=order.pk)
 

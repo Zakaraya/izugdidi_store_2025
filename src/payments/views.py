@@ -39,7 +39,8 @@ def pay_page(request, order_id: int):
         }
         try:
             # send_order_paid_email.delay(order.id, order.email, context)
-            send_order_paid_email_task.delay(order.id)
+            # send_order_paid_email_task.delay(order.id)
+            send_order_paid_email_task(order.id)
         except Exception as e:
             pass
         return redirect("orders:track", pk=order.id)

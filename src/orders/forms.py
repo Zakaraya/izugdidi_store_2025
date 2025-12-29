@@ -15,7 +15,7 @@ class CheckoutForm(forms.ModelForm):
     )
     promo_code = forms.CharField(
         required=False, label="Промокод",
-        widget=forms.TextInput(attrs={"class": "input", "placeholder": "Промокод"})
+        widget=forms.TextInput(attrs={"class": "input", "placeholder": "Promocode"})
     )
 
     class Meta:
