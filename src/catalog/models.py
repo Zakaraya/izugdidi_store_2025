@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from parler.models import TranslatableModel, TranslatedFields
+from django.conf import settings
 
 class TimeStamped(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -100,3 +101,21 @@ class ProductImage(TimeStamped):
             if qs.count() >= 10:
                 from django.core.exceptions import ValidationError
                 raise ValidationError(_("Maximum 10 images per product."))
+
+
+class Favorite(TimeStamped):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='favorites',
+        null=True,
+        blank=True
+    )
+    session_key = models.CharField(max_length=40, null=True, blank=True, db_index=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='favorited_by')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'product'], name='unique_user_favorite', condition=models.Q(user__isnull=False)),
+            models.UniqueConstraint(fields=['session_key', 'product'], name='unique_session_favorite', condition=models.Q(session_key__isnull=False)),
+        ]

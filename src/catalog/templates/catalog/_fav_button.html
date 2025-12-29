@@ -1,0 +1,43 @@
+{% comment %} catalog/_fav_button.html {% endcomment %}
+{% load i18n %}
+<button class="fav-toggle-btn {% if p.id in fav_ids %}active{% endif %}"
+        hx-post="{% url 'catalog:toggle_favorite' p.id %}"
+        hx-on:click="event.stopPropagation()"
+        hx-swap="outerHTML"
+        title="{% trans 'В избранное' %}">
+    <svg width="20" height="20" viewBox="0 0 24 24"
+         fill="{% if p.id in fav_ids %}currentColor{% else %}none{% endif %}"
+         stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+    </svg>
+</button>
+
+<style>
+.fav-toggle-btn {
+    /* Принудительно показываем всегда */
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    padding: 7px;
+    color: #b4b4b4; /* Серый цвет для неактивного */
+    transition: all 0.2s ease-in-out;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Цвет иконки, когда товар в избранном */
+.fav-toggle-btn.active {
+    color: #ff4d4d !important;
+}
+
+/* Эффект при наведении на само сердечко */
+.fav-toggle-btn:hover {
+    transform: scale(1.15);
+    color: #ff4d4d;
+    background: #fff;
+}
+</style>

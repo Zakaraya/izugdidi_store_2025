@@ -14,7 +14,6 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from django.utils.translation import gettext_lazy as _
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -24,31 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-*&6q$th5e7uw8_@t(iun8ayq6q!nm+hl7h42!$ocsfeh+v1nv-'
+SECRET_KEY = 'django-insecure-*&6q$th5e7uw8_@t(iun8ayq6q!nm+hl7h42!$ocsfeh+v1nv-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = True
 # DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
-DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-# ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*"]
 
-# ALLOWED_HOSTS = [h.strip() for h in os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") if h.strip()]
-# CSRF_TRUSTED_ORIGINS = [f"https://{h}" for h in ALLOWED_HOSTS if h not in ("localhost", "127.0.0.1")]
-raw_hosts = os.environ.get("ALLOWED_HOSTS", "").split(",")
-ALLOWED_HOSTS = [h.strip() for h in raw_hosts if h.strip()]
-CSRF_TRUSTED_ORIGINS = []
-for h in ALLOWED_HOSTS:
-    # пропускаем wildcard и локальные адреса
-    if h == "*" or h in ("localhost", "127.0.0.1"):
-        continue
-    CSRF_TRUSTED_ORIGINS.append(f"https://{h}")
-    CSRF_TRUSTED_ORIGINS.append(f"http://{h}")
-
-# Если не задано явно — разрешим любой Host, чтобы health-check не падал
-if not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -58,9 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'storages',
 
     # Third-party
     "rest_framework",
@@ -78,7 +58,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -105,7 +84,8 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.i18n",
                 "cart.context_processors.cart_info",
-                "cart.context_processors.cart_header",
+                "catalog.context_processors.favorites_info",
+
             ],
         },
     },
@@ -118,45 +98,29 @@ ASGI_APPLICATION = "config.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-#
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": os.getenv("POSTGRES_DB", "shopdb"),
-#         "USER": os.getenv("POSTGRES_USER", "shopuser"),
-#         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "shopsecret"),
-#         "HOST": os.getenv("POSTGRES_HOST", "db"),
-#         "PORT": int(os.getenv("POSTGRES_PORT", "5432")),
-#         "CONN_MAX_AGE": 60,
-#     }
-# }
+
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
-        conn_max_age=600,
-    )
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "shopdb"),
+        "USER": os.getenv("POSTGRES_USER", "shopuser"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "shopsecret"),
+        "HOST": os.getenv("POSTGRES_HOST", "db"),
+        "PORT": int(os.getenv("POSTGRES_PORT", "5432")),
+        "CONN_MAX_AGE": 60,
+    }
 }
 
 # Сессии и кэш в Redis
-USE_REDIS = os.getenv("USE_REDIS", "0") == "1"
-
-if USE_REDIS:
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": f"redis://{os.getenv('REDIS_HOST','redis')}:{os.getenv('REDIS_PORT','6379')}/1",
-            "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
-        }
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{os.getenv('REDIS_HOST','redis')}:{os.getenv('REDIS_PORT','6379')}/1",
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
     }
-    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-    SESSION_CACHE_ALIAS = "default"
-else:
-    # Без Redis: локальный кэш и БД-сессии
-    CACHES = {
-        "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}
-    }
-    SESSION_ENGINE = "django.contrib.sessions.backends.db"
-
+}
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 
 # I18N / L10N
 LANGUAGE_CODE = "ka"  # по умолчанию грузинский
@@ -180,7 +144,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # твоя пользовательская директория со статикой проекта (может быть пустой, но ДОЛЖНА существовать)
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -193,7 +156,6 @@ STATICFILES_FINDERS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Пользовательская модель (создадим ниже)
 AUTH_USER_MODEL = "users.User"
 
 # DRF базовая конфигурация
@@ -231,104 +193,9 @@ CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_REDIRECT_URL = "/users/account/orders/"
 
-# --- Media / Spaces (S3 совместимый) ---
-# AWS_ACCESS_KEY_ID = os.environ.get("SPACES_KEY")
-# AWS_SECRET_ACCESS_KEY = os.environ.get("SPACES_SECRET")
-# AWS_STORAGE_BUCKET_NAME = os.environ.get("SPACES_BUCKET")
-# AWS_S3_ENDPOINT_URL = os.environ.get("SPACES_ENDPOINT")  # например: https://ams3.digitaloceanspaces.com
-# AWS_S3_REGION_NAME = os.environ.get("SPACES_REGION", "ams3")
-#
-# USE_SPACES = all([
-#     AWS_ACCESS_KEY_ID,
-#     AWS_SECRET_ACCESS_KEY,
-#     AWS_STORAGE_BUCKET_NAME,
-#     AWS_S3_ENDPOINT_URL,
-# ])
-#
-# if USE_SPACES:
-#     # INSTALLED_APPS = [*INSTALLED_APPS, "storages"]  # на случай локального запуска без storages
-#     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-#     AWS_DEFAULT_ACL = "public-read"
-#     AWS_QUERYSTRING_AUTH = False
-#     AWS_S3_SIGNATURE_VERSION = "s3v4"
-#     AWS_S3_ADDRESSING_STYLE = "virtual"  # важен для Spaces
-#
-#     # Красивый CDN-домен (если включишь CDN — подставь сюда свой):
-#     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}.digitaloceanspaces.com"
-#     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-# else:
-#     # Фоллбэк на локальные медиа (dev)
-#     MEDIA_URL = "/media/"
-#     MEDIA_ROOT = BASE_DIR / "media"
-
-AWS_ACCESS_KEY_ID = os.environ.get("SPACES_KEY")
-AWS_SECRET_ACCESS_KEY = os.environ.get("SPACES_SECRET")
-
-AWS_STORAGE_BUCKET_NAME = "izugdidi-media"                 # твой Space
-AWS_S3_REGION_NAME = "ams3"
-AWS_S3_ENDPOINT_URL = "https://ams3.digitaloceanspaces.com"
-AWS_S3_SIGNATURE_VERSION = "s3v4"
-AWS_S3_ADDRESSING_STYLE = "virtual"                        # важно для <bucket>.<region>.digitaloceanspaces.com
-
-AWS_DEFAULT_ACL = None
-AWS_S3_FILE_OVERWRITE = False                              # чтобы не перетирать файлы с одинаковым именем
-AWS_QUERYSTRING_AUTH = False                               # True -> подписанные приватные ссылки
-
-AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}.digitaloceanspaces.com"
-
-MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-MEDIA_ROOT = ""                                            # НЕ пишем медиа локально
-
-STORAGES = {
-    "default": { "BACKEND": "storages.backends.s3boto3.S3Boto3Storage" },
-    "staticfiles": { "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage" },
-}
-
-
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SECURE_SSL_REDIRECT = False
-
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
-# (Можно оставить HSTS — это на уровне браузера, не мешает probe)
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-
-
-DJANGO_LOG_LEVEL = os.getenv("DJANGO_LOG_LEVEL", "INFO")
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {"class": "logging.StreamHandler"},
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": DJANGO_LOG_LEVEL,
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["console"],
-            "level": DJANGO_LOG_LEVEL,
-            "propagate": True,
-        },
-        # ← самое важное: ошибки запросов (500) идут сюда
-        "django.request": {
-            "handlers": ["console"],
-            "level": "ERROR",
-            "propagate": False,
-        },
-        "django.server": {
-            "handlers": ["console"],
-            "level": "ERROR",
-            "propagate": False,
-        },
+CELERY_BEAT_SCHEDULE = {
+    'send-payment-reminders-every-hour': {
+        'task': 'orders.tasks.run_payment_reminders',
+        'schedule': 3600.0, # в секундах
     },
 }
-
-# чтобы исключения показывались в логах даже без DEBUG
-DEBUG_PROPAGATE_EXCEPTIONS = True

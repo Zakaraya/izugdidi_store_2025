@@ -1,0 +1,9 @@
+Здравствуйте!
+
+Ваш заказ №{{ order.id }} успешно принят.
+Сумма к оплате: {{ order.total }} {{ order.currency }}
+
+Вы можете оплатить заказ по ссылке:
+{{ protocol }}://{{ domain }}{% url 'payments:pay_page' order.id %}
+
+Спасибо за покупку!

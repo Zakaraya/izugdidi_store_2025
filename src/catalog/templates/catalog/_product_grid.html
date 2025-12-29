@@ -2,8 +2,12 @@
 <div id="product-grid">
   <div class="product-grid">
     {% for p in page_obj.object_list %}
-      <div class="product-card">
-        <a href="{% url 'catalog:product_detail' p.base_slug %}" class="product-link">
+      <div class="product-card" style="position: relative; display: flex; flex-direction: column;">
+          <div class="fav-container" style="position: absolute; top: 10px; right: 10px; z-index: 5;">
+            {% include "catalog/_fav_button.html" with p=p %}
+         </div>
+
+        <a href="{% url 'catalog:product_detail' p.base_slug %}" class="product-link" style="flex: 1;">
           <div class="img-frame">
             {% with img=p.images.first %}
               {% if img %}
@@ -58,3 +62,15 @@
   </nav>
   {% endif %}
 </div>
+
+<style>
+/* Чтобы кнопка была поверх картинки в углу */
+.product-card .fav-toggle-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+}
+</style>

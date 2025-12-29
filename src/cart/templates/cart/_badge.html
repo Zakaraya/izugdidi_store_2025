@@ -1,12 +1,28 @@
 {% load i18n %}
-<span class="badge" aria-label="{% trans 'Товаров в корзине' %}">
+<span id="cart-badge" class="badge {% if not qty_total %}is-zero{% endif %}" aria-label="{% trans 'Товаров в корзине' %}">
   {{ qty_total|default:0 }}
 </span>
+
 <style>
-    .icon-link .badge {
-  display:inline-flex; min-width:18px; height:18px; padding:0 6px;
-  border-radius:999px; align-items:center; justify-content:center;
-  font-size:11px; line-height:1; background:var(--primary,#111); color:#fff; margin-left:6px;
+.badge {
+  display: inline-flex;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  line-height: 1;
+  background: var(--primary, #111);
+  color: #fff;
+  margin-left: 6px;
+  transition: all 0.2s ease;
 }
-.icon-link .badge.empty { background:transparent; color:transparent; }
+
+/* Изменяем логику: вместо прозрачности делаем его, например, чуть бледнее или оставляем как есть */
+.badge.is-zero {
+  background: #ccc; /* Светло-серый, если в корзине 0 */
+  color: #fff;      /* Но цифра 0 всё равно будет видна */
+}
 </style>

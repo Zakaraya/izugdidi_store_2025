@@ -15,7 +15,7 @@
     <p style="color: var(--text-secondary); margin:0 0 24px;">{% trans "Мы отправили подтверждение на вашу почту." %}</p>
 
     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;">
-      <a class="btn" href="/pay/{{ order.id }}/">{% trans "Оплатить сейчас" %}</a>
+      <a class="btn" href="{% url 'payments:pay_page' order.id %}">{% trans "Оплатить сейчас" %}</a>
       <a class="btn secondary" href="{% url 'users:account_hub' %}?tab=orders">{% trans "Мои заказы" %}</a>
     </div>
   </div>

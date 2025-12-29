@@ -8,8 +8,10 @@ from django.utils import timezone
 from cart.utils import get_or_create_cart
 from .forms import CheckoutForm
 from .models import Coupon, Order, OrderItem
-from .tasks import send_order_placed_email
+# from .tasks import send_order_placed_email
 from django.contrib.auth.decorators import login_required
+from .tasks import send_order_created_email
+
 
 def _calc_discount(subtotal: Decimal, coupon: Coupon) -> Decimal:
     if not coupon:
@@ -139,7 +141,10 @@ def checkout(request):
                 with transaction.atomic():
                     # ВАЖНО: адреса и способ доставки уже соберутся в save() формы
                     order = form.save(commit=False)
-                    order.user = request.user if request.user.is_authenticated else None
+                    if request.user.is_authenticated:
+                        order.user = request.user
+                    else:
+                        order.guest_email = form.cleaned_data['email']
                     order.status = Order.Status.PENDING
                     order.total = total
                     order.discount_total = discount_total
@@ -166,12 +171,12 @@ def checkout(request):
                     cart.items.all().delete()
 
                 # письмо — опционально
-                try:
-                    context = {"order": order, "request_scheme": request.scheme, "request_host": request.get_host()}
-                    send_order_placed_email.delay(order.id, order.email, context)
-                except Exception:
-                    pass
-
+                # try:
+                #     context = {"order": order, "request_scheme": request.scheme, "request_host": request.get_host()}
+                #     send_order_placed_email.delay(order.id, order.email, context)
+                # except Exception:
+                #     pass
+                send_order_created_email.delay(order.id)
                 messages.success(request, "The order has been created. Thanks!")
                 return redirect("orders:success", pk=order.pk)
 

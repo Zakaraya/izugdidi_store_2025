@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Здравствуйте, {{ order.customer_name }}!</h2>
+    <p>Спасибо за ваш заказ №{{ order.id }}.</p>
+    <p>Сумма к оплате: <b>{{ order.total }} {{ order.currency }}</b></p>
+    <hr>
+    <p>Если вы еще не оплатили заказ, вы можете сделать это по ссылке:</p>
+    <p><a href="{{ protocol }}://{{ domain }}{% url 'payments:pay_page' order.id %}">Перейти к оплате</a></p>
+</body>
+</html>

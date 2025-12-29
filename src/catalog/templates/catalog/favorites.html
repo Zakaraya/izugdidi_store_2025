@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Избранное" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="section-title">{% trans "Ваше избранное" %}</h1>
+
+    {% if page_obj.object_list %}
+        {% include "catalog/_product_grid.html" %}
+    {% else %}
+        <div class="empty-state" style="text-align: center; margin-top: 60px;">
+            <div style="font-size: 64px; margin-bottom: 20px;">❤️</div>
+            <h2>{% trans "Список пуст" %}</h2>
+            <p>{% trans "Вы еще не добавили ни одного товара в избранное." %}</p>
+            <a href="{% url 'catalog:product_list' %}" class="btn primary" style="display:inline-block; margin-top:20px;">
+                {% trans "Перейти в каталог" %}
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

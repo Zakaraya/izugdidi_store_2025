@@ -1,29 +1,49 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
+# from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.template.loader import render_to_string
 
 from orders.models import Order
-from .forms import ProfileForm
+from .forms import ProfileForm, CustomUserCreationForm
 
 @login_required
 def my_orders(request):
     qs = Order.objects.filter(user=request.user).order_by("-created_at")
     return render(request, "users/my_orders.html", {"orders": qs})
 
+
 def signup(request):
     if request.user.is_authenticated:
-        return redirect("users:my_orders")
+        return redirect("users:my_orders")  # или 'users:account_hub'
+
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # ---> НАЧАЛО НОВОЙ ЛОГИКИ <---
+
+            # Получаем email, который пользователь ввел при регистрации
+            user_email = form.cleaned_data.get('email')
+
+            if user_email:
+                # 1. Находим все "гостевые" заказы с этим email
+                guest_orders = Order.objects.filter(
+                    guest_email__iexact=user_email,  # iexact для регистронезависимого поиска
+                    user__isnull=True  # Убедимся, что заказы еще не привязаны
+                )
+                # 2. Привязываем найденные заказы к новому пользователю
+                guest_orders.update(user=user)
+
+            # ---> КОНЕЦ НОВОЙ ЛОГИКИ <---
+
             login(request, user)
-            return redirect("users:my_orders")
+            # Теперь редирект на страницу, где пользователь увидит свои заказы
+            return redirect("users:account_hub")  # <-- Рекомендую редиректить сюда
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
+
     return render(request, "registration/signup.html", {"form": form})
 
 

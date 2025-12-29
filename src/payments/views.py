@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from orders.models import Order
-from orders.tasks import send_order_paid_email
+from orders.tasks import send_order_paid_email_task
 
 def _order_accessible(request, order: Order) -> bool:
     # Авторизованный видит свои заказы, гость — по id (для демо). В проде добавьте токен-доступ по email/кодам.
@@ -38,7 +38,8 @@ def pay_page(request, order_id: int):
             "request_host": request.get_host(),
         }
         try:
-            send_order_paid_email.delay(order.id, order.email, context)
+            # send_order_paid_email.delay(order.id, order.email, context)
+            send_order_paid_email_task.delay(order.id)
         except Exception as e:
             pass
         return redirect("orders:track", pk=order.id)

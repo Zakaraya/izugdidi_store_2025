@@ -32,24 +32,32 @@ def cart_add(request):
     pid = int(request.POST.get("product_id", "0"))
     product = get_object_or_404(Product, pk=pid, is_published=True)
     qty = int(request.POST.get("qty", "1"))
-    item, created = cart.items.get_or_create(product=product, defaults={
-        "qty": qty,
-        "unit_price_snapshot": product.price
-    })
+
+    item, created = cart.items.get_or_create(
+        product=product,
+        defaults={"qty": qty, "unit_price_snapshot": product.price}
+    )
     if not created:
         item.qty += qty
         item.save(update_fields=["qty", "updated_at"])
-    _, items, _ = get_cart(request)
-    total_qty = sum(i.qty for i in items)
+
+    # Получаем общее количество товаров в корзине
+    total_qty = sum(i.qty for i in cart.items.all())
+
     if request.headers.get("HX-Request") == "true":
+        # Создаем HTML для значка корзины
         oob = _render_badge_oob(total_qty)
-        resp = HttpResponseRedirect("/cart/")
-        resp["HX-Redirect"] = request.META.get("HTTP_REFERER", "/")
-        resp = HttpResponse(oob, content_type="text/html; charset=utf-8")
-        resp["X-Toast"] = "Product added to cart"
-        return resp
+        # Создаем HTML для сообщения
+        toast_message = "Product added to cart"
+        # Возвращаем HTML, который HTMX вставит в страницу
+        response = HttpResponse(oob, content_type="text/html; charset=utf-8")
+        # Добавляем заголовок для отображения всплывающего сообщения
+        response["HX-Trigger"] = f'{{"showToast": "{toast_message}"}}'
+        return response
+
     messages.success(request, "The product has been added to the cart.")
-    return redirect("cart:detail")
+    # Редирект на ту же страницу, с которой был сделан запрос
+    return redirect(request.META.get("HTTP_REFERER", "cart:detail"))
 
 @require_POST
 def cart_update(request, item_id):
@@ -160,44 +168,58 @@ def _render_badge_html(total_qty: int) -> str:
     return render_to_string("cart/_badge.html", {"qty_total": total_qty})
 
 @require_POST
-@login_required
-def update_item_qty(request, item_id: int):
-    try:
-        qty_raw = request.POST.get("qty")
-        qty = int(qty_raw)
-        if qty < 1:
-            raise ValueError("Quantity must be >= 1")
-    except (TypeError, ValueError, InvalidOperation):
-        return HttpResponseBadRequest("Invalid quantity")
+def update_item_qty(request, item_id):
+    print("this is update_item_qty") # Ваш отладочный принт
+
+    # 1. Получаем корзину для ЛЮБОГО пользователя (гостя или залогиненного)
+    cart = get_or_create_cart(request)
 
     try:
-        item = CartItem.objects.select_related("product").get(id=item_id, cart__user=request.user)
+        # 2. Ищем товар строго внутри этой корзины. Это безопасно и правильно.
+        item = cart.items.get(pk=item_id)
     except CartItem.DoesNotExist:
-        return HttpResponseBadRequest("Item not found")
+        return JsonResponse({"ok": False, "error": "Item not found in your cart"}, status=404)
 
-    # при желании можно проверять наличие stock и т.п.
+    # 3. Получаем новое количество из POST-запроса
+    try:
+        # Ваш JS-код отправляет данные в формате x-www-form-urlencoded
+        qty = int(request.POST.get('qty', '1'))
+        if qty < 1:
+            # Предотвращаем установку количества меньше 1
+            qty = 1
+    except (ValueError, TypeError):
+        return JsonResponse({"ok": False, "error": "Invalid quantity provided"}, status=400)
+
+    # 4. Обновляем и сохраняем
     item.qty = qty
-    item.save(update_fields=["qty"])
+    item.save(update_fields=['qty', 'updated_at'])
 
-    cart_obj, items, subtotal = get_cart(request)
+    # 5. Готовим JSON-ответ с HTML-фрагментами для обновления страницы
+    items = cart.items.all()
+    subtotal = sum(i.qty * i.unit_price_snapshot for i in items)
     total_qty = sum(i.qty for i in items)
 
-    item_total = (item.unit_price_snapshot or Decimal("0")) * item.qty
-    item_total_html = _render_money_html(item_total, item.product.currency)
-
-    summary_html = render_to_string("cart/_summary.html", {"subtotal": subtotal}, request=request)
-    badge_html = _render_badge_html(total_qty)
-
+    # Форматируем цену для строки товара.
+    # Если у вас есть templatetag 'money', используйте его в шаблоне
+    # или отформатируйте здесь.
+    # item_total_price_str = f"{item.total_price} {item.product.currency}"
+    item_total_price = item.qty * item.unit_price_snapshot
+    item_total_price_str = f"{item_total_price} {item.product.currency}"
     return JsonResponse({
         "ok": True,
         "item_id": item.id,
-        "item_total_html": item_total_html,
-        "summary_html": summary_html,
-        "badge_html": badge_html,
-        "total_qty": total_qty,
-        "qty": item.qty,
+        "item_total_html": item_total_price_str,
+        "summary_html": render_to_string(
+            "cart/_summary.html",
+            {"subtotal": subtotal, "items": items},
+            request=request
+        ),
+        "badge_html": render_to_string(
+            "cart/_badge.html",
+            {"qty_total": total_qty},
+            request=request
+        )
     })
-
 
 @require_POST
 def remove_item(request, item_id: int):

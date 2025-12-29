@@ -103,4 +103,234 @@
       });
     })();
   </script>
+
+
+<!-- Модальное окно для зума с навигацией -->
+<div id="imageModal" class="modal-zoom">
+  <span class="close-modal">&times;</span>
+
+  <!-- Кнопки управления -->
+  <button class="nav-btn prev" id="prevBtn">&#10094;</button>
+  <img class="modal-content" id="imgFull">
+  <button class="nav-btn next" id="nextBtn">&#10095;</button>
+
+  <!-- Счетчик (опционально) -->
+  <div id="caption" style="position: absolute; bottom: 20px; color: white; font-size: 14px;"></div>
+</div>
+
+
+<style>
+  /* Стили для зума */
+  .main.img-frame img {
+    cursor: zoom-in; /* Меняем курсор, чтобы пользователь понял, что можно кликнуть */
+    transition: transform 0.3s ease;
+  }
+  .main.img-frame img:hover {
+    transform: scale(1.02);
+  }
+
+  /* Модалка на весь экран */
+  .modal-zoom {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    padding: 20px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 8px;
+    animation: zoomAnim 0.3s;
+  }
+
+  @keyframes zoomAnim {
+    from {transform:scale(0.7); opacity:0}
+    to {transform:scale(1); opacity:1}
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+    /* Стили для кнопок навигации */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  font-size: 40px;
+  padding: 16px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s;
+  user-select: none;
+  z-index: 10001;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.prev { left: 20px; }
+.next { right: 20px; }
+
+/* Скрытие стрелок на маленьких экранах или их уменьшение */
+@media (max-width: 768px) {
+  .nav-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    background: rgba(0,0,0,0.5); /* На мобилках лучше темный фон */
+  }
+}
+
+/* Остальные стили модалки из прошлого ответа */
+.modal-zoom {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.9);
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  max-width: 85%;
+  max-height: 85%;
+  object-fit: contain;
+}
+.close-modal {
+  position: absolute;
+  top: 30px; right: 40px;
+  color: #fff; font-size: 40px; cursor: pointer;
+  z-index: 10002;
+}
+</style>
+
+<script>
+ (function(){
+  // 1. Сбор данных
+  var main = document.getElementById('mainImage');
+  var thumbsContainer = document.getElementById('thumbs');
+  var modal = document.getElementById('imageModal');
+  var modalImg = document.getElementById('imgFull');
+  var captionText = document.getElementById('caption');
+
+  // Собираем все URL картинок из превью в массив
+  var images = [];
+  if (thumbsContainer) {
+    var thumbImgs = thumbsContainer.querySelectorAll('img');
+    thumbImgs.forEach(function(img) {
+      images.push(img.getAttribute('data-src'));
+    });
+  } else if (main) {
+    // Если картинок всего одна
+    images.push(main.src);
+  }
+
+  var currentIndex = 0;
+
+  // Функция обновления картинки в модалке
+  function updateModalImage(index) {
+    if (index < 0) index = images.length - 1;
+    if (index >= images.length) index = 0;
+
+    currentIndex = index;
+    modalImg.src = images[currentIndex];
+    if (captionText) {
+      captionText.innerText = (currentIndex + 1) + " / " + images.length;
+    }
+  }
+
+  // Открытие модалки
+  if (main) {
+    main.onclick = function() {
+      // Находим индекс текущей главной картинки в массиве
+      var currentSrc = main.getAttribute('src');
+      currentIndex = images.indexOf(currentSrc);
+      if (currentIndex === -1) currentIndex = 0;
+
+      modal.style.display = "flex";
+      updateModalImage(currentIndex);
+      document.body.style.overflow = "hidden";
+    };
+  }
+
+  // Кнопки Назад / Вперед
+  document.getElementById('prevBtn').onclick = function(e) {
+    e.stopPropagation();
+    updateModalImage(currentIndex - 1);
+  };
+
+  document.getElementById('nextBtn').onclick = function(e) {
+    e.stopPropagation();
+    updateModalImage(currentIndex + 1);
+  };
+
+  // Закрытие
+  document.querySelector('.close-modal').onclick = function() {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+  };
+
+  modal.onclick = function(e) {
+    if (e.target === modal || e.target === modalImg) {
+      // Клик по фону или самой картинке (опционально) тоже может закрывать
+      // Но если хотите листать только кнопками, лучше оставить закрытие только на фон
+      if (e.target === modal) {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+    }
+  };
+
+  // Поддержка клавиатуры (стрелки влево/вправо и Esc)
+  document.addEventListener('keydown', function(e) {
+    if (modal.style.display === "flex") {
+      if (e.key === "ArrowLeft") updateModalImage(currentIndex - 1);
+      if (e.key === "ArrowRight") updateModalImage(currentIndex + 1);
+      if (e.key === "Escape") {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+    }
+  });
+
+  // Логика переключения превью на самой странице (старая)
+  if(thumbsContainer && main) {
+    thumbsContainer.addEventListener('click', function(e){
+      if(e.target && e.target.tagName === 'IMG'){
+        var src = e.target.getAttribute('data-src');
+        if(src){ main.setAttribute('src', src); }
+        var imgs = thumbsContainer.querySelectorAll('img');
+        imgs.forEach(function(img){ img.classList.remove('active'); });
+        e.target.classList.add('active');
+      }
+    });
+  }
+})();
+</script>
 {% endblock %}

@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load i18n %}
+
 {% block title %}Мои заказы{% endblock %}
 {% block content %}
   <h1>Мои заказы</h1>
   {% if orders %}
-{# ДЕСКТОП: таблица #}
 <div class="orders-table">
   <table class="table orders">
     <thead>
@@ -29,7 +30,6 @@
   </table>
 </div>
 
-{# МОБИЛА: карточки #}
 <div class="orders-cards">
   {% for o in orders %}
     <div class="order-card">

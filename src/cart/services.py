@@ -7,10 +7,13 @@ SESSION_CART_KEY = "cart_session_key"
 
 def _ensure_session_key(request) -> str:
     """
-    Возвращает и при необходимости создаёт стабильный session_key для гостя.
+    Возвращает и при необходимости создаёт session_key для гостя.
     """
     key = request.session.get(SESSION_CART_KEY)
     if not key:
+        # Убедимся, что сессия существует перед тем, как что-то в неё записывать
+        if not request.session.session_key:
+            request.session.create()
         key = get_random_string(32)
         request.session[SESSION_CART_KEY] = key
     return key

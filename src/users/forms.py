@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 
 User = get_user_model()
 
@@ -43,3 +44,23 @@ class ProfileForm(forms.ModelForm):
             user.profile.phone = self.cleaned_data["phone"]
             user.profile.save()
         return user
+
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ("username", "email") # Убедитесь, что email здесь есть
+
+    def clean_email(self):
+        """
+        Проверяет, что email уникален в системе.
+        """
+        email = self.cleaned_data.get('email')
+        if email:
+            # Ищем пользователя с таким email, без учета регистра (Boris@... и boris@... - одно и то же)
+            if User.objects.filter(email__iexact=email).exists():
+                # Если найден, вызываем ошибку валидации
+                raise forms.ValidationError(
+                    _("Этот адрес электронной почты уже используется.")
+                )
+        return email

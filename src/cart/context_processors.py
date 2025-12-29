@@ -10,7 +10,7 @@ def cart_info(request):
     except Exception:
         count = 0
         total = 0
-    return {"cart_count": count, "cart_total": total}
+    return {"cart_count": count, "cart_total": total, "cart_items_count": count}
 
 def cart_header(request):
     try:

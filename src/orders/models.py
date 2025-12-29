@@ -81,6 +81,10 @@ class Order(TimeStamped):
     placed_at = models.DateTimeField(null=True, blank=True)
 
     tracking_number = models.CharField(max_length=64, blank=True)
+    guest_email = models.EmailField(
+        blank=True,
+        null=True
+    )
 
     class Meta:
         verbose_name = _("Order")

@@ -229,7 +229,7 @@ msgstr "Add to cart"
 
 #: catalog/templates/catalog/product_detail.html:70
 msgid "Похожие товары"
-msgstr "No products yet."
+msgstr "Similar products"
 
 #: catalog/templates/catalog/product_list.html:3
 #: catalog/templates/catalog/product_list.html:7 templates/base.html:15
